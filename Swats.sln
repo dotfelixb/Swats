@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89536195-2689-452E-AFEE-32F7AB9F01B9}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7787EF6-9041-4755-A951-CDECC507FDE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swats", "src\Swats\Swats.csproj", "{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E} = {A7787EF6-9041-4755-A951-CDECC507FDE2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11B3BAE0-17DD-4D76-9B3B-1D8621AA3784}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Swats</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Swats.styles.css" asp-append-version="true" />
+</head>
+<body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
+    @*sidebar*@
+    <div style="width: 68px;"></div>
+
+    @*main*@
+    <div class="flex-auto w-full">
+        @*header*@
+        <header>
+
+        </header>
+
+        <main>
+             @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
