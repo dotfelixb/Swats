@@ -17,6 +17,9 @@
          <div>
             @await Component.InvokeAsync("StatsCard", new { count = 3, title = "My Overdue Tickets" })
         </div> 
+         <div >
+            @await Component.InvokeAsync("StatsCard", new { count = 1, title = "My due today" })
+        </div>
          <div>
             @await Component.InvokeAsync("StatsCard", new { count = 23, title = "Open Tickets" })
         </div>

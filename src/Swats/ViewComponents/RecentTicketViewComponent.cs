@@ -53,6 +53,12 @@ public class RecentTicketViewComponent : ViewComponent
                 Tags = new []{ "TA", "CRM", "Application" },
                 CreatedAt = DateTimeOffset.UtcNow.AddDays(-5)
             },
+             new RecentTicket {
+                Id = Guid.NewGuid(),
+                Title = "Portal Certification Error",
+                Tags = new []{ "Members Portal", "CRM", "SSL" },
+                CreatedAt = DateTimeOffset.UtcNow
+            },
         };
     }
 }
