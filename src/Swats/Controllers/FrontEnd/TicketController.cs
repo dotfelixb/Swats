@@ -16,6 +16,6 @@ public class TicketController : FrontEndController
 
     public IActionResult CreatePartial()
     {
-        return View();
+        return PartialView("_CreatePartial");
     }
 }

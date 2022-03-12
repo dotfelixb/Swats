@@ -2,17 +2,4 @@
     ViewData["Title"] = "New Ticket - Unsave";
 }
 
-<div id="main-swap"">
-    <section class="flex w-full font-bold text-2xl pb-5">
-        <div class="flex w-1/2">New Ticket</div>
-        <div class="flex w-1/2 justify-end">
-            <div class="">
-                <vc:button label="Save" buttontype="primary"></vc:button>
-            </div>
-        </div>
-    </section>
-
-    <div class="w-full flex">
-       
-    </div>
-</div>
+@await Html.PartialAsync("_CreatePartial")
