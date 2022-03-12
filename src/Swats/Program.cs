@@ -1,6 +1,9 @@
+using Swats.Model;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
