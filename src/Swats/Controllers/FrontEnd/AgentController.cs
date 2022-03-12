@@ -2,7 +2,7 @@
 
 namespace Swats.Controllers.FrontEnd;
 
-public class UserController : FrontEndController
+public class AgentController : FrontEndController
 {
     public IActionResult Index()
     {
