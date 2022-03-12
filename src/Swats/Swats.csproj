@@ -19,9 +19,7 @@
   <ItemGroup>
     <Folder Include="Controllers\BackEnd\" />
     <Folder Include="wwwroot\lib\" />
-    <Folder Include="Views\Shared\Components\" />
     <Folder Include="Views\Shared\Components\StatsCard\" />
-    <Folder Include="ViewComponents\" />
     <Folder Include="Views\Shared\Components\RecentTicket\" />
     <Folder Include="Views\User\" />
     <Folder Include="Views\Agent\" />

@@ -9,7 +9,4 @@
   <ItemGroup>
     <None Remove="ViewModel\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModel\" />
-  </ItemGroup>
 </Project>

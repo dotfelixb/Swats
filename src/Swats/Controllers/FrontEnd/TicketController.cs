@@ -8,4 +8,14 @@ public class TicketController : FrontEndController
     {
         return View();
     }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    public IActionResult CreatePartial()
+    {
+        return View();
+    }
 }

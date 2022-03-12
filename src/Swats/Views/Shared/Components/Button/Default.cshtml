@@ -1,0 +1,11 @@
+﻿@model SwatsButton
+
+@{
+    var primary = Model.ButtonType == "primary"
+                ? "bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-800"
+                : "bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-400";
+}
+
+<div class="text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md @primary">
+    @Model.Label
+</div>
