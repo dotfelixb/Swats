@@ -1,3 +1,4 @@
+using Htmx;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Swats.Controllers.FrontEnd;
@@ -11,11 +12,8 @@ public class TicketController : FrontEndController
 
     public IActionResult Create()
     {
-        return View();
-    }
-
-    public IActionResult CreatePartial()
-    {
-        return PartialView("~/Views/Ticket/_CreatePartial.cshtml");
+        return Request.IsHtmx()
+            ? PartialView("~/Views/Ticket/_CreatePartial.cshtml")
+            : View();
     }
 }
