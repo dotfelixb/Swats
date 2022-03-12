@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Swats.Controllers.FrontEnd;
 
-public class TicketController : FrontEndController
+public class UserController : FrontEndController
 {
     public IActionResult Index()
     {

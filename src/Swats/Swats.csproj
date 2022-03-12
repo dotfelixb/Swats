@@ -23,6 +23,8 @@
     <Folder Include="Views\Shared\Components\StatsCard\" />
     <Folder Include="ViewComponents\" />
     <Folder Include="Views\Shared\Components\RecentTicket\" />
+    <Folder Include="Views\User\" />
+    <Folder Include="Views\Agent\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +32,8 @@
     <None Remove="Views\Shared\Components\StatsCard\" />
     <None Remove="ViewComponents\" />
     <None Remove="Views\Shared\Components\RecentTicket\" />
+    <None Remove="Views\User\" />
+    <None Remove="Views\Agent\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Swats.Model\Swats.Model.csproj">
