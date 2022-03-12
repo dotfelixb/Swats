@@ -2,8 +2,34 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div>
-    Swats
+<div class="main">
+    <section class="title font-bold text-2xl pb-5">
+        Dashboard
+    </section>
+
+    <div class="grid grid-cols-5 gap-4 pb-10">
+        <div>
+            @await Component.InvokeAsync("StatsCard", new { count = 8, title = "My Tickets" })
+        </div>
+         <div>
+            @await Component.InvokeAsync("StatsCard", new { count = 3, title = "My Overdue Tickets" })
+        </div> 
+         <div>
+            @await Component.InvokeAsync("StatsCard", new { count = 23, title = "Open Tickets" })
+        </div>
+         <div >
+            @await Component.InvokeAsync("StatsCard", new { count = 12, title = "Overdue Tickets" })
+        </div>
+    </div>
+
+     <section class="title font-semibold text-sm pb-5">
+        Recent Tickets
+    </section>
+
+    <div class="w-full flex">
+        @await Component.InvokeAsync("RecentTicket")
+    </div>
 </div>

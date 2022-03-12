@@ -16,6 +16,21 @@
   <ItemGroup>
     <Folder Include="Controllers\BackEnd\" />
     <Folder Include="wwwroot\lib\" />
+    <Folder Include="Views\Shared\Components\" />
+    <Folder Include="Views\Shared\Components\StatsCard\" />
+    <Folder Include="ViewComponents\" />
+    <Folder Include="Views\Shared\Components\RecentTicket\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Views\Shared\Components\" />
+    <None Remove="Views\Shared\Components\StatsCard\" />
+    <None Remove="ViewComponents\" />
+    <None Remove="Views\Shared\Components\RecentTicket\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Swats.Model\Swats.Model.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

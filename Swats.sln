@@ -7,11 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		README.md = README.md
+		tailwind.config.js = tailwind.config.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7787EF6-9041-4755-A951-CDECC507FDE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swats", "src\Swats\Swats.csproj", "{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swats.Model", "src\Swats.Model\Swats.Model.csproj", "{55B5268F-9F05-4FAC-AC45-D589AF5949EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +26,17 @@ Global
 		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B5268F-9F05-4FAC-AC45-D589AF5949EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B5268F-9F05-4FAC-AC45-D589AF5949EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B5268F-9F05-4FAC-AC45-D589AF5949EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B5268F-9F05-4FAC-AC45-D589AF5949EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3435FF47-BA2C-4A76-B1AC-3F6CFDA9EF8E} = {A7787EF6-9041-4755-A951-CDECC507FDE2}
+		{55B5268F-9F05-4FAC-AC45-D589AF5949EC} = {A7787EF6-9041-4755-A951-CDECC507FDE2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11B3BAE0-17DD-4D76-9B3B-1D8621AA3784}
