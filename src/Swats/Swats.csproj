@@ -34,6 +34,7 @@
     <None Remove="Views\Agent\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Swats.Data\Swats.Data.csproj" />
     <ProjectReference Include="..\Swats.Model\Swats.Model.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>

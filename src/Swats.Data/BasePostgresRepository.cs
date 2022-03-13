@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Swats.Data;
 
-    internal abstract class BasePostgresRepository
+    public abstract class BasePostgresRepository
     {
         private readonly ConnectionStringOptions _connectionStrings;
 

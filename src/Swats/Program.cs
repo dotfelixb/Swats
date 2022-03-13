@@ -1,10 +1,20 @@
+using Microsoft.AspNetCore.Identity;
+using Swats.Data.Repository;
 using Swats.Model;
+using Swats.Model.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddControllersWithViews();
+
+// auth
+builder.Services
+    .AddIdentity<AuthUser, AuthRole>()
+    .AddDefaultTokenProviders();
+builder.Services.AddTransient<IUserStore<AuthUser>, AuthUserRepository>();
+builder.Services.AddTransient<IRoleStore<AuthRole>, AuthRoleRepository>();
 
 var app = builder.Build();
 
@@ -20,7 +30,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapControllerRoute(

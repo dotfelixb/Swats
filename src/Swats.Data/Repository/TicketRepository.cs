@@ -13,3 +13,4 @@ internal class TicketRepository : BasePostgresRepository, ITicketRepository
     {
     }
 }
+
