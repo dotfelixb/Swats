@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Dapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
@@ -24,22 +25,45 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task<IdentityResult> CreateAsync(AuthUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return WithConnection(async conn =>
+        {
+            var query = @"";
+
+            var cmd = await conn.ExecuteAsync(query, new { });
+
+            return cmd > 0
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
+        });
     }
 
     public Task<IdentityResult> DeleteAsync(AuthUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return WithConnection(async conn =>
+        {
+            var query = @"";
+
+            var cmd = await conn.ExecuteAsync(query, new { });
+
+            return cmd > 0
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError { Description = "User deletion failed!" });
+        });
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        // Nothing to dispose.
     }
 
     public Task<AuthUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return WithConnection(async conn =>
+        {
+            var query = @"";
+
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { });
+        });
     }
 
     public Task<AuthUser> FindByIdAsync(string userId, CancellationToken cancellationToken)

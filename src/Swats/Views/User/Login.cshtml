@@ -1,0 +1,22 @@
+﻿@{
+  Layout = "_AuthLayout";
+}
+
+<div class="w-full flex flex-col">
+  <div class="flex-1"></div>
+  <div style="width: 460px;" class="">
+    <section class=" flex w-full font-bold text-2xl pb-5">
+      <div class="flex w-1/2">New Ticket</div>
+      <div class="flex w-1/2 justify-end">
+        <div class="">
+          <vc:button label="Save" buttontype="primary"></vc:button>
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full flex">
+      @DateTime.UtcNow
+    </div>
+  </div>
+  <div class="flex-1"></div>
+</div>

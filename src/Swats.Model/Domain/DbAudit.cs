@@ -2,6 +2,7 @@
 
 public class DbAudit
 {
+    public Guid RowVersion { get; set; } = Guid.NewGuid();
     public bool Deleted { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
@@ -12,8 +13,9 @@ public class DbAudit
 public class DbAuditLog
 {
     public Guid Id { get; set; }
-    public Guid TargetId { get; set; }
+    public Guid Target { get; set; }
     public string ActionName { get; set; }
+    public string Description { get; set; }
     public string ObjectName { get; set; }
     public string ObjectData { get; set; }
     public Guid CreatedBy { get; set; }

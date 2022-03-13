@@ -21,7 +21,6 @@
     <Folder Include="wwwroot\lib\" />
     <Folder Include="Views\Shared\Components\StatsCard\" />
     <Folder Include="Views\Shared\Components\RecentTicket\" />
-    <Folder Include="Views\User\" />
     <Folder Include="Views\Agent\" />
   </ItemGroup>
 
@@ -35,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Swats.Data\Swats.Data.csproj" />
+    <ProjectReference Include="..\Swats.Infrastructure\Swats.Infrastructure.csproj" />
     <ProjectReference Include="..\Swats.Model\Swats.Model.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
