@@ -22,7 +22,7 @@
 </head>
 
 <body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
-    
+
 
     @*main*@
     <div class="flex-auto w-full">
@@ -31,8 +31,10 @@
 
         </header>
 
-        <main class="w-full flex-auto px-36 py-12">
+        <main class="w-full flex flex-row px-36 py-12">
+            <div class="flex-1"></div>
             @RenderBody()
+            <div class="flex-1"></div>
         </main>
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>

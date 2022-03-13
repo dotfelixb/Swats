@@ -17,7 +17,8 @@ builder.Services
     .AddDefaultTokenProviders();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(o => o.LoginPath = new PathString("user/login"));
+    .AddCookie();
+builder.Services.ConfigureApplicationCookie(o => o.LoginPath = new PathString("/user/login"));
 builder.Services
     .AddAuthorization(o => o.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 builder.Services.AddTransient<IUserStore<AuthUser>, AuthUserRepository>();
