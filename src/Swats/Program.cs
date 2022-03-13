@@ -1,7 +1,10 @@
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Swats.Data.Repository;
+using Swats.Infrastructure;
 using Swats.Model;
 using Swats.Model.Domain;
 
@@ -9,12 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>())
+    .AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
+builder.Services.AddAutoMapper(typeof(ModelProfiles));
 
 // auth
-builder.Services
-    .AddIdentity<AuthUser, AuthRole>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<AuthUser, AuthRole>(o =>
+{
+    o.Password.RequireDigit = false;
+}).AddDefaultTokenProviders();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
@@ -40,6 +47,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.UseAuthorization();
+//app.UseSwatsSeed();
 
 app.MapControllerRoute(
     name: "default",

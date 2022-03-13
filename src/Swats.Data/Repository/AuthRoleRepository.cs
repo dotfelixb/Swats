@@ -24,7 +24,6 @@ public class AuthRoleRepository : BasePostgresRepository
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     public Task<AuthRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)

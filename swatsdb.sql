@@ -10,7 +10,8 @@ CREATE TABLE authuser
 	id UUID PRIMARY KEY
     , username VARCHAR(150)
 	, normalizedusername VARCHAR(150)
-	, email VARCHAR(50)
+	, email VARCHAR(150)
+	, normalizedemail VARCHAR(150)
 	, emailconfirmed BOOLEAN
 	, passwordhash VARCHAR
 	, securitystamp VARCHAR
@@ -81,7 +82,42 @@ CREATE TABLE authuserrole
 	, FOREIGN KEY (authrole) REFERENCES authrole(id) ON DELETE CASCADE
 );
 
+
 -- create system users
+INSERT INTO public.authuser 
+	(id
+	, username
+	, normalizedusername
+	, email
+	, normalizedemail
+	, emailconfirmed
+	, passwordhash
+	, securitystamp
+	, phone
+	, phoneconfirmed
+	, twofactorenabled
+	, lockout
+	, failedcount
+	, rowversion
+	, createdby
+	, updatedby)
+VALUES
+	('00000000-0000-0000-0000-000000000001'
+	, 'system'
+	, 'SYSTEM'
+	, 'system@swats.email'
+	, 'SYSTEM@SWATS.APP'
+	, FALSE
+	, 'AQAAAAEAACcQAAAAENKZ2rdqa77c2axnGbvBJKuXzMgSi8xDEUH65Rm9S9YitdxK0SlNucoFS3mdi51fGw=='
+	, '00000000000000000000000000000001'
+	, '0000000000'
+	, FALSE
+	, FALSE
+	, FALSE
+	, 0
+	, '00000000-0000-0000-0000-000000000001'
+	, '00000000-0000-0000-0000-000000000001'
+	, '00000000-0000-0000-0000-000000000001');
 
 
 
