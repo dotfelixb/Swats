@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
+    <title>@ViewData["Title"] - Swats</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script>
         tailwind.config = {
@@ -22,13 +22,7 @@
 </head>
 
 <body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
-    @*sidebar*@
-    <div style="width: 68px" class="flex-initial bg-white drop-shadow-lg ">
-        <div class="p-4" style="height: 48px;">
-            <span></span>
-        </div>
-        @await Html.PartialAsync("_Nav")
-    </div>
+
 
     @*main*@
     <div class="flex-auto w-full">
@@ -37,8 +31,10 @@
 
         </header>
 
-        <main class="w-full flex-auto px-36 py-12">
+        <main class="w-full flex flex-row px-36 py-12">
+            <div class="flex-1"></div>
             @RenderBody()
+            <div class="flex-1"></div>
         </main>
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>

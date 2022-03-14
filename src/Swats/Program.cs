@@ -1,7 +1,35 @@
+using FluentValidation.AspNetCore;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Swats.Data.Repository;
+using Swats.Infrastructure;
+using Swats.Model;
+using Swats.Model.Domain;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
+builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>())
+    .AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
+builder.Services.AddAutoMapper(typeof(ModelProfiles));
+
+// auth
+builder.Services.AddIdentity<AuthUser, AuthRole>(o =>
+{
+    o.Password.RequireDigit = false;
+}).AddDefaultTokenProviders();
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+builder.Services.ConfigureApplicationCookie(o => o.LoginPath = new PathString("/user/login"));
+builder.Services
+    .AddAuthorization(o => o.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+builder.Services.AddTransient<IUserStore<AuthUser>, AuthUserRepository>();
+builder.Services.AddTransient<IRoleStore<AuthRole>, AuthRoleRepository>();
 
 var app = builder.Build();
 
@@ -17,8 +45,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthorization();
+app.UseAuthorization();
+//app.UseSwatsSeed();
 
 app.MapControllerRoute(
     name: "default",

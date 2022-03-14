@@ -5,30 +5,31 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="main">
-    <section class="title font-bold text-2xl pb-5">
-        Dashboard
+<div class="">
+    <section class="flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">Dashboard</div>
+        <div class="flex w-1/2 justify-end"></div>
     </section>
 
     <div class="grid grid-cols-5 gap-4 pb-10">
         <div>
             @await Component.InvokeAsync("StatsCard", new { count = 8, title = "My Tickets" })
         </div>
-         <div>
+        <div>
             @await Component.InvokeAsync("StatsCard", new { count = 3, title = "My Overdue Tickets" })
-        </div> 
-         <div >
+        </div>
+        <div>
             @await Component.InvokeAsync("StatsCard", new { count = 1, title = "My due today" })
         </div>
-         <div>
+        <div>
             @await Component.InvokeAsync("StatsCard", new { count = 23, title = "Open Tickets" })
         </div>
-         <div >
+        <div>
             @await Component.InvokeAsync("StatsCard", new { count = 12, title = "Overdue Tickets" })
         </div>
     </div>
 
-     <section class="title font-semibold text-sm pb-5">
+    <section class="title font-semibold text-sm pb-5">
         Recent Tickets
     </section>
 
