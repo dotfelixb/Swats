@@ -1,9 +1,9 @@
-﻿using MassTransit;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Swats.Infrastructure.Features.Users.Login;
 using Swats.Infrastructure.Features.Users.Register;
+using Swats.Model.Commands;
 using Swats.Model.Domain;
 
 namespace Swats.Controllers.FrontEnd;
@@ -26,8 +26,12 @@ public class UserController : FrontEndController
     }
 
     [AllowAnonymous]
-    public IActionResult Login()
+    public async Task<IActionResult> Login(string returnUrl = null)
     {
+        // Clear the existing external cookie to ensure a clean login process
+        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+        ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
@@ -39,9 +43,18 @@ public class UserController : FrontEndController
 
     [HttpPost]
     [AllowAnonymous]
-    public IActionResult Login(LoginCommand command)
+    public async Task<IActionResult> Login(LoginCommand command, string returnUrl = null)
     {
-        return View();
+        ViewData["ReturnUrl"] = returnUrl;
+
+        var result = await _signInManager.PasswordSignInAsync(command.UserName, command.Password, command.RememberMe, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+            return LocalRedirect(returnUrl);
+        }
+
+        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        return View(command);
     }
 
     [HttpPost]
@@ -61,7 +74,7 @@ public class UserController : FrontEndController
     //        UserName = "system",
     //        Email = "system@swats.app",
     //        NormalizedUserName = "SYSTEM",
-    //        RowVersion= Guid.NewGuid(),
+    //        RowVersion = Guid.NewGuid(),
     //    };
 
     //    var result = await _userManager.CreateAsync(user, "root@pAss");

@@ -20,25 +20,54 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task AddToRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         throw new NotImplementedException();
     }
 
     public Task<IdentityResult> CreateAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
-            var query = @"INSERT INTO public.authuser
-                    (id, username, normalizedusername, email, normalizedemail
-                    , emailconfirmed, passwordhash, securitystamp, phone
-                    , phoneconfirmed, twofactorenabled, lockout, failedcount
-                    , rowversion, createdby, updatedby)
+            var query = $@"INSERT INTO public.authuser
+                    (id
+                    , username
+                    , normalizedusername
+                    , email
+                    , normalizedemail
+                    , emailconfirmed
+                    , passwordhash
+                    , securitystamp
+                    , phone
+                    , phoneconfirmed
+                    , twofactorenabled
+                    , lockout
+                    , failedcount
+                    , rowversion
+                    , createdby
+                    , updatedby)
                 VALUES
-	                (@Id, @UserName, @NormalizedUserName, @Email, @NormalizedEmail
-                    , FALSE, @PasswordHash, @SecurityStamp, @Phone, FALSE, FALSE, FALSE, 0
-                    , @RowVersion, @CreatedBy, @UpdatedBy);
+	                (@{nameof(AuthUser.Id)}
+                    , @{nameof(AuthUser.UserName)}
+                    , @{nameof(AuthUser.NormalizedUserName)}
+                    , @{nameof(AuthUser.Email)}
+                    , @{nameof(AuthUser.NormalizedEmail)}
+                    , FALSE
+                    , @{nameof(AuthUser.PasswordHash)}
+                    , @{nameof(AuthUser.SecurityStamp)}
+                    , @{nameof(AuthUser.Phone)}
+                    , FALSE
+                    , FALSE
+                    , FALSE
+                    , 0
+                    , @{nameof(AuthUser.RowVersion)}
+                    , @{nameof(AuthUser.CreatedBy)}
+                    , @{nameof(AuthUser.UpdatedBy)});
             ";
 
-            var cmd = await conn.ExecuteAsync(query, new
+            var result = await conn.ExecuteAsync(query, new
             {
                 user.Id,
                 user.UserName,
@@ -55,7 +84,7 @@ public class AuthUserRepository : BasePostgresRepository
 
             // TODO : Save Audit log
 
-            return cmd > 0
+            return result > 0
                 ? IdentityResult.Success
                 : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
         });
@@ -63,11 +92,13 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task<IdentityResult> DeleteAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
-            var query = @"";
+            var query = @"UPDATE public.authuser SET deleted = TRUE WHERE id = @Id";
 
-            var cmd = await conn.ExecuteAsync(query, new { });
+            var cmd = await conn.ExecuteAsync(query, new { user.Id });
 
             return cmd > 0
                 ? IdentityResult.Success
@@ -82,16 +113,20 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task<AuthUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
-            var query = @"SELECT * FROM public.authuser WHERE email = @Email";
+            var query = @"SELECT * FROM public.authuser WHERE normalizedemail = @NormalizedEmail";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { Email = normalizedEmail });
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedEmail = normalizedEmail });
         });
     }
 
     public Task<AuthUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
             var query = @"SELECT * FROM public.authuser WHERE id = @Id";
@@ -102,46 +137,62 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task<AuthUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
-            var query = @"SELECT * FROM public.authuser WHERE username = @Username or normalizedusername = @Username";
+            var query = @"SELECT * FROM public.authuser WHERE normalizedusername = @NormalizedUserName";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { Username = normalizedUserName });
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedUserName = normalizedUserName });
         });
     }
 
     public Task<string> GetEmailAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.Email);
     }
 
     public Task<bool> GetEmailConfirmedAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.EmailConfirmed);
     }
 
     public Task<string> GetNormalizedEmailAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.NormalizedEmail);
     }
 
     public Task<string> GetNormalizedUserNameAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.NormalizedUserName);
     }
 
     public Task<string> GetPasswordHashAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.PasswordHash);
     }
 
     public Task<string> GetPhoneNumberAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.Phone);
     }
 
     public Task<bool> GetPhoneNumberConfirmedAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.PhoneConfirmed);
     }
 
@@ -165,51 +216,77 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task<bool> GetTwoFactorEnabledAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.TwoFactorEnabled);
     }
 
     public Task<string> GetUserIdAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.Id.ToString());
     }
 
     public Task<string> GetUserNameAsync(AuthUser user, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.FromResult(user.UserName);
     }
 
     public Task<IList<AuthUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         throw new NotImplementedException();
     }
 
     public Task<bool> HasPasswordAsync(AuthUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
     }
 
     public Task<bool> IsInRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         throw new NotImplementedException();
     }
 
     public Task RemoveFromRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         throw new NotImplementedException();
     }
 
     public Task SetEmailAsync(AuthUser user, string email, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() =>
+        {
+            user.Email = email;
+        }, cancellationToken);
     }
 
     public Task SetEmailConfirmedAsync(AuthUser user, bool confirmed, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() =>
+        {
+            user.EmailConfirmed = confirmed;
+        }, cancellationToken);
     }
 
     public Task SetNormalizedEmailAsync(AuthUser user, string normalizedEmail, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.Run(() =>
         {
             user.NormalizedEmail = normalizedEmail;
@@ -218,6 +295,8 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task SetNormalizedUserNameAsync(AuthUser user, string normalizedName, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.Run(() =>
         {
             user.NormalizedUserName = normalizedName;
@@ -226,6 +305,8 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task SetPasswordHashAsync(AuthUser user, string passwordHash, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.Run(() =>
         {
             user.PasswordHash = passwordHash;
@@ -234,26 +315,89 @@ public class AuthUserRepository : BasePostgresRepository
 
     public Task SetPhoneNumberAsync(AuthUser user, string phoneNumber, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         throw new NotImplementedException();
     }
 
     public Task SetPhoneNumberConfirmedAsync(AuthUser user, bool confirmed, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() =>
+        {
+            user.PhoneConfirmed = confirmed;
+        }, cancellationToken);
     }
 
     public Task SetTwoFactorEnabledAsync(AuthUser user, bool enabled, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() =>
+        {
+            user.TwoFactorEnabled = enabled;
+        }, cancellationToken);
     }
 
     public Task SetUserNameAsync(AuthUser user, string userName, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() =>
+        {
+            user.UserName = userName;
+        }, cancellationToken);
     }
 
     public Task<IdentityResult> UpdateAsync(AuthUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = $@"UPDATE public.authuser
+                SET username=@{nameof(user.UserName)}
+                    , normalizedusername=@{nameof(AuthUser.NormalizedUserName)}
+                    , email=@{nameof(AuthUser.Email)}
+                    , normalizedemail=@{nameof(AuthUser.NormalizedEmail)}
+                    , emailconfirmed=@{nameof(AuthUser.EmailConfirmed)}
+                    , passwordhash=@{nameof(AuthUser.PasswordHash)}
+                    , securitystamp=@{nameof(AuthUser.SecurityStamp)}
+                    , phone=@{nameof(AuthUser.Phone)}
+                    , phoneconfirmed=@{nameof(AuthUser.PhoneConfirmed)}
+                    , twofactorenabled=@{nameof(AuthUser.TwoFactorEnabled)}
+                    , lockout=@{nameof(AuthUser.Lockout)}
+                    , failedcount=@{nameof(AuthUser.FailedCount)}
+                    , rowversion=@{nameof(AuthUser.RowVersion)}
+                    , updatedby=@{nameof(AuthUser.UpdatedBy)}
+                    , updatedat=now()
+                WHERE id=@Id;";
+
+            var result = await conn.ExecuteAsync(query, new
+            {
+                user.Id,
+                user.UserName,
+                user.NormalizedUserName,
+                user.Email,
+                user.NormalizedEmail,
+                user.EmailConfirmed,
+                user.PasswordHash,
+                user.SecurityStamp,
+                user.Phone,
+                user.PhoneConfirmed,
+                user.TwoFactorEnabled,
+                user.Lockout,
+                user.FailedCount,
+                user.RowVersion,
+                user.UpdatedBy
+            });
+
+            // TODO : Save Audit log
+
+            return result > 0
+                  ? IdentityResult.Success
+                  : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
+        });
     }
 }
