@@ -49,6 +49,12 @@ public class UserController : FrontEndController
     public async Task<IActionResult> Login(LoginCommand command, string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
+        if (!ModelState.IsValid)
+        {
+            TempData["LoginStatus"] = "Form Errors";
+            return View(command);
+        }
+
 
         var result = await _signInManager.PasswordSignInAsync(command.UserName, command.Password, command.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)

@@ -20,7 +20,7 @@
     <div class="w-full bg-white rounded drop-shadow-sm px-14 py-10">
         @if (!string.IsNullOrWhiteSpace(loginStatus))
         {
-            <div class="bg-red-600 rounded px-5 py-3 text-white">
+            <div class="bg-red-400 rounded px-5 py-3 text-white">
                 @loginStatus
             </div>
         }
@@ -32,6 +32,7 @@
                 </label>
                 <input asp-for="@Model.UserName" placeholder="you@@email.com"
                        class="block w-full rounded border-gray-300 focus:border-indigo-300 focus:ring-indigo-300;" />
+                <span asp-validation-for="@Model.UserName" class="text-xs text-red-600"></span>
             </div>
 
             @* password *@
@@ -41,6 +42,7 @@
                 </label>
                 <input type="password" asp-for="@Model.Password"
                        class="block w-full rounded border-gray-300 focus:border-indigo-300 focus:ring-indigo-300;" />
+                 <span asp-validation-for="@Model.Password" class="text-xs text-red-600"></span>
             </div>
 
             @* button *@
