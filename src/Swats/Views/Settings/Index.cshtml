@@ -1,10 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "Settings";
 }
 
-<div class="">
-    <section class="title font-bold text-2xl pb-5">
-        Settings
-    </section>
-
-</div>
+@await Html.PartialAsync("~/Views/Settings/_IndexPartial.cshtml")

@@ -1,0 +1,49 @@
+﻿@model CreateDepartmentCommand
+
+@{
+    var controlClass = "w-full px-3";
+    var labelClass = "block text-gray-600 text-xs py-1";
+    var inputClass = "block text-sm py-2 w-full rounded bg-gray-50 border-gray-300 focus:border-indigo-300 focus:ring-indigo-300";
+    var errorClass = "text-xs text-red-400";
+    var primaryButton = "text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-800";
+    var defaultButton = "text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-400";
+
+}
+
+<div id="main-swap">
+    <form asp-controller="Ticket" asp-action="Create" method="post">
+        <section class=" flex w-full font-bold text-2xl pb-5">
+            <div class="flex w-1/2">New Department</div>
+            <div class="flex w-1/2 justify-end">
+                <div class="">
+                    <button class="@defaultButton"
+                        hx-post="/department" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
+                        hx-push-url="true">
+                        Cancel
+                    </button>
+                     <button class="@primaryButton"
+                        hx-post="/department/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
+                        hx-push-url="true">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @* name *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Name" class="@labelClass">
+                        Name
+                    </label>
+                    <input asp-for="@Model.Name" class="@inputClass" />
+                    <span asp-validation-for="@Model.Name" class="@errorClass"></span>
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+</div>
