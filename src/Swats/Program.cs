@@ -25,7 +25,11 @@ builder.Services.AddIdentity<AuthUser, AuthRole>(o =>
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
-builder.Services.ConfigureApplicationCookie(o => o.LoginPath = new PathString("/user/login"));
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.LoginPath = new PathString("/user/login");
+    o.ExpireTimeSpan = TimeSpan.FromHours(3);
+});
 builder.Services
     .AddAuthorization(o => o.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 builder.Services.AddTransient<IUserStore<AuthUser>, AuthUserRepository>();
@@ -45,7 +49,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 //app.UseSwatsSeed();
 

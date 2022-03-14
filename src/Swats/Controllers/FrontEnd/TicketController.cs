@@ -1,4 +1,5 @@
 using Htmx;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Swats.Controllers.FrontEnd;
