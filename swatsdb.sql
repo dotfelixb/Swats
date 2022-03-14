@@ -5,6 +5,9 @@
 
 CREATE DATABASE swats;
 
+-- sequences
+CREATE SEQUENCE TicketCode INCREMENT 1 START 1;
+
 CREATE TABLE authuser 
 (
 	id UUID PRIMARY KEY

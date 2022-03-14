@@ -4,16 +4,17 @@ public class Ticket : DbAudit
 {
     public Guid Id { get; set; }
     public string Code { get; set; }
-    public string Title { get; set; }
-    public string CreatorName { get; set; }
-    public string CreatorEmail { get; set; }
-    public Guid AssignedTo { get; set; }
+    public string Subject { get; set; }
+    public string Requester { get; set; }
+    public string Body { get; set; }
+    public Guid Assignee { get; set; }
     public Guid Source { get; set; }
+    public Guid Type { get; set; }
     public Guid Department { get; set; }
+    public Guid HelpTopic { get; set; }
     public TicketPriority Priority { get; set; }
-    public DateOnly DueDate { get; set; }
     public TicketStatus Status { get; set; }
-    public bool Reopened { get; set; }
+
 }
 
 public class Tag : DbAudit

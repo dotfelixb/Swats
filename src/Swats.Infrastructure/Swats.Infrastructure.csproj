@@ -8,7 +8,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="FluentValidation" Version="10.4.0" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
@@ -17,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Swats.Model\Swats.Model.csproj" />
+    <ProjectReference Include="..\Swats.Data\Swats.Data.csproj" />
   </ItemGroup>
 
 </Project>
