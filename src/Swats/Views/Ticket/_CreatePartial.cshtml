@@ -1,16 +1,101 @@
 @model CreateTicketCommand
 
+@{
+    var controlClass = "w-full px-3";
+    var labelClass = "block text-gray-600 text-xs py-1";
+    var inputClass = "block w-full rounded bg-gray-50 border-gray-300 focus:border-indigo-300 focus:ring-indigo-300";
+    var errorClass = "text-xs text-red-400";
+}
+
 <div id="main-swap" ">
     <section class=" flex w-full font-bold text-2xl pb-5">
-        <div class="flex w-1/2">New Ticket</div>
-        <div class="flex w-1/2 justify-end">
-            <div class="">
-                <vc:button label="Save" buttontype="primary"></vc:button>
-            </div>
+    <div class="flex w-1/2">New Ticket</div>
+    <div class="flex w-1/2 justify-end">
+        <div class="">
+            <vc:button label="Save" buttontype="primary"></vc:button>
         </div>
+    </div>
     </section>
 
-    <div class="w-full flex">
-        @DateTime.UtcNow
+    <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+        <form asp-controller="Ticket" asp-action="Create" method="post">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @* requester *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Requester" class="@labelClass">
+                        Requester
+                    </label>
+                    <input asp-for="@Model.Requester" class="@inputClass" />
+                    <span asp-validation-for="@Model.Requester" class="@errorClass"></span>
+                </div>
+
+                @* subject *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Subject" class="@labelClass">
+                        Subject
+                    </label>
+                    <input asp-for="@Model.Subject" class="@inputClass" />
+                    <span asp-validation-for="@Model.Subject" class="@errorClass"></span>
+                </div>
+
+                @* assignee *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Assignee" class="@labelClass">
+                        Assigned To
+                    </label>
+                    <input asp-for="@Model.Assignee" class="@inputClass" />
+                    <span asp-validation-for="@Model.Assignee" class="@errorClass"></span>
+                </div>
+
+                @* source *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Source" class="@labelClass">
+                        Source
+                    </label>
+                    <input asp-for="@Model.Source" class="@inputClass" />
+                    <span asp-validation-for="@Model.Source" class="@errorClass"></span>
+                </div>
+
+                @* type *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Type" class="@labelClass">
+                        Type
+                    </label>
+                    <input asp-for="@Model.Type" class="@inputClass" />
+                    <span asp-validation-for="@Model.Type" class="@errorClass"></span>
+                </div>
+
+                @* department *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Department" class="@labelClass">
+                        Department
+                    </label>
+                    <input asp-for="@Model.Department" class="@inputClass" />
+                    <span asp-validation-for="@Model.Department" class="@errorClass"></span>
+                </div>
+
+                @* help topic *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.HelpTopic" class="@labelClass">
+                        Help Topic
+                    </label>
+                    <input asp-for="@Model.HelpTopic" class="@inputClass" />
+                    <span asp-validation-for="@Model.HelpTopic" class="@errorClass"></span>
+                </div>
+
+            </div>
+            <div class="grid grid-cols-1 gap-5 py-4">
+                @* body *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Body" class="@labelClass">
+                        Description
+                    </label>
+                    <textarea asp-for="@Model.Body" class="@inputClass" cols="30" rows="10"></textarea>
+                    <span asp-validation-for="@Model.Body" class="@errorClass"></span>
+
+                </div>
+            </div>
+        </form>
     </div>
 </div>

@@ -35,6 +35,9 @@ builder.Services
 builder.Services.AddTransient<IUserStore<AuthUser>, AuthUserRepository>();
 builder.Services.AddTransient<IRoleStore<AuthRole>, AuthRoleRepository>();
 
+// repositories
+builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

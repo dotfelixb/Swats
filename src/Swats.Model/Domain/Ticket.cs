@@ -109,6 +109,7 @@ public enum TicketPriority
 
 public enum TicketStatus
 {
+    New,
     Open, // Read Only except Requester
 
     Approved, // Ready for Assignee by Ticket Admin

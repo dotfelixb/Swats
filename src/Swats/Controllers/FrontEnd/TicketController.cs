@@ -12,6 +12,22 @@ public class TicketController : FrontEndController
         return View();
     }
 
+    public IActionResult Create()
+    {
+        if (!ModelState.IsValid)
+        {
+            return Request.IsHtmx()
+              ? PartialView("~/Views/Ticket/_CreatePartial.cshtml")
+              : View();
+        }
+
+        return Request.IsHtmx()
+            ? PartialView("~/Views/Ticket/_CreatePartial.cshtml")
+            : View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Create(CreateTicketCommand command)
     {
         if (!ModelState.IsValid)

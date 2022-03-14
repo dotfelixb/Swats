@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
-<body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
+<body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen overflow-y-hidden">
     @*sidebar*@
     <div style="width: 68px" class="flex-initial bg-white drop-shadow-lg ">
         <div class="p-4" style="height: 48px;">
@@ -30,10 +30,10 @@
     @*main*@
     <div class="flex-auto w-full">
         @*header*@
-        <header style="height: 48px;" class="bg-white px-3 py-3">
+        <header style="height: 48px;" class="bg-white px-3 py-3 drop-shadow-md">
         </header>
 
-        <main class="w-full flex-auto px-36 py-12">
+        <main class="w-full flex-auto px-36 py-12 h-screen overflow-y-auto">
             @RenderBody()
         </main>
     </div>
@@ -48,8 +48,8 @@
         }
     </style>
     <script src="https://unpkg.com/htmx.org@1.7.0"
-            integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
-            crossorigin="anonymous"></script>
+        integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
