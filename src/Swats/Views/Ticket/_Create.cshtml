@@ -15,16 +15,25 @@
         <section class=" flex w-full font-bold text-2xl pb-5">
             <div class="flex w-1/2">New Ticket</div>
             <div class="flex w-1/2 justify-end">
-                <div class="">
+                <div class="flex flex-row">
                     <button class="@defaultButton"
                         hx-post="/ticket" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
-                        Cancel
-                    </button>
+                        <div class="flex flex-row ">
+                            <div class="flex "> </div> 
+                            <div class="flex">Cancel</div>
+                       </div>
+                    </button> 
+                    <span class="mr-4"></span>
                      <button class="@primaryButton"
                         hx-post="/ticket/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
-                        Save
+                       <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center "> 
+                                <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
+                                </div> 
+                            <div class="flex">Save</div>
+                       </div>
                     </button>
                 </div>
             </div>
@@ -65,7 +74,9 @@
                     <label asp-for="@Model.Source" class="@labelClass">
                         Source
                     </label>
-                    <input asp-for="@Model.Source" class="@inputClass" />
+                    <select asp-for="@Model.Source" class="@inputClass" asp-items="@Html.GetEnumSelectList<TicketSource>()">
+                        <option value=""></option>
+                    </select>
                     <span asp-validation-for="@Model.Source" class="@errorClass"></span>
                 </div>
 

@@ -1,4 +1,4 @@
-﻿@model CreateDepartmentCommand
+@model CreateBusinessHourCommand
 
 @{
     var controlClass = "w-full px-3";
@@ -11,13 +11,13 @@
 }
 
 <div id="main-swap">
-    <form asp-controller="Department" asp-action="Create" method="post">
+    <form asp-controller="BusinessHour" asp-action="Create" method="post">
         <section class=" flex w-full font-bold text-2xl pb-5">
-            <div class="flex w-1/2">New Department</div>
+            <div class="flex w-1/2">New Business Hour</div>
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
                     <button class="@defaultButton"
-                        hx-post="/admin/department" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
+                        hx-post="/admin/businesshour" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
                         <div class="flex flex-row ">
                             <div class="flex "> </div> 
@@ -26,7 +26,7 @@
                     </button> 
                     <span class="mr-4"></span>
                      <button class="@primaryButton"
-                        hx-post="/admin/department/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
+                        hx-post="/admin/businesshour/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
                        <div class="flex flex-row ">
                             <div class="mr-2 flex items-center "> 
@@ -51,55 +51,27 @@
                     <span asp-validation-for="@Model.Name" class="@errorClass"></span>
                 </div>
 
-                @* type *@
+                 @* status *@
                 <div class="@controlClass">
-                    <label asp-for="@Model.Type" class="@labelClass">
-                        Type
+                    <label asp-for="@Model.Status" class="@labelClass">
+                        Status
                     </label>
-                    <select asp-for="@Model.Type" class="@inputClass" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
+                    <select asp-for="@Model.Status" class="@inputClass" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
                         <option value=""></option>
                     </select>
-                    <span asp-validation-for="@Model.Type" class="@errorClass"></span>
+                    <span asp-validation-for="@Model.Status" class="@errorClass"></span>
                 </div>
-
-                @* manager *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.Manager" class="@labelClass">
-                        Manager
-                    </label>
-                    <input asp-for="@Model.Manager" class="@inputClass" />
-                    <span asp-validation-for="@Model.Manager" class="@errorClass"></span>
-                </div>
-
-                @* business hour *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.BusinessHour" class="@labelClass">
-                        Business Hour
-                    </label>
-                    <input asp-for="@Model.BusinessHour" class="@inputClass" />
-                    <span asp-validation-for="@Model.BusinessHour" class="@errorClass"></span>
-                </div>
-
-                @* outgoing email *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.OutgoingEmail" class="@labelClass">
-                        Outgoing Email
-                    </label>
-                    <input asp-for="@Model.OutgoingEmail" class="@inputClass" />
-                    <span asp-validation-for="@Model.OutgoingEmail" class="@errorClass"></span>
-                </div>
-
                
 
             </div>
             <div class="grid grid-cols-1 gap-5 py-4">
-                @* body *@
+                @* description *@
                 <div class="@controlClass">
-                    <label asp-for="@Model.Response" class="@labelClass">
-                        Default Responsee
+                    <label asp-for="@Model.Description" class="@labelClass">
+                       Description
                     </label>
-                    <textarea asp-for="@Model.Response" class="@inputClass" cols="30" rows="5"></textarea>
-                    <span asp-validation-for="@Model.Response" class="@errorClass"></span>
+                    <textarea asp-for="@Model.Description" class="@inputClass" cols="30" rows="5"></textarea>
+                    <span asp-validation-for="@Model.Description" class="@errorClass"></span>
                 </div>
             </div>
         </div>

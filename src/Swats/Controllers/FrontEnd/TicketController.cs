@@ -1,5 +1,4 @@
 using Htmx;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Model.Commands;
 
@@ -10,14 +9,14 @@ public class TicketController : FrontEndController
     public IActionResult Index()
     {
         return Request.IsHtmx()
-            ? PartialView("~/Views/Ticket/_IndexPartial.cshtml")
+            ? PartialView("~/Views/Ticket/_Index.cshtml")
             : View();
     }
 
     public IActionResult Create()
     {
         return Request.IsHtmx()
-            ? PartialView("~/Views/Ticket/_CreatePartial.cshtml")
+            ? PartialView("~/Views/Ticket/_Create.cshtml")
             : View();
     }
 
@@ -28,10 +27,10 @@ public class TicketController : FrontEndController
         if (!ModelState.IsValid)
         {
             return Request.IsHtmx()
-              ? PartialView("~/Views/Ticket/_CreatePartial.cshtml", command)
+              ? PartialView("~/Views/Ticket/_Create.cshtml", command)
               : View(command);
         }
 
-        return  RedirectToAction(actionName: "Index");
+        return RedirectToAction(actionName: "Index");
     }
 }

@@ -63,13 +63,6 @@ public class TicketSla : DbAudit
     public Guid Sla { get; set; }
 }
 
-public class TicketSource : DbAudit
-{
-    public Guid Id { get; set; }
-    public string Code { get; set; }
-    public string Name { get; set; }
-}
-
 public class TicketComment : DbAudit
 {
     public Guid Id { get; set; }

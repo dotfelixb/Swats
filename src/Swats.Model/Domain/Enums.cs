@@ -20,6 +20,14 @@ public enum TicketPriority
     Important
 }
 
+public enum TicketSource
+{
+    App,
+    Web,
+    Call,
+    Api,
+}
+
 public enum TicketStatus
 {
     New,
