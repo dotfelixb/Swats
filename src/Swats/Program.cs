@@ -56,6 +56,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.UseSwatsSeed();
 
+app.MapAreaControllerRoute(
+    name: "areadefault",
+    areaName: "admin",
+    pattern: "admin/{controller=Settings}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");

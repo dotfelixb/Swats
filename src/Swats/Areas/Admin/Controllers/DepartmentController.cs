@@ -1,10 +1,12 @@
 ﻿using Htmx;
 using Microsoft.AspNetCore.Mvc;
+using Swats.Controllers;
 
-namespace Swats.Controllers.FrontEnd;
+namespace Swats.Areas.Admin.Controllers;
 
-public class DepartmentController : FrontEndController {
-
+[Area("admin")]
+public class DepartmentController : FrontEndController
+{
     public IActionResult Index()
     {
         return View();
