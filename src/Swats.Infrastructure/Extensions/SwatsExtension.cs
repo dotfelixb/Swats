@@ -8,4 +8,7 @@ public static class SwatsExtension
     {
         return builder.UseMiddleware<SwatsSeedMiddleware>();
     }
+
+    public static string FormatCode(this long value, string prefix = "", int width = 6, char padChar = '0')
+            => $"{prefix}{value.ToString().PadLeft(width, padChar)}";
 }

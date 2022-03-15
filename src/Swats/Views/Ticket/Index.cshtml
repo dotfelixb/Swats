@@ -2,17 +2,4 @@
     ViewData["Title"] = "Ticket";
 }
 
-<div id="main-swap">
-    <section class="flex w-full font-bold text-2xl pb-5">
-        <div class="flex w-1/2">Tickets</div>
-        <div class="flex w-1/2 justify-end">
-            <div class="">
-                <vc:button label="New Ticket" buttontype="primary"></vc:button>
-            </div>
-        </div>
-    </section>
-
-    <div class="w-full flex">
-        @await Component.InvokeAsync("RecentTicket")
-    </div>
-</div>
+@await Html.PartialAsync("~/Views/Ticket/_IndexPartial.cshtml")

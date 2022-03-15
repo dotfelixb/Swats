@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Swats</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-    <script>
-        tailwind.config = {
+    <script>tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
@@ -15,10 +14,8 @@
                     },
                 },
             }
-        }
-    </script>
+        }</script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Swats.styles.css" asp-append-version="true" />
 </head>
 
 <body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
@@ -28,7 +25,6 @@
     <div class="flex-auto w-full">
         @*header*@
         <header style="height: 48px;" class="bg-white px-3 py-3">
-
         </header>
 
         <main class="w-full flex flex-row px-36 py-12">
@@ -48,8 +44,8 @@
         }
     </style>
     <script src="https://unpkg.com/htmx.org@1.7.0"
-        integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
-        crossorigin="anonymous"></script>
+            integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>

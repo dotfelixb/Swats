@@ -1,0 +1,43 @@
+﻿@{
+}
+
+<div id="main-swap">
+    <section class="flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">Settings</div>
+        <div class="flex w-1/2 justify-end">
+           
+        </div>
+    </section>
+
+    <div class="w-full flex flex-row">
+        <div class="mr-5">
+            <ul>
+                <li>
+                    <a asp-area="admin" asp-controller="department">
+                    <div>
+                        <span>Department</span>
+                    </div>    
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-area="admin" asp-controller="department">
+                    <div>
+                        <span>Teams</span>
+                    </div>    
+                    </a>
+                </li>
+
+                 <li>
+                    <a href="/department">
+                    <div>
+                        <span>Business Hours</span>
+                    </div>    
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="w-full flex-1 bg-white drop-shadow-lg rounded px-10 py-10"></div>
+    </div>
+</div>

@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-    <script>
-        tailwind.config = {
+    <script>tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
@@ -15,13 +14,11 @@
                     },
                 },
             }
-        }
-    </script>
+        }</script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Swats.styles.css" asp-append-version="true" />
 </head>
 
-<body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
+<body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen overflow-y-hidden">
     @*sidebar*@
     <div style="width: 68px" class="flex-initial bg-white drop-shadow-lg ">
         <div class="p-4" style="height: 48px;">
@@ -33,11 +30,10 @@
     @*main*@
     <div class="flex-auto w-full">
         @*header*@
-        <header style="height: 48px;" class="bg-white px-3 py-3">
-
+        <header style="height: 48px;" class="bg-white px-3 py-3 drop-shadow-md">
         </header>
 
-        <main class="w-full flex-auto px-36 py-12">
+        <main class="w-full flex-auto px-36 py-12 h-screen overflow-y-auto">
             @RenderBody()
         </main>
     </div>

@@ -1,0 +1,5 @@
+input.input-validation-error, 
+select.input-validation-error, 
+textarea.input-validation-error {  
+  border: 2px solid rgb(252, 165, 165);
+}

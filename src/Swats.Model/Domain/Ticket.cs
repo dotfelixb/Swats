@@ -4,16 +4,17 @@ public class Ticket : DbAudit
 {
     public Guid Id { get; set; }
     public string Code { get; set; }
-    public string Title { get; set; }
-    public string CreatorName { get; set; }
-    public string CreatorEmail { get; set; }
-    public Guid AssignedTo { get; set; }
+    public string Subject { get; set; }
+    public string Requester { get; set; }
+    public string Body { get; set; }
+    public Guid Assignee { get; set; }
     public Guid Source { get; set; }
+    public Guid Type { get; set; }
     public Guid Department { get; set; }
+    public Guid HelpTopic { get; set; }
     public TicketPriority Priority { get; set; }
-    public DateOnly DueDate { get; set; }
     public TicketStatus Status { get; set; }
-    public bool Reopened { get; set; }
+
 }
 
 public class Tag : DbAudit
@@ -93,41 +94,15 @@ public class Attachment : DbAudit
     public string AbsolutePath { get; set; }
 }
 
-public class User : DbAudit
+public class Agent : DbAudit
 {
-
-}
-
-public enum TicketPriority
-{
-    Low,
-    Normal,
-    High,
-    Important
-}
-
-public enum TicketStatus
-{
-    Open, // Read Only except Requester
-
-    Approved, // Ready for Assignee by Ticket Admin
-    Assigned, // Is assigned
-
-    Pending, // On hold, Only Assignee & Approval
-    Review, // Same as Pending but can be comment on
-
-    Close, // Only Approval User
-    Deleted,
-}
-
-public enum CommentSource
-{
-    Internal,
-    External
-}
-
-public enum AttachmentSource
-{
-    Ticket,
-    Comment
+    public Guid Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string Mobile { get; set; }
+    public string Telephone { get; set; }
+    public Guid Timezone { get; set; }
+    public Guid Department { get; set; }
+    public Guid Team { get; set; }
 }
