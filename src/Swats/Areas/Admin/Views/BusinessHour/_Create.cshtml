@@ -16,16 +16,16 @@
             <div class="flex w-1/2">New Business Hour</div>
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
-                    <button class="@defaultButton"
+                    <div class="@defaultButton"
                         hx-post="/admin/businesshour" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
                         <div class="flex flex-row ">
                             <div class="flex "> </div> 
                             <div class="flex">Cancel</div>
                        </div>
-                    </button> 
+                    </div> 
                     <span class="mr-4"></span>
-                     <button class="@primaryButton"
+                     <div class="@primaryButton"
                         hx-post="/admin/businesshour/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
                        <div class="flex flex-row ">
@@ -34,7 +34,7 @@
                                 </div> 
                             <div class="flex">Save</div>
                        </div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -62,6 +62,35 @@
                     <span asp-validation-for="@Model.Status" class="@errorClass"></span>
                 </div>
                
+                @* timezone *@
+                <div class="@controlClass">
+                    <label asp-for="@Model.Timezone" class="@labelClass">
+                        Timezone
+                    </label>
+                    <select asp-for="@Model.Timezone" class="@inputClass" >
+                        <option value=""></option>
+                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
+                        {
+                        <option value="">@item.DisplayName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.Timezone" class="@errorClass"></span>
+                </div>
+
+                <div class="@controlClass">
+                    <label asp-for="@Model.Timezone" class="@labelClass">
+                        Timezone
+                    </label>
+                     <input list="timezones" asp-for="@Model.Name" class="@inputClass" />
+                    <datalist id="timezones" >
+                        <option value=""></option>
+                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
+                        {
+                        <option value="@item.DisplayName">@item.DisplayName</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Timezone" class="@errorClass"></span>
+                </div>
 
             </div>
             <div class="grid grid-cols-1 gap-5 py-4">
