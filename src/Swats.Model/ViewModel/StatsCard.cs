@@ -6,3 +6,17 @@ public class StatsCard
     public int Count { get; init; }
     public string? ExtraClass { get; init; }
 }
+
+public class PanelLink
+{
+    public string Title { get; set; }
+    public string IconName { get; set; }
+    public string Location { get; set; }
+}
+
+public class IndexPartial
+{
+    public string Title { get; set; }
+    public string CreateTitle { get; set; }
+    public string CreateLocation { get; set; }
+}

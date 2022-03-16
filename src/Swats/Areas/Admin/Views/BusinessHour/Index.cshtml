@@ -1,5 +1,7 @@
+@model IndexPartial
+
 @{
   ViewData["Title"] = "Business Hour";
 }
 
-@await Html.PartialAsync("~/Areas/Admin/Views/BusinessHour/_Index.cshtml")
+@await Html.PartialAsync("~/Areas/Admin/Views/_Index.cshtml", Model)

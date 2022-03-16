@@ -27,7 +27,7 @@ builder.Services
     .AddCookie();
 builder.Services.ConfigureApplicationCookie(o =>
 {
-    o.LoginPath = new PathString("/user/login");
+    o.LoginPath = new PathString("/auth/login");
     o.ExpireTimeSpan = TimeSpan.FromHours(3);
 });
 builder.Services

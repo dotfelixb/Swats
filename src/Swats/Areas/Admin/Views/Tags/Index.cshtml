@@ -1,5 +1,7 @@
+@model IndexPartial
+
 @{
-  ViewData["Title"] = "Tags";
+    ViewData["Title"] = "Tags";
 }
 
-@await Html.PartialAsync("~/Areas/Admin/Views/Tags/_Index.cshtml")
+@await Html.PartialAsync("~/Areas/Admin/Views/_Index.cshtml", Model)
