@@ -7,13 +7,16 @@ using Swats.Data.Repository;
 using Swats.Infrastructure;
 using Swats.Model;
 using Swats.Model.Domain;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
-builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>())
-    .AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o=>
+{
+    o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+}).AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
 builder.Services.AddAutoMapper(typeof(ModelProfiles));
 

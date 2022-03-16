@@ -2,9 +2,9 @@
 
 public class StatsCard
 {
-    public string? Title { get; init; }
+    public string Title { get; init; }
     public int Count { get; init; }
-    public string? ExtraClass { get; init; }
+    public string ExtraClass { get; init; }
 }
 
 public class PanelLink

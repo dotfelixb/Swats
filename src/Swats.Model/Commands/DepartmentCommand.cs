@@ -49,10 +49,11 @@ public class CreateBusinessHourCommand : IRequest<Result>
     public DefaultStatus Status { get; set; }
 }
 
-public class CreateTicketTypeCommand : IRequest<Result>
+public class CreateTicketTypeCommand : IRequest<Result<Guid>>
 {
     public string Name { get; set; }
     public string Description { get; set; }
     public string Color { get; set; }
     public DefaultType Visibility { get; set; }
+    public Guid CreatedBy { get; set; }
 }

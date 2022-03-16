@@ -1,7 +1,7 @@
-@model CreateTagCommand
+@model TicketType
 
 @{
   ViewData["Title"] = "Ticket Type - " + ViewData["EditTitle"];
 }
 
-@await Html.PartialAsync("~/Areas/Admin/Views/TicketType/_Create.cshtml", Model)
+@await Html.PartialAsync("~/Areas/Admin/Views/TicketType/_Edit.cshtml", Model)

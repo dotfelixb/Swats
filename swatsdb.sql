@@ -151,6 +151,35 @@ CREATE TABLE Source
 	, updatedat TIMESTAMPTZ DEFAULT(now())
 );
 
+CREATE TABLE tickettype
+(
+    id UUID PRIMARY KEY
+	, name VARCHAR(50)
+	, description VARCHAR
+	, color VARCHAR(20)
+	, visibility INT
+	, rowversion UUID NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby UUID
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+CREATE TABLE tickettypeauditlog
+(
+    id UUID PRIMARY KEY
+	, target UUID
+	, actionname VARCHAR(50) 
+	, description VARCHAR(150) 
+	, objectname VARCHAR(50) 
+	, objectdata VARCHAR 
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES tickettype(id) ON DELETE CASCADE
+);
+
+
 CREATE TABLE table
 (
     id UUID PRIMARY KEY

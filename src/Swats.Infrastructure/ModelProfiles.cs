@@ -8,5 +8,6 @@ public class ModelProfiles : AutoMapper.Profile
     public ModelProfiles()
     {
         CreateMap<CreateTicketCommand, Ticket>();
+        CreateMap<CreateTicketTypeCommand, TicketType>();
     }
 }

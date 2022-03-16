@@ -1,8 +1,10 @@
-﻿namespace Swats.Model.Domain;
+﻿using MassTransit;
+
+namespace Swats.Model.Domain;
 
 public class Ticket : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public string Code { get; set; }
     public string Subject { get; set; }
     public string Requester { get; set; }
@@ -17,23 +19,34 @@ public class Ticket : DbAudit
 
 }
 
+public class TicketType : DbAudit
+{
+    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Color { get; set; }
+    public DefaultType Visibility { get; set; }
+}
+
+public class TicketTypeAuditLog : DbAuditLog { }
+
 public class Tag : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public string Code { get; set; }
     public string Name { get; set; }
 }
 
 public class TicketTag : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public Guid Ticket { get; set; }
     public Guid Tag { get; set; }
 }
 
 public class TicketFellow : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public Guid Ticket { get; set; }
     public Guid Fellow { get; set; }
     public int Points { get; set; }
@@ -42,14 +55,14 @@ public class TicketFellow : DbAudit
 
 public class Department : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public string Code { get; set; }
     public string Name { get; set; }
 }
 
 public class Sla : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public string Code { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -58,14 +71,14 @@ public class Sla : DbAudit
 
 public class TicketSla : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public Guid Ticket { get; set; }
     public Guid Sla { get; set; }
 }
 
 public class TicketComment : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public string Code { get; set; }
     public Guid Ticket { get; set; }
     public Guid Comment { get; set; }
@@ -80,7 +93,7 @@ public class TicketComment : DbAudit
 
 public class Attachment : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public Guid Target { get; set; }
     public AttachmentSource Source { get; set; }
     public string FilePath { get; set; }
