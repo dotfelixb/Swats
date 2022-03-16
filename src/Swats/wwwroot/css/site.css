@@ -1,7 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 input.input-validation-error, 
 select.input-validation-error, 
 textarea.input-validation-error {  
   border: 2px solid rgb(252, 165, 165);
+}
+
+.noop {
+    @apply border-l-4 border-indigo-500;
 }
 
 textarea { resize: none; }
