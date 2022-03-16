@@ -1,0 +1,7 @@
+@model CreateTagCommand
+
+@{
+  ViewData["Title"] = "New Ticket Type - Unsave";
+}
+
+@await Html.PartialAsync("~/Areas/Admin/Views/TicketType/_Create.cshtml", Model)

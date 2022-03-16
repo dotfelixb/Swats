@@ -48,3 +48,11 @@ public class CreateBusinessHourCommand : IRequest<Result>
     public string[] Holidays { get; set; }
     public DefaultStatus Status { get; set; }
 }
+
+public class CreateTicketTypeCommand : IRequest<Result>
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Color { get; set; }
+    public DefaultType Visibility { get; set; }
+}

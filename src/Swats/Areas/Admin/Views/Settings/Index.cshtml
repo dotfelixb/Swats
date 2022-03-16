@@ -57,6 +57,9 @@
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "calendar", title = "Business Hours", location="/admin/businesshour" })
         </div>
         <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "trail-sign", title = "Ticket Type", location="/admin/tickettype" })
+        </div>
+        <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "flash", title = "Tags", location="/admin/tags" })
         </div>
         <div>
