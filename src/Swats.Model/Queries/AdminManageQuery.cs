@@ -1,4 +1,6 @@
-﻿using Swats.Model.Domain;
+﻿using FluentResults;
+using MediatR;
+using Swats.Model.Domain;
 
 namespace Swats.Model.Queries;
 
@@ -13,4 +15,9 @@ public class FetchTicketType
     public string Description { get; set; }
     public string Color { get; set; }
     public DefaultType Visibility { get; set; }
+}
+
+public class GetTicketTypeCommand : IRequest<Result<TicketType>>
+{
+    public Guid Id { get; set; }
 }

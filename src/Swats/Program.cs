@@ -19,6 +19,7 @@ builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>())
 }).AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
 builder.Services.AddAutoMapper(typeof(ModelProfiles));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // auth
 builder.Services.AddIdentity<AuthUser, AuthRole>(o =>

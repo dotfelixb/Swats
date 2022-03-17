@@ -40,7 +40,7 @@ public class AuthController : FrontEndController
     [AllowAnonymous]
     public IActionResult Register()
     {
-        return View();
+        return Content("Ask your admin to register you");
     }
 
     [HttpPost]
@@ -67,7 +67,7 @@ public class AuthController : FrontEndController
 
             var claims = new List<Claim>
             {
-                new Claim("Id", user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email)
             };

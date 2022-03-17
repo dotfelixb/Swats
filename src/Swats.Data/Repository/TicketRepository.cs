@@ -7,11 +7,14 @@ namespace Swats.Data.Repository;
 
 public interface ITicketRepository
 {
+    Task<long> GenerateTicketCode(CancellationToken cancellationToken);
+    
     Task<int> CreateTicket(Ticket ticket, CancellationToken cancellationToken);
 
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<long> GenerateTicketCode(CancellationToken cancellationToken);
+    Task<TicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
+
 }
 
 public class TicketRepository : BasePostgresRepository, ITicketRepository
@@ -107,6 +110,16 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             var query = "SELECT NEXTVAL('TicketCode');";
 
             return conn.QuerySingleAsync<long>(query);
+        });
+    }
+
+    public Task<TicketType> GetTicketType(Guid id, CancellationToken cancellationToken)
+    {
+        return WithConnection(async conn =>
+        {
+            var query = @"SELECT * FROM public.tickettype WHERE id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<TicketType>(query, new { Id = id});
         });
     }
 }
