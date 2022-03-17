@@ -21,3 +21,9 @@ public class GetTicketTypeCommand : IRequest<Result<TicketType>>
 {
     public Guid Id { get; set; }
 }
+
+public class ListTicketTypeCommand : IRequest<Result<IEnumerable<TicketType>>>
+{
+    public int Offset { get; set; } = 0;
+    public int Limit { get; set; } = 20;
+}

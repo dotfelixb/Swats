@@ -1,7 +1,7 @@
-@model IndexPartial
+@model IEnumerable<TicketType>
 
 @{
     ViewData["Title"] = "Ticket Type";
 }
 
-@await Html.PartialAsync("~/Areas/Admin/Views/_Index.cshtml", Model)
+@await Html.PartialAsync("~/Areas/Admin/Views/TicketType/_Index.cshtml", Model)

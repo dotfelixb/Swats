@@ -1,0 +1,84 @@
+@model IEnumerable<TicketType>
+@{
+
+}
+
+<div id="main-swap">
+  <section class="flex w-full font-bold text-2xl pb-5">
+    <div class="flex w-1/2">Ticket Type</div>
+    <div class="flex w-1/2 justify-end">
+      <div class="">
+        <button class="btn-primary" hx-get="/admin/tickettype/create" hx-trigger="click" hx-target="#main-swap"
+          hx-swap="outerHTML" hx-push-url="true">
+          New Ticket Type
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class=" bg-white drop-shadow-lg rounded">
+    @* filter fields *@
+    <div class="grid grid-cols-5 gap-4 pb-3">
+      <div>
+        <div class="w-full">
+          <input class="form-input-search" placeholder="Name" />
+        </div>
+      </div>
+      <div>
+        <div class="w-full">
+          <input class="form-input-search" placeholder="Name" />
+        </div>
+      </div>
+    </div>
+
+    @* filtered fields display *@
+    <div class="w-full">
+      <span class="text-xs rounded bg-indigo-500 text-white px-2 py-1 m-1">Filter</span>
+      <span class="text-xs rounded bg-indigo-500 text-white px-2 py-1 m-1">Name</span>
+    </div>
+
+    <div class="w-full border-t-2 border-gray-50">
+      <table class="w-full table-auto">
+        <thead>
+          <tr class="text-left px-3" style="background-color: #eaeaea;">
+            <th class="px-3 py-1">
+              <p>Name</p>
+              <p style="color: #6b6b6b;">Description</p>
+            </th>
+            <th class="px-3 py-1">
+              <p>Visibility</p>
+              <p style="color: #6b6b6b;">Color</p>
+            </th>
+            <th class="px-3 py-1">
+              <p>Created By</p>
+              <p style="color: #6b6b6b;">Created At</p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model)
+          {
+            <tr class="px-10"> 
+              <td class="px-3 py-1">
+                <p>
+                  <a asp-area="admin" asp-controller="tickettype" asp-action="edit" asp-route-id="@item.Id">
+                    @item.Name
+                  </a>
+                </p>
+                <p style="color: #9b9b9b;">@item.Description</p>
+              </td>
+              <td class="px-3 py-1">
+                <p>@item.Visibility</p>
+                <p style="color: #9b9b9b;">@item.Color</p>
+              </td>
+              <td class="px-3 py-1">
+                <p>@item.CreatedBy</p>
+                <p style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -6,10 +6,10 @@ public class DbAudit
 {
     public Guid RowVersion { get; set; } = Guid.NewGuid();
     public bool Deleted { get; set; }
-    public Guid? CreatedBy { get; set; }
-    public DateTimeOffset? CreatedAt { get; set; }
-    public Guid? UpdatedBy { get; set; }
-    public DateTimeOffset? UpdatedAt { get; set; }
+    public Guid CreatedBy { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public Guid UpdatedBy { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }
 
 public class DbAuditLog

@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Threading;
+using Dapper;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
@@ -14,6 +15,8 @@ public interface ITicketRepository
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<TicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<TicketType>> ListTicketTypes(int offset, int limit, CancellationToken cancellationToken);
 
 }
 
@@ -120,6 +123,16 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             var query = @"SELECT * FROM public.tickettype WHERE id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<TicketType>(query, new { Id = id});
+        });
+    }
+
+    public Task<IEnumerable<TicketType>> ListTicketTypes(int offset, int limit, CancellationToken cancellationToken)
+    {
+        return WithConnection(async conn =>
+        {
+            var query = @"SELECT * FROM public.tickettype OFFSET @Offset LIMIT @Limit";
+
+            return await conn.QueryAsync<TicketType>(query, new { offset, limit});
         });
     }
 }

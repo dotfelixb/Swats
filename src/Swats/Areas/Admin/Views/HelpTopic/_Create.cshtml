@@ -1,12 +1,6 @@
 @model CreateHelpTopicCommand
 
 @{
-    var controlClass = "w-full px-3";
-    var labelClass = "block text-gray-600 text-xs py-1";
-    var inputClass = "block text-sm py-2 w-full rounded bg-gray-50 border-gray-300 focus:border-indigo-300 focus:ring-indigo-300";
-    var errorClass = "text-xs text-red-400";
-    var primaryButton = "text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-800";
-    var defaultButton = "text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-400";
 
 }
 
@@ -16,7 +10,7 @@
             <div class="flex w-1/2">New Help Topic</div>
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
-                    <button class="@defaultButton"
+                    <button class="btn-default"
                         hx-post="/admin/helptopic" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
                         <div class="flex flex-row ">
@@ -25,7 +19,7 @@
                        </div>
                     </button> 
                     <span class="mr-4"></span>
-                     <button class="@primaryButton"
+                     <button class="btn-primary"
                         hx-post="/admin/helptopic/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
                         hx-push-url="true">
                        <div class="flex flex-row ">
@@ -43,63 +37,63 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @* topic *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.Topic" class="@labelClass">
+                <div class="form-control">
+                    <label asp-for="@Model.Topic" class="form-label">
                         Topic
                     </label>
-                    <input asp-for="@Model.Topic" class="@inputClass" />
-                    <span asp-validation-for="@Model.Topic" class="@errorClass"></span>
+                    <input asp-for="@Model.Topic" class="form-input" />
+                    <span asp-validation-for="@Model.Topic" class="form-input-error"></span>
                 </div>
 
                 @* type *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.Type" class="@labelClass">
+                <div class="form-control">
+                    <label asp-for="@Model.Type" class="form-label">
                         Type
                     </label>
-                    <select asp-for="@Model.Type" class="@inputClass" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
+                    <select asp-for="@Model.Type" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
                         <option value=""></option>
                     </select>
-                    <span asp-validation-for="@Model.Type" class="@errorClass"></span>
+                    <span asp-validation-for="@Model.Type" class="form-input-error"></span>
                 </div>
 
                 @* status *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.Status" class="@labelClass">
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="@inputClass" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
                         <option value=""></option>
                     </select>
-                    <span asp-validation-for="@Model.Status" class="@errorClass"></span>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
 
                 @* linked department *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.LinkedDepartment" class="@labelClass">
+                <div class="form-control">
+                    <label asp-for="@Model.LinkedDepartment" class="form-label">
                         Linked Department
                     </label>
-                    <input asp-for="@Model.LinkedDepartment" class="@inputClass" />
-                    <span asp-validation-for="@Model.LinkedDepartment" class="@errorClass"></span>
+                    <input asp-for="@Model.LinkedDepartment" class="form-input" />
+                    <span asp-validation-for="@Model.LinkedDepartment" class="form-input-error"></span>
                 </div>
 
                 @* default department *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.DefaultDepartment" class="@labelClass">
+                <div class="form-control">
+                    <label asp-for="@Model.DefaultDepartment" class="form-label">
                         Default Department
                     </label>
-                    <input asp-for="@Model.DefaultDepartment" class="@inputClass" />
-                    <span asp-validation-for="@Model.DefaultDepartment" class="@errorClass"></span>
+                    <input asp-for="@Model.DefaultDepartment" class="form-input" />
+                    <span asp-validation-for="@Model.DefaultDepartment" class="form-input-error"></span>
                 </div>
 
             </div>
             <div class="grid grid-cols-1 gap-5 py-4">
                 @* note *@
-                <div class="@controlClass">
-                    <label asp-for="@Model.Note" class="@labelClass">
+                <div class="form-control">
+                    <label asp-for="@Model.Note" class="form-label">
                        Note
                     </label>
-                    <textarea asp-for="@Model.Note" class="@inputClass" cols="30" rows="5"></textarea>
-                    <span asp-validation-for="@Model.Note" class="@errorClass"></span>
+                    <textarea asp-for="@Model.Note" class="form-input" cols="30" rows="5"></textarea>
+                    <span asp-validation-for="@Model.Note" class="form-input-error"></span>
                 </div>
             </div>
         </div>

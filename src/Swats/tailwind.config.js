@@ -3,7 +3,8 @@
 module.exports = {
     content: [
         "./Views/**/*.{html,cshtml}",
-        "./Shared/**/*.{html,cshtml}"
+        "./Shared/**/*.{html,cshtml}",
+        "./Areas/Admin/Views/**/*.{html,cshtml}"
     ],
     theme: {
         extend: {

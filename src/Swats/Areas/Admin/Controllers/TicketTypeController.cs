@@ -30,20 +30,19 @@ public class TicketTypeController : FrontEndController
         _mediatr = mediatr;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketTypeController)}::{nameof(Index)}");
-
-        var partial = new IndexPartial
+        var query = new ListTicketTypeCommand{};
+        var result = await _mediatr.Send(query);
+        if(result.IsFailed)
         {
-            CreateLocation = "/admin/tickettype/create",
-            CreateTitle = "New Ticket Type",
-            Title = "Ticket Types"
-        };
-
+            return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        }
+        
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/_Index.cshtml", partial)
-                : View(partial);
+                ? PartialView("~/Areas/Admin/Views/_Index.cshtml",result.Value)
+                : View(result.Value);
     }
 
     public async Task<IActionResult> Edit(Guid id)
