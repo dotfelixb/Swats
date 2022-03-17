@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
+using Swats.Model.Queries;
 
 namespace Swats.Data.Repository;
 
@@ -16,7 +17,7 @@ public interface ITicketRepository
 
     Task<TicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<TicketType>> ListTicketTypes(int offset, int limit, CancellationToken cancellationToken);
+    Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
 }
 
@@ -126,13 +127,24 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public Task<IEnumerable<TicketType>> ListTicketTypes(int offset, int limit, CancellationToken cancellationToken)
+    public Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
-            var query = @"SELECT * FROM public.tickettype OFFSET @Offset LIMIT @Limit";
+            var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
+            var query = $@"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM tickettype t
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
 
-            return await conn.QueryAsync<TicketType>(query, new { offset, limit});
+            return await conn.QueryAsync<FetchTicketType>(query, new { offset, limit });
         });
     }
 }

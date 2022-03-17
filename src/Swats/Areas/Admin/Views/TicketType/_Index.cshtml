@@ -1,4 +1,4 @@
-@model IEnumerable<TicketType>
+@model IEnumerable<FetchTicketType>
 @{
 
 }
@@ -40,41 +40,47 @@
     <div class="w-full border-t-2 border-gray-50">
       <table class="w-full table-auto">
         <thead>
-          <tr class="text-left px-3" style="background-color: #eaeaea;">
-            <th class="px-3 py-1">
-              <p>Name</p>
-              <p style="color: #6b6b6b;">Description</p>
-            </th>
-            <th class="px-3 py-1">
-              <p>Visibility</p>
-              <p style="color: #6b6b6b;">Color</p>
-            </th>
-            <th class="px-3 py-1">
-              <p>Created By</p>
-              <p style="color: #6b6b6b;">Created At</p>
-            </th>
-          </tr>
+            <tr class="text-left px-3" style="background-color: #eaeaea;">
+                <th class="px-3 py-3 font-semibold text-xs">
+                    <p>Name</p>
+                    <p style="color: #6b6b6b;">Description</p>
+                </th>
+                <th class="px-3 py-3 font-semibold text-xs">
+                    <p>Visibility</p>
+                    <p style="color: #6b6b6b;">Color</p>
+                </th>
+                <th class="px-3 py-3 font-semibold text-xs">
+                    <p>Created By</p>
+                    <p style="color: #6b6b6b;">Created At</p>
+                </th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
           @foreach (var item in Model)
           {
-            <tr class="px-10"> 
-              <td class="px-3 py-1">
-                <p>
-                  <a asp-area="admin" asp-controller="tickettype" asp-action="edit" asp-route-id="@item.Id">
-                    @item.Name
-                  </a>
-                </p>
-                <p style="color: #9b9b9b;">@item.Description</p>
-              </td>
-              <td class="px-3 py-1">
-                <p>@item.Visibility</p>
-                <p style="color: #9b9b9b;">@item.Color</p>
-              </td>
-              <td class="px-3 py-1">
-                <p>@item.CreatedBy</p>
-                <p style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
-              </td>
+            <tr class="px-10 cursor-pointer"
+                hx-get="/admin/tickettype/edit/@item.Id"
+                hx-trigger="click"
+                hx-target="#main-swap"
+                hx-swap="outerHTML"
+                hx-push-url="true">
+                <td class="px-3 py-1">
+                    <p class="text-xs">@item.Name </p>
+                    <p class="text-xs" style="color: #9b9b9b;">@item.Description</p>
+                </td>
+               
+                <td class="px-3 py-3">
+                    <p class="text-xs">@item.Visibility</p>
+                    <p class="text-xs" style="color: #9b9b9b;">@item.Color</p>
+                </td>
+                <td class="px-3 py-3">
+                    <p class="text-xs">@item.CreatedByName</p>
+                    <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
+                </td>
+                <td>
+                    <span class="text-gray-300" ><ion-icon name="chatbubbles"></ion-icon></span>
+                </td>
             </tr>
           }
         </tbody>
