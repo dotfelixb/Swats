@@ -70,7 +70,13 @@
                     <label asp-for="@Model.BusinessHour" class="form-label">
                         Business Hour
                     </label>
-                    <input asp-for="@Model.BusinessHour" class="form-input" />
+                    <select asp-for="@Model.BusinessHour" class="form-input" >
+                        <option value=""></option>
+                        @foreach (var item in Model.BusinessHours)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                     <span asp-validation-for="@Model.BusinessHour" class="form-input-error"></span>
                 </div>
 

@@ -35,6 +35,7 @@ public class TicketController : FrontEndController
     public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
+       
         var ticketTypeResult = await _mediatr.Send(new ListTicketTypeCommand { });
         if (ticketTypeResult.IsFailed)
         {
