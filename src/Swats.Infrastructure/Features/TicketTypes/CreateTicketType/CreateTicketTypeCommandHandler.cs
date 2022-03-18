@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentResults;
-using MassTransit;
 using MediatR;
 using Swats.Data.Repository;
 using Swats.Model.Commands;
@@ -23,8 +22,6 @@ public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCo
     public async Task<Result<Guid>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
         var ticketType = _mapper.Map<CreateTicketTypeCommand, TicketType>(request);
-       //TODO : use auto mapper
-        ticketType.UpdatedBy = ticketType.CreatedBy;
 
         var auditLog = new DbAuditLog
         {
@@ -37,7 +34,7 @@ public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCo
         };
 
         var rst= await _ticketRepository.CreateTicketType(ticketType, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(ticketType.Id) : Result.Fail<Guid>("Not able to crea");
+        return rst > 0 ? Result.Ok(ticketType.Id) : Result.Fail<Guid>("Not able to create now!");
     }
 }
 

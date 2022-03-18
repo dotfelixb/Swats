@@ -18,4 +18,16 @@
     <ProjectReference Include="..\Swats.Data\Swats.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Features\BusinessHour\" />
+    <None Remove="Features\BusinessHour\CreateBusinessHour\" />
+    <None Remove="Features\BusinessHour\ListBusinessHour\" />
+    <None Remove="Features\BusinessHour\GetBusinessHour\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\BusinessHour\" />
+    <Folder Include="Features\BusinessHour\CreateBusinessHour\" />
+    <Folder Include="Features\BusinessHour\ListBusinessHour\" />
+    <Folder Include="Features\BusinessHour\GetBusinessHour\" />
+  </ItemGroup>
 </Project>

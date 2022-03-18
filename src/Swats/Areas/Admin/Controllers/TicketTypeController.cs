@@ -24,11 +24,12 @@ public class TicketTypeController : FrontEndController
         , ILogger<TicketTypeController> logger
         , IMediator mediatr)
     {
-        ;
         _httpAccessor = contextAccessor;
         _logger = logger;
         _mediatr = mediatr;
     }
+
+    #region GET
 
     public async Task<IActionResult> Index()
     {
@@ -41,7 +42,7 @@ public class TicketTypeController : FrontEndController
         }
         
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/_Index.cshtml",result.Value)
+                ? PartialView("~/Areas/Admin/Views/TicketType/_Index.cshtml",result.Value)
                 : View(result.Value);
     }
 
@@ -70,6 +71,10 @@ public class TicketTypeController : FrontEndController
              : View();
     }
 
+    #endregion
+
+    #region POST
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateTicketTypeCommand command)
     {
@@ -90,8 +95,9 @@ public class TicketTypeController : FrontEndController
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {
-            _logger.LogInformation($"{msg} - Unable to get login user");
-            TempData["CreateError"] = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
+            var reason = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
+            _logger.LogError($"{msg} - {reason}");
+            TempData["CreateError"] = reason;
 
             return Request.IsHtmx()
                ? PartialView("~/Areas/Admin/Views/TicketType/_Create.cshtml", command)
@@ -100,4 +106,6 @@ public class TicketTypeController : FrontEndController
 
         return RedirectToAction("Edit", new { Id = result.Value});
     }
+
+    #endregion
 }

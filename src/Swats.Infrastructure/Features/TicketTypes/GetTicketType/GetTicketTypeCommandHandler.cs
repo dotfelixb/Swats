@@ -20,7 +20,7 @@ internal class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeComman
         var rst = await _ticketRepository.GetTicketType(request.Id, cancellationToken);
 
         return rst.Id == Guid.Empty 
-            ? Result.Fail<FetchTicketType>($"Ticket Type with Id {request.Id} does not exist")
+            ? Result.Fail<FetchTicketType>($"Ticket Type with Id {request.Id} does not exist!")
             : Result.Ok(rst);
     }
 }

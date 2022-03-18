@@ -119,6 +119,8 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 
     public Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return WithConnection(async conn =>
         {
             var query = @"

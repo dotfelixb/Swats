@@ -179,6 +179,36 @@ CREATE TABLE tickettypeauditlog
 	, FOREIGN KEY (target) REFERENCES tickettype(id) ON DELETE CASCADE
 );
 
+CREATE TABLE businesshour
+(
+    id UUID PRIMARY KEY
+	, name VARCHAR(50)
+	, description VARCHAR
+	, timezone VARCHAR(50)
+	, status INT
+	, holidays VARCHAR[][]
+	, rowversion UUID NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby UUID
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+
+CREATE TABLE businesshourauditlog
+(
+    id UUID PRIMARY KEY
+	, target UUID NOT NULL
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES businesshour(id) ON DELETE CASCADE
+);
+
 
 CREATE TABLE table
 (
@@ -201,4 +231,5 @@ CREATE TABLE auditlog
 	, objectdata VARCHAR NOT NULL
     , createdby UUID
 	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES (id) ON DELETE CASCADE
 );

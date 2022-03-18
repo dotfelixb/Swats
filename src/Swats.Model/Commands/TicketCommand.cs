@@ -1,5 +1,6 @@
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Model.Domain;
 
 namespace Swats.Model.Commands;
@@ -13,6 +14,7 @@ public class CreateTicketCommand : IRequest<Result>
     public string Agent { get; set; } // user by api to identify the swats user that created this ticket
     public TicketSource Source { get; set; }
     public string Type { get; set; }
+    public IEnumerable<SelectListItem> TicketTypes { get; set; }
     public string Department { get; set; }
     public string HelpTopic { get; set; }
     public TicketPriority Priority { get; set; } = TicketPriority.Low;

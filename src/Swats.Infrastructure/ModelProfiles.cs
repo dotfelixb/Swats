@@ -7,7 +7,19 @@ public class ModelProfiles : AutoMapper.Profile
 {
     public ModelProfiles()
     {
-        CreateMap<CreateTicketCommand, Ticket>();
-        CreateMap<CreateTicketTypeCommand, TicketType>();
+        CreateMap<CreateTicketCommand, Ticket>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy))
+            .ForMember(d => d.RowVersion, opt => Guid.NewGuid());
+        CreateMap<CreateTicketTypeCommand, TicketType>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s=> s.CreatedBy))
+            .ForMember(d => d.RowVersion, opt => Guid.NewGuid());
+        CreateMap<CreateBusinessHourCommand, BusinessHour>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy))
+            .ForMember(d => d.RowVersion, opt => Guid.NewGuid());
+
+        /**
+         *.ForMember(d => d.ParentCustomer,
+         *          opt => opt.MapFrom(s => s.ParentCustomer.ToGuid()))
+         */
     }
 }

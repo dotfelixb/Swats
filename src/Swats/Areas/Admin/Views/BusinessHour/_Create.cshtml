@@ -69,29 +69,15 @@
                         Timezone
                     </label>
                     <select asp-for="@Model.Timezone" class="form-input" >
-                        <option value=""></option>
-                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
-                        {
-                        <option value="">@item.DisplayName</option>
-                        }
-                    </select>
-                    <span asp-validation-for="@Model.Timezone" class="form-input-error"></span>
-                </div>
-
-                @* <div class="form-control">
-                    <label asp-for="@Model.Timezone" class="form-label">
-                        Timezone
-                    </label>
-                     <input list="timezones" asp-for="@Model.Name" class="form-input" />
-                    <datalist id="timezones" >
-                        <option value=""></option>
+                        @* TODO : Set to users locale *@
+                        <option value="(UTC) Coordinated Universal Time" selected>(UTC) Coordinated Universal Time</option>
                         @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
                         {
                         <option value="@item.DisplayName">@item.DisplayName</option>
                         }
-                    </datalist>
+                    </select>
                     <span asp-validation-for="@Model.Timezone" class="form-input-error"></span>
-                </div> *@
+                </div>
 
             </div>
             <div class="grid grid-cols-1 gap-5 py-4">
