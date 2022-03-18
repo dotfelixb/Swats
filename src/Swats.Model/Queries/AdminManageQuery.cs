@@ -8,7 +8,7 @@ internal class AdminManageQuery
 {
 }
 
-public class GetTicketTypeCommand : IRequest<Result<TicketType>>
+public class GetTicketTypeCommand : IRequest<Result<FetchTicketType>>
 {
     public Guid Id { get; set; }
 }
@@ -22,6 +22,7 @@ public class ListTicketTypeCommand : IRequest<Result<IEnumerable<FetchTicketType
 
 public class FetchTicketType : TicketType
 {
+    public string ImageCode { get; set; }
     public string CreatedByName { get; set; }
     public string UpdatedByName { get; set; }
 }

@@ -6,7 +6,7 @@ using Swats.Model.Queries;
 
 namespace Swats.Infrastructure.Features.TicketTypes.GetTicketType;
 
-internal class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeCommand, Result<TicketType>>
+internal class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeCommand, Result<FetchTicketType>>
 {
     private readonly ITicketRepository _ticketRepository;
 
@@ -15,12 +15,12 @@ internal class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeComman
         _ticketRepository = ticketRepository;
     }
 
-    public async Task<Result<TicketType>> Handle(GetTicketTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<FetchTicketType>> Handle(GetTicketTypeCommand request, CancellationToken cancellationToken)
     {
         var rst = await _ticketRepository.GetTicketType(request.Id, cancellationToken);
 
         return rst.Id == Guid.Empty 
-            ? Result.Fail<TicketType>($"Ticket Type with Id {request.Id} does not exist")
+            ? Result.Fail<FetchTicketType>($"Ticket Type with Id {request.Id} does not exist")
             : Result.Ok(rst);
     }
 }

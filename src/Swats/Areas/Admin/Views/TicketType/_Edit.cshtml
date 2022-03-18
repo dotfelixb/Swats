@@ -1,7 +1,7 @@
-@model TicketType
+@model FetchTicketType
 
 @{
-  
+  ViewData["Title"] = Model.Name;
 }
 
 <div id="main-swap">
@@ -18,7 +18,74 @@
     </div>
   </section>
 
-  <div class="w-full flex bg-white drop-shadow-lg rounded px-10 py-10">
+  <div class="w-full flex flex-row">
+    <div style="width: 220px" class="">
+        <div class=" pr-2">
+            <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@Model.Name" />
+        </div>
+      <ul class="edit-sidebar py-5">
+        <li>
+            <div class="">Created By</div>
+            <div class="">@Model.CreatedByName</div>
+        </li>
+        <li>
+          <div>
+            <div>Created At</div>
+            <div>@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <div>Updated By</div>
+            <div>@Model.UpdatedByName</div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <div>Updated At</div>
+            <div>@Model.UpdatedAt.ToString("MMM dd, yyyy")</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        @* name *@
+        <div class="form-control">
+            <label asp-for="@Model.Name" class="form-label">
+                Name
+            </label>
+            <input asp-for="@Model.Name" class="form-input" />
+        </div>
 
+         @* visibility *@
+                <div class="form-control">
+                    <label asp-for="@Model.Visibility" class="form-label">
+                        Visibility
+                    </label>
+                    <select asp-for="@Model.Visibility" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
+                    </select>
+                </div>
+
+                   @* color *@
+                <div class="form-control">
+                    <label asp-for="@Model.Color" class="form-label">
+                        Color
+                    </label>
+                    <input asp-for="@Model.Color" class="form-input" />
+                </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 py-4">
+                @* description *@
+                <div class="form-control">
+                    <label asp-for="@Model.Description" class="form-label">
+                       Description
+                    </label>
+                    <textarea asp-for="@Model.Description" class="form-input" cols="30" rows="5"></textarea>
+                </div>
+            </div>
+    </div>
   </div>
 </div>

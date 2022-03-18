@@ -1,4 +1,4 @@
-@model CreateTagCommand
+@model CreateTicketTypeCommand
 
 @{
     
@@ -47,13 +47,13 @@
 
                  @* status *@
                 <div class="form-control">
-                    <label asp-for="@Model.Name" class="form-label">
+                    <label asp-for="@Model.Visibility" class="form-label">
                         Visibility
                     </label>
-                    <select asp-for="@Model.Name" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
+                    <select asp-for="@Model.Visibility" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
                         <option value=""></option>
                     </select>
-                    <span asp-validation-for="@Model.Name" class="form-input-error"></span>
+                    <span asp-validation-for="@Model.Visibility" class="form-input-error"></span>
                 </div>
 
             </div>

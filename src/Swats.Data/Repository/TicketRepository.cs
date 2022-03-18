@@ -15,7 +15,7 @@ public interface ITicketRepository
 
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<TicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
+    Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
@@ -117,13 +117,18 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public Task<TicketType> GetTicketType(Guid id, CancellationToken cancellationToken)
+    public Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken)
     {
         return WithConnection(async conn =>
         {
-            var query = @"SELECT * FROM public.tickettype WHERE id = @Id";
+            var query = @"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM tickettype t
+                WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<TicketType>(query, new { Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id});
         });
     }
 

@@ -54,6 +54,7 @@ public class TicketTypeController : FrontEndController
         {
             return NotFound(result.Reasons.FirstOrDefault()?.Message);
         }
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/tickettype/edit/{id}".GenerateQrCode();
 
         return Request.IsHtmx()
                 ? PartialView("~/Areas/Admin/Views/TicketType/_Edit.cshtml", result.Value)
