@@ -8,7 +8,7 @@ namespace Swats.Model.Commands;
 public class CreateDepartmentCommand : IRequest<Result>
 {
     public string Name { get; set; }
-    public Guid Manager { get; set; }
+    public string Manager { get; set; }
     public string BusinessHour { get; set; }
     public IEnumerable<SelectListItem> BusinessHours { get; set; }
     public string OutgoingEmail { get; set; }
