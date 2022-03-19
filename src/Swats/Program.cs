@@ -42,6 +42,7 @@ builder.Services.AddTransient<IRoleStore<AuthRole>, AuthRoleRepository>();
 // repositories
 builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
 builder.Services.AddSingleton<IManageRepository, ManageRepository>();
+builder.Services.AddSingleton<IAgentRepository, AgentReposiory>();
 
 var app = builder.Build();
 

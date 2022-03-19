@@ -78,16 +78,16 @@ public class BusinessHourController : FrontEndController
     [HttpPost]
     public async Task<IActionResult> Create(CreateBusinessHourCommand command)
     {
-        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Create)}");
+        var msg = $"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Create)}";
+        _logger.LogInformation(msg);
 
         // get login user id
         var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-        var msg = $"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Create)}";
-        _logger.LogInformation(msg);
-
         if (!ModelState.IsValid)
         {
+            _logger.LogError($"{msg} - Invalid Model state");
+
             return Request.IsHtmx()
                 ? PartialView("~/Areas/Admin/Views/BusinessHour/_Create.cshtml", command)
                 : View(command);

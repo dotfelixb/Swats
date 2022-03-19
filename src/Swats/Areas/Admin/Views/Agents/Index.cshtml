@@ -1,7 +1,7 @@
-﻿@model IndexPartial
+﻿@model IEnumerable<FetchedAgent>
 
 @{
     ViewData["Title"] = "Agents";
 }
 
-@await Html.PartialAsync("~/Areas/Admin/Views/_Index.cshtml", Model)
+@await Html.PartialAsync("~/Areas/Admin/Views/Agents/_Index.cshtml", Model)

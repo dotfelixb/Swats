@@ -2,6 +2,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Model.Domain;
+using Swats.Model.Queries;
 
 namespace Swats.Model.Commands;
 
@@ -20,4 +21,12 @@ public class CreateTicketCommand : IRequest<Result>
     public TicketPriority Priority { get; set; } = TicketPriority.Low;
     public TicketStatus Status { get; set; } = TicketStatus.New;
     public Guid CreatedBy { get; set; }
+}
+
+public class GetTicketTypeCommand : GetType, IRequest<Result<FetchTicketType>>
+{
+}
+
+public class ListTicketTypeCommand : ListType, IRequest<Result<IEnumerable<FetchTicketType>>>
+{
 }

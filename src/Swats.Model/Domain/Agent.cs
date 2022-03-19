@@ -1,8 +1,10 @@
-﻿namespace Swats.Model.Domain;
+﻿using MassTransit;
+
+namespace Swats.Model.Domain;
 
 public class Agent : DbAudit
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = NewId.NextGuid();
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }

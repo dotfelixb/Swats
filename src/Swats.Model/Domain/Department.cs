@@ -8,3 +8,11 @@ public class Department : DbAudit
     public string Code { get; set; }
     public string Name { get; set; }
 }
+
+public class Team : DbAudit
+{
+    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Name { get; set; }
+    public Guid Department { get; set; }
+    public Guid Lead { get; set; }
+}

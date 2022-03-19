@@ -2,6 +2,4 @@
 
 namespace Swats.Model.Queries;
 
-public class FetchBusinessHour : BusinessHour
-{
-}
+public class FetchTag : Tag { }

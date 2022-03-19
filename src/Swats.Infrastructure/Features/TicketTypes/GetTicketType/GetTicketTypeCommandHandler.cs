@@ -1,12 +1,13 @@
 ﻿using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Model.Commands;
 using Swats.Model.Domain;
 using Swats.Model.Queries;
 
 namespace Swats.Infrastructure.Features.TicketTypes.GetTicketType;
 
-internal class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeCommand, Result<FetchTicketType>>
+public class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeCommand, Result<FetchTicketType>>
 {
     private readonly ITicketRepository _ticketRepository;
 

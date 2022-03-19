@@ -209,6 +209,32 @@ CREATE TABLE businesshourauditlog
 	, FOREIGN KEY (target) REFERENCES businesshour(id) ON DELETE CASCADE
 );
 
+CREATE TABLE agent
+(
+    id UUID PRIMARY KEY
+	, email VARCHAR(50)
+	, firstname VARCHAR(50)
+	, lastname VARCHAR(50)
+	, mobile VARCHAR(50)
+	, telephone VARCHAR(50)
+	, timezone VARCHAR(50)
+	, department UUID
+	, team UUID
+	, tickettype UUID
+	, mode INT
+	, rowversion UUID NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby UUID
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (id) REFERENCES authuser(id) ON DELETE CASCADE
+	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
+	, FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE
+	, FOREIGN KEY (tickettype) REFERENCES tickettype(id) ON DELETE CASCADE
+);
+
+
 
 CREATE TABLE table
 (

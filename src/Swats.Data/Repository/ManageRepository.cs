@@ -13,6 +13,12 @@ public interface IManageRepository
     Task<FetchBusinessHour> GetBusinessHour(Guid id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+  
+    Task<int> CreateTag(Tag tag, DbAuditLog auditLog, CancellationToken cancellationToken);
+   
+    Task<FetchTag> GetTag(Guid id, CancellationToken cancellationToken);
+    
+    Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool deleted, CancellationToken cancellationToken);
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -92,6 +98,11 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
+    public Task<int> CreateTag(Tag tag, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<FetchBusinessHour> GetBusinessHour(Guid id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -107,6 +118,11 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
             return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
         });
+    }
+
+    public Task<FetchTag> GetTag(Guid id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
     public Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
@@ -128,5 +144,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
             return await conn.QueryAsync<FetchBusinessHour>(query, new { offset, limit });
         });
+    }
+
+    public Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool deleted, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

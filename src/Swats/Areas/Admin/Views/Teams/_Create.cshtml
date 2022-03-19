@@ -1,4 +1,4 @@
-@model CreateBusinessHourCommand
+﻿@model CreateTeamCommand
 
 @{
 
@@ -7,11 +7,11 @@
 <div id="main-swap">
     <form asp-controller="BusinessHour" asp-action="Create" method="post">
         <section class=" flex w-full font-bold text-2xl pb-5">
-            <div class="flex w-1/2">New Business Hour</div>
+            <div class="flex w-1/2">New Team</div>
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
                     <button class="btn-default"
-                        hx-post="/admin/businesshour" 
+                        hx-post="/admin/teams" 
                         hx-trigger="click" 
                         hx-target="#main-swap" 
                         hx-swap="outerHTML"
@@ -24,7 +24,7 @@
                     </button> 
                     <span class="mr-4"></span>
                      <button class="btn-primary"
-                        hx-post="/admin/businesshour/create" 
+                        hx-post="/admin/teams/create" 
                         hx-trigger="click" 
                         hx-target="#main-swap" 
                         hx-swap="outerHTML"
@@ -51,50 +51,34 @@
                     <input asp-for="@Model.Name" class="form-input" />
                     <span asp-validation-for="@Model.Name" class="form-input-error"></span>
                 </div>
-
-                 @* status *@
-                <div class="form-control">
-                    <label asp-for="@Model.Status" class="form-label">
-                        Status
-                    </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
-                        <option value=""></option>
-                    </select>
-                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
-                </div>
                
-                @* timezone *@
                 <div class="form-control">
-                    <label asp-for="@Model.Timezone" class="form-label">
-                        Timezone
+                    <label asp-for="@Model.Department" class="form-label">
+                        Department
                     </label>
-                    @* TODO : Set to users locale *@
-                    @*<select asp-for="@Model.Timezone" class="form-input" >
-                        <option value="(UTC) Coordinated Universal Time" selected>(UTC) Coordinated Universal Time</option>
-                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
+                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
+                    <datalist id="departmentlist">
+                        @foreach (var item in Model.DepartmentList)
                         {
-                        <option value="@item.DisplayName">@item.DisplayName</option>
-                        }
-                    </select>*@
-                    <input asp-for="@Model.Timezone" list="timezonelist" class="form-input" />
-                    <datalist id="timezonelist">
-                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
-                        {
-                            <option value="@item.Id">@item.DisplayName</option>
+                            <option value="@item.Value">@item.Text</option>
                         }
                     </datalist>
-                    <span asp-validation-for="@Model.Timezone" class="form-input-error"></span>
+                    <span asp-validation-for="@Model.Department" class="form-input-error"></span>
                 </div>
 
-            </div>
-            <div class="grid grid-cols-1 gap-5 py-4">
-                @* description *@
+                
                 <div class="form-control">
-                    <label asp-for="@Model.Description" class="form-label">
-                       Description
+                    <label asp-for="@Model.Lead" class="form-label">
+                        Lead
                     </label>
-                    <textarea asp-for="@Model.Description" class="form-input" cols="30" rows="5"></textarea>
-                    <span asp-validation-for="@Model.Description" class="form-input-error"></span>
+                    <input asp-for="@Model.Lead" list="leadlist" class="form-input" />
+                    <datalist id="leadlist">
+                        @foreach (var item in Model.LeadList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Lead" class="form-input-error"></span>
                 </div>
             </div>
         </div>

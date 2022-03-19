@@ -54,3 +54,9 @@ public enum AttachmentSource
     Ticket,
     Comment
 }
+
+public enum AgentMode
+{
+    Agent,
+    User
+}
