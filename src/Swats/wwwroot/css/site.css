@@ -15,9 +15,12 @@ tbody tr:nth-of-type(2n) td {
   background-color: #f7f7f7;
 }
 
+.admin-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10;
+}
 
 .edit-sidebar li {
-  @apply text-xs py-1;
+    @apply text-xs py-1;
 }
 
 .edit-sidebar li div:first-child {

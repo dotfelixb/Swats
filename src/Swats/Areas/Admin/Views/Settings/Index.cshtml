@@ -14,7 +14,7 @@
         Staff
     </section>
 
-    <div class="grid grid-cols-5 gap-4 pb-10">
+    <div class="admin-grid">
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "person", title = "Users", location="/admin/user" })
         </div>
@@ -33,7 +33,7 @@
         Email
     </section>
 
-    <div class="grid grid-cols-5 gap-4 pb-10">
+     <div class="admin-grid">
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "mail", title = "Email Settings", location="/" })
         </div>
@@ -46,7 +46,7 @@
         Manage
     </section>
 
-    <div class="grid grid-cols-5 gap-4 pb-10">
+     <div class="admin-grid">
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "information-circle", title = "Help Topics", location="/admin/helptopic" })
         </div>
@@ -74,7 +74,7 @@
         Tickets
     </section>
 
-   <div class="grid grid-cols-5 gap-4 pb-10">
+     <div class="admin-grid">
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "ticket", title = "Ticket Settings", location="/" })
         </div>
@@ -90,7 +90,7 @@
         Settings
     </section>
 
-    <div class="grid grid-cols-5 gap-4 pb-10">
+     <div class="admin-grid">
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "push", title = "User Import", location="/" })
         </div>
@@ -106,7 +106,7 @@
         Notifications
     </section>
 
-    <div class="grid grid-cols-5 gap-4 pb-10">
+     <div class="admin-grid">
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "notifications", title = "Notifications", location="/" })
         </div>

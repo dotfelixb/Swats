@@ -18,6 +18,7 @@ public class CreateDepartmentCommand : IRequest<Result<Guid>>
     public string OutgoingEmail { get; set; }
     public string Response { get; set; }
     public DefaultType Type { get; set; }
+    public string Note { get; set; }
     public Guid CreatedBy { get; set; }
 }
 
@@ -32,6 +33,8 @@ public class CreateTeamCommand : IRequest<Result<Guid>>
     public IEnumerable<SelectListItem> DepartmentList { get; set; } = Enumerable.Empty<SelectListItem>();
     public string Lead { get; set; }
     public IEnumerable<SelectListItem> LeadList { get; set; } = Enumerable.Empty<SelectListItem>();
+    public DefaultStatus Status { get; set; }
+    public string Note { get; set; }
     public Guid CreatedBy { get; set; }
 }
 
