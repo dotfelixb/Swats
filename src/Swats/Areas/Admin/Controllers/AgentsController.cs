@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using Swats.Model.Queries;

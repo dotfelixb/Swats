@@ -21,7 +21,7 @@ public class Ticket : DbAudit
 
 public class TicketType : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Name { get; set; }
     public string Description { get; set; }
     public string Color { get; set; }

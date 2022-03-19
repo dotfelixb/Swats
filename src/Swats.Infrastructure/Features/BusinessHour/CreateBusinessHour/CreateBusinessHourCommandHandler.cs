@@ -1,11 +1,11 @@
-﻿using System;
-using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
+using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.BusinessHour.CreateBusinessHour;
 
@@ -35,7 +35,7 @@ public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHo
         };
 
         var rst = await _manageRepository.CreateBusinessHour(businessHour, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(businessHour.Id) : Result.Fail<Guid>("Not able to create now!");
+        return rst > 0 ? Result.Ok(businessHour.Id.ToGuid()) : Result.Fail<Guid>("Not able to create now!");
     }
 }
 

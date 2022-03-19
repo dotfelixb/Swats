@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Model.Domain;

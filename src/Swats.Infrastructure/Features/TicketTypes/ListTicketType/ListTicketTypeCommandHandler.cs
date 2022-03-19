@@ -7,8 +7,8 @@ using Swats.Model.Queries;
 namespace Swats.Infrastructure.Features.TicketTypes.GetTicketType;
 
 public class ListTicketTypeCommandHandler : IRequestHandler<ListTicketTypeCommand, Result<IEnumerable<FetchTicketType>>>
-{   
-     private readonly ITicketRepository _ticketRepository;
+{
+    private readonly ITicketRepository _ticketRepository;
 
     public ListTicketTypeCommandHandler(ITicketRepository ticketRepository)
     {

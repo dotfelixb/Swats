@@ -16,10 +16,17 @@ public class CreateDepartmentCommand : IRequest<Result<Guid>>
     public string BusinessHour { get; set; }
     public IEnumerable<SelectListItem> BusinessHours { get; set; } = Enumerable.Empty<SelectListItem>();
     public string OutgoingEmail { get; set; }
-    public string Response { get; set; }
     public DefaultType Type { get; set; }
-    public string Note { get; set; }
+    public string Response { get; set; }
     public Guid CreatedBy { get; set; }
+}
+
+public class GetDepartmentCommand : GetType, IRequest<Result<FetchDepartment>>
+{
+}
+
+public class ListDepartmentCommand : ListType, IRequest<Result<IEnumerable<FetchDepartment>>>
+{
 }
 
 #endregion

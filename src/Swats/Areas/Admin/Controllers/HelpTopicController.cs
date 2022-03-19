@@ -18,7 +18,7 @@ public class HelpTopicController : FrontEndController
         };
 
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/_Index.cshtml",partial)
+                ? PartialView("~/Areas/Admin/Views/_Index.cshtml", partial)
                 : View(partial);
     }
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Swats.Model.ViewModel;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Swats.Infrastructure;
 

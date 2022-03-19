@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Identity;
 
 namespace Swats.Model.Domain;
 

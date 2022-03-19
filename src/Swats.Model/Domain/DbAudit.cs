@@ -22,8 +22,8 @@ public class DbAudit
 
 public class DbAuditLog
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
-    public Guid Target { get; set; }
+    public string Id { get; set; } = NewId.NextGuid().ToString();
+    public string Target { get; set; }
     public string ActionName { get; set; }
     public string Description { get; set; }
     public string ObjectName { get; set; }

@@ -22,13 +22,6 @@ public static class MvcExtensions
             : "";
     }
 
-    public static Guid ToGuid(this string value)
-    {
-        return Guid.TryParse(value, out var rst)
-            ? rst
-            : throw new InvalidOperationException(nameof(value));
-    }
-
     public static string GenerateQrCode(this string value)
     {
         using var generator = new QRCodeGenerator();

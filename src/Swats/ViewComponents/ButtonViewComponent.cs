@@ -3,7 +3,7 @@ using Swats.Model.ViewModel;
 
 namespace Swats.ViewComponents;
 
-public class ButtonViewComponent:ViewComponent
+public class ButtonViewComponent : ViewComponent
 {
     public ButtonViewComponent()
     {

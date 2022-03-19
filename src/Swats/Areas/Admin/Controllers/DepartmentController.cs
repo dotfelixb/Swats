@@ -3,9 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
+using Swats.Extensions;
+using Swats.Model;
 using Swats.Model.Commands;
-using Swats.Model.Queries;
-using Swats.Model.ViewModel;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -25,27 +26,45 @@ public class DepartmentController : FrontEndController
         _mediatr = mediatr;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Index)}");
 
-        var partial = new IndexPartial
+        var query = new ListDepartmentCommand { };
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed)
         {
-            CreateLocation = "/admin/department/create",
-            CreateTitle = "New Department",
-            Title = "Departments"
+            return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        }
 
-        };
         return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/_Index.cshtml",partial)
-             : View(partial);
+                ? PartialView("~/Areas/Admin/Views/Department/_Index.cshtml", result.Value)
+                : View(result.Value);
+    }
+
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Edit)}");
+
+        var query = new GetDepartmentCommand { Id = id };
+        var result = await _mediatr.Send(query);
+
+        if (result.IsFailed)
+        {
+            return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        }
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/department/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+                ? PartialView("~/Areas/Admin/Views/department/_Edit.cshtml", result.Value)
+                : View(result.Value);
     }
 
     public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Create)}");
 
-        var businesshourResult = await _mediatr.Send(new ListBusinessHourCommand {});
+        var businesshourResult = await _mediatr.Send(new ListBusinessHourCommand { });
         if (businesshourResult.IsFailed)
         {
             return BadRequest(businesshourResult.Reasons.FirstOrDefault()?.Message);
@@ -53,11 +72,49 @@ public class DepartmentController : FrontEndController
 
         CreateDepartmentCommand command = new()
         {
-            BusinessHours = businesshourResult.Value.Select(s => new SelectListItem{Text = s.Name, Value = s.Id.ToString() })
+            BusinessHours = businesshourResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
         };
 
         return Request.IsHtmx()
              ? PartialView("~/Areas/Admin/Views/Department/_Create.cshtml", command)
              : View(command);
     }
+
+    #region POST
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateDepartmentCommand command)
+    {
+        var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(Create)}";
+        _logger.LogInformation(msg);
+
+        // get login user id
+        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError($"{msg} - Invalid Model state");
+
+            return Request.IsHtmx()
+                ? PartialView("~/Areas/Admin/Views/Department/_Create.cshtml", command)
+                : View(command);
+        }
+
+        command.CreatedBy = userId.ToGuid();
+        var result = await _mediatr.Send(command);
+        if (result.IsFailed)
+        {
+            var reason = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
+            _logger.LogError($"{msg} - {reason}");
+            TempData["CreateError"] = reason;
+
+            return Request.IsHtmx()
+                ? PartialView("~/Areas/Admin/Views/Department/_Create.cshtml", command)
+                : View(command);
+        }
+
+        return RedirectToAction("Edit", new { Id = result.Value });
+    }
+
+    #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Queries;
 
@@ -19,7 +20,7 @@ namespace Swats.Infrastructure.Features.Agents.GetAgent
         {
             var result = await _agentRepository.GetAgent(request.Id, cancellationToken);
 
-            return result.Id == Guid.Empty
+            return result.Id.ToGuid() == Guid.Empty
                 ? Result.Fail<FetchedAgent>($"Agent with id [{request.Id}] does not exist!")
                 : Result.Ok(result);
         }

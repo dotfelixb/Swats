@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using System.Text.Json;
@@ -34,6 +35,6 @@ public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Result<
         };
 
         var rst = await _manageRepository.CreateTag(tag, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(tag.Id) : Result.Fail<Guid>("Not able to create now!");
+        return rst > 0 ? Result.Ok(tag.Id.ToGuid()) : Result.Fail<Guid>("Not able to create now!");
     }
 }

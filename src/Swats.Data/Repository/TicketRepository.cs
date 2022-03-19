@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
@@ -10,7 +9,7 @@ namespace Swats.Data.Repository;
 public interface ITicketRepository
 {
     Task<long> GenerateTicketCode(CancellationToken cancellationToken);
-    
+
     Task<int> CreateTicket(Ticket ticket, CancellationToken cancellationToken);
 
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
@@ -130,7 +129,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 FROM tickettype t
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id });
         });
     }
 

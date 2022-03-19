@@ -1,12 +1,11 @@
-using System.Security.Claims;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Controllers;
 using Swats.Extensions;
+using Swats.Model;
 using Swats.Model.Commands;
-using Swats.Model.Queries;
-using Swats.Model.ViewModel;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
