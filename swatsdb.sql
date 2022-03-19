@@ -151,6 +151,91 @@ CREATE TABLE Source
 	, updatedat TIMESTAMPTZ DEFAULT(now())
 );
 
+CREATE TABLE tickettype
+(
+    id UUID PRIMARY KEY
+	, name VARCHAR(50)
+	, description VARCHAR
+	, color VARCHAR(20)
+	, visibility INT
+	, rowversion UUID NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby UUID
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+CREATE TABLE tickettypeauditlog
+(
+    id UUID PRIMARY KEY
+	, target UUID
+	, actionname VARCHAR(50) 
+	, description VARCHAR(150) 
+	, objectname VARCHAR(50) 
+	, objectdata VARCHAR 
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES tickettype(id) ON DELETE CASCADE
+);
+
+CREATE TABLE businesshour
+(
+    id UUID PRIMARY KEY
+	, name VARCHAR(50)
+	, description VARCHAR
+	, timezone VARCHAR(50)
+	, status INT
+	, holidays VARCHAR[][]
+	, rowversion UUID NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby UUID
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+
+CREATE TABLE businesshourauditlog
+(
+    id UUID PRIMARY KEY
+	, target UUID NOT NULL
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES businesshour(id) ON DELETE CASCADE
+);
+
+CREATE TABLE agent
+(
+    id UUID PRIMARY KEY
+	, email VARCHAR(50)
+	, firstname VARCHAR(50)
+	, lastname VARCHAR(50)
+	, mobile VARCHAR(50)
+	, telephone VARCHAR(50)
+	, timezone VARCHAR(50)
+	, department UUID
+	, team UUID
+	, tickettype UUID
+	, mode INT
+	, rowversion UUID NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby UUID
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby UUID
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (id) REFERENCES authuser(id) ON DELETE CASCADE
+	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
+	, FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE
+	, FOREIGN KEY (tickettype) REFERENCES tickettype(id) ON DELETE CASCADE
+);
+
+
+
 CREATE TABLE table
 (
     id UUID PRIMARY KEY
@@ -172,4 +257,5 @@ CREATE TABLE auditlog
 	, objectdata VARCHAR NOT NULL
     , createdby UUID
 	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES (id) ON DELETE CASCADE
 );

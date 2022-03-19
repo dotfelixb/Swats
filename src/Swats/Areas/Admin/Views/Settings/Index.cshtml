@@ -1,5 +1,117 @@
 ﻿@{
-    ViewData["Title"] = "Settings";
+    ViewData["Title"] = "Admin";
 }
+<div id="main-swap">
+  <section class="flex w-full font-bold text-2xl pb-5">
+    <div class="flex w-1/2">Admin Panel</div>
+    <div class="flex w-1/2 justify-end">
+      <div class="">
+      </div>
+    </div>
+  </section>
 
-@await Html.PartialAsync("~/Areas/Admin/Views/Settings/_IndexPartial.cshtml")
+  <section class="title font-semibold text-sm py-5">
+        Staff
+    </section>
+
+    <div class="admin-grid">
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "person", title = "Users", location="/admin/user" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "headset", title = "Agents", location="/admin/agents" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "people", title = "Department", location="/admin/department" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "git-merge", title = "Teams", location="/admin/teams" })
+        </div>
+    </div>
+
+    <section class="title font-semibold text-sm py-5">
+        Email
+    </section>
+
+     <div class="admin-grid">
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "mail", title = "Email Settings", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "radio-button-on", title = "Breaklines", location="/" })
+        </div>
+    </div>
+
+    <section class="title font-semibold text-sm py-5">
+        Manage
+    </section>
+
+     <div class="admin-grid">
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "information-circle", title = "Help Topics", location="/admin/helptopic" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "flame", title = "SLA Plains", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "calendar", title = "Business Hours", location="/admin/businesshour" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "trail-sign", title = "Ticket Type", location="/admin/tickettype" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "flash", title = "Tags", location="/admin/tags" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "code-working", title = "Workflows", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "checkmark-circle", title = "Approval Workflows", location="/" })
+        </div>
+    </div>
+
+    <section class="title font-semibold text-sm py-5">
+        Tickets
+    </section>
+
+     <div class="admin-grid">
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "ticket", title = "Ticket Settings", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "star-half", title = "Ratings", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "repeat", title = "Recurring", location="/" })
+        </div>
+    </div>
+
+    <section class="title font-semibold text-sm py-5">
+        Settings
+    </section>
+
+     <div class="admin-grid">
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "push", title = "User Import", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "terminal", title = "Logs", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "cog", title = "User Options", location="/" })
+        </div>
+    </div>
+
+    <section class="title font-semibold text-s py-5">
+        Notifications
+    </section>
+
+     <div class="admin-grid">
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "notifications", title = "Notifications", location="/" })
+        </div>
+        <div>
+            @await Component.InvokeAsync("PanelLinkCard", new { iconName = "document-text", title = "Templates", location="/" })
+        </div>
+    </div>
+</div>

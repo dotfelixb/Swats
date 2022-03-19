@@ -1,4 +1,7 @@
 <ul>
+    <li class="hidden border-l-4 border-indigo-500">
+
+    </li>
     <li>
         <a href="/">
             <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("Dashboard")">
@@ -26,8 +29,8 @@
     </li>
 
     <li>
-        <a href="/agent">
-            <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("Agent")">
+        <a href="/admin/agents">
+            <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("Agents")">
                 <div class="flex  justify-center">
                     <ion-icon name="headset-outline"></ion-icon>
                 </div>
@@ -39,7 +42,7 @@
     </li>
 
     <li>
-        <a href="/user">
+        <a asp-area="admin" asp-controller="user">
             <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("User")">
                 <div class="flex  justify-center">
                     <ion-icon name="people-outline"></ion-icon>
@@ -51,14 +54,15 @@
         </a>
     </li>
 
-     <li>
+    <li>
         <a asp-area="admin" asp-controller="settings" asp-action="index">
-            <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("Settings,Department")">
+            <div
+                class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("Admin,Settings,Department,HelpTopic,Tags,Teams,BusinessHour,TicketType")">
                 <div class="flex  justify-center">
                     <ion-icon name="settings-outline"></ion-icon>
                 </div>
                 <div class="flex justify-center">
-                    <span style="font-size: 10px;">Settings</span>
+                    <span style="font-size: 10px;">Admin</span>
                 </div>
             </div>
         </a>

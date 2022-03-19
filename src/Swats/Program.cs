@@ -7,15 +7,19 @@ using Swats.Data.Repository;
 using Swats.Infrastructure;
 using Swats.Model;
 using Swats.Model.Domain;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
-builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>())
-    .AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o=>
+{
+    o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+}).AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
 builder.Services.AddAutoMapper(typeof(ModelProfiles));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // auth
 builder.Services.AddIdentity<AuthUser, AuthRole>(o =>
@@ -27,7 +31,7 @@ builder.Services
     .AddCookie();
 builder.Services.ConfigureApplicationCookie(o =>
 {
-    o.LoginPath = new PathString("/user/login");
+    o.LoginPath = new PathString("/auth/login");
     o.ExpireTimeSpan = TimeSpan.FromHours(3);
 });
 builder.Services
@@ -37,6 +41,8 @@ builder.Services.AddTransient<IRoleStore<AuthRole>, AuthRoleRepository>();
 
 // repositories
 builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
+builder.Services.AddSingleton<IManageRepository, ManageRepository>();
+builder.Services.AddSingleton<IAgentRepository, AgentReposiory>();
 
 var app = builder.Build();
 

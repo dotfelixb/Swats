@@ -1,0 +1,86 @@
+﻿@model CreateTeamCommand
+
+@{
+
+}
+
+<div id="main-swap">
+    <form asp-controller="BusinessHour" asp-action="Create" method="post">
+        <section class=" flex w-full font-bold text-2xl pb-5">
+            <div class="flex w-1/2">New Team</div>
+            <div class="flex w-1/2 justify-end">
+                <div class="flex flex-row">
+                    <button class="btn-default"
+                        hx-post="/admin/teams" 
+                        hx-trigger="click" 
+                        hx-target="#main-swap" 
+                        hx-swap="outerHTML"
+                        hx-push-url="true"
+                        >
+                        <div class="flex flex-row ">
+                            <div class="flex "> </div> 
+                            <div class="flex">Cancel</div>
+                       </div>
+                    </button> 
+                    <span class="mr-4"></span>
+                     <button class="btn-primary"
+                        hx-post="/admin/teams/create" 
+                        hx-trigger="click" 
+                        hx-target="#main-swap" 
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
+                       <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center "> 
+                                <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
+                                </div> 
+                            <div class="flex">Save</div>
+                       </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @* name *@
+                <div class="form-control">
+                    <label asp-for="@Model.Name" class="form-label">
+                        Name
+                    </label>
+                    <input asp-for="@Model.Name" class="form-input" />
+                    <span asp-validation-for="@Model.Name" class="form-input-error"></span>
+                </div>
+               
+                <div class="form-control">
+                    <label asp-for="@Model.Department" class="form-label">
+                        Department
+                    </label>
+                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
+                    <datalist id="departmentlist">
+                        @foreach (var item in Model.DepartmentList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Department" class="form-input-error"></span>
+                </div>
+
+                
+                <div class="form-control">
+                    <label asp-for="@Model.Lead" class="form-label">
+                        Lead
+                    </label>
+                    <input asp-for="@Model.Lead" list="leadlist" class="form-input" />
+                    <datalist id="leadlist">
+                        @foreach (var item in Model.LeadList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Lead" class="form-input-error"></span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

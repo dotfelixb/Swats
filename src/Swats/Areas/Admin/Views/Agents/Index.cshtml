@@ -1,0 +1,7 @@
+﻿@model IEnumerable<FetchedAgent>
+
+@{
+    ViewData["Title"] = "Agents";
+}
+
+@await Html.PartialAsync("~/Areas/Admin/Views/Agents/_Index.cshtml", Model)

@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Htmx;
+using Microsoft.AspNetCore.Mvc;
 using Swats.Controllers;
+using Swats.Model.ViewModel;
 
 namespace Swats.Areas.Admin.Controllers;
 
 [Area("admin")]
-    public class SettingsController : FrontEndController
+public class SettingsController : FrontEndController
+{
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return  View();
     }
+}

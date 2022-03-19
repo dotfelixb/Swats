@@ -20,6 +20,14 @@ public enum TicketPriority
     Important
 }
 
+public enum TicketSource
+{
+    App,
+    Web,
+    Call,
+    Api,
+}
+
 public enum TicketStatus
 {
     New,
@@ -45,4 +53,10 @@ public enum AttachmentSource
 {
     Ticket,
     Comment
+}
+
+public enum AgentMode
+{
+    Agent,
+    User
 }

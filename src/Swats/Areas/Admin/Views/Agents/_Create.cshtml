@@ -1,0 +1,156 @@
+﻿@model CreateAgentCommand
+
+@{
+
+}
+
+<div id="main-swap">
+    <form asp-controller="BusinessHour" asp-action="Create" method="post">
+        <section class=" flex w-full font-bold text-2xl pb-5">
+            <div class="flex w-1/2">New Agent</div>
+            <div class="flex w-1/2 justify-end">
+                <div class="flex flex-row">
+                    <button class="btn-default"
+                        hx-post="/admin/agents" 
+                        hx-trigger="click" 
+                        hx-target="#main-swap" 
+                        hx-swap="outerHTML"
+                        hx-push-url="true"
+                        >
+                        <div class="flex flex-row ">
+                            <div class="flex "> </div> 
+                            <div class="flex">Cancel</div>
+                       </div>
+                    </button> 
+                    <span class="mr-4"></span>
+                     <button class="btn-primary"
+                        hx-post="/admin/agents/create" 
+                        hx-trigger="click" 
+                        hx-target="#main-swap" 
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
+                       <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center "> 
+                                <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
+                                </div> 
+                            <div class="flex">Save</div>
+                       </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                
+                <div class="form-control">
+                    <label asp-for="@Model.Email" class="form-label">
+                        Email
+                    </label>
+                    <input asp-for="@Model.Email" class="form-input" />
+                    <span asp-validation-for="@Model.Email" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Mobile" class="form-label">
+                        Mobile
+                    </label>
+                    <input asp-for="@Model.Mobile" class="form-input" />
+                    <span asp-validation-for="@Model.Mobile" class="form-input-error"></span>
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.FirstName" class="form-label">
+                        First Name
+                    </label>
+                    <input asp-for="@Model.FirstName" class="form-input" />
+                    <span asp-validation-for="@Model.FirstName" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.LastName" class="form-label">
+                        Last Name
+                    </label>
+                    <input asp-for="@Model.LastName" class="form-input" />
+                    <span asp-validation-for="@Model.LastName" class="form-input-error"></span>
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.Telephone" class="form-label">
+                        Telephone
+                    </label>
+                    <input asp-for="@Model.Telephone" class="form-input" />
+                    <span asp-validation-for="@Model.Telephone" class="form-input-error"></span>
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.Timezone" class="form-label">
+                        Agent Time zone
+                    </label>
+                    <input asp-for="@Model.Timezone" list="timezonelist" class="form-input" />
+                    <datalist id="timezonelist">
+                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
+                        {
+                            <option value="@item.Id">@item.DisplayName</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Timezone" class="form-input-error"></span>
+                </div>
+
+                  <div class="form-control">
+                    <label asp-for="@Model.Department" class="form-label">
+                        Department
+                    </label>
+                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
+                    <datalist id="departmentlist">
+                        @foreach (var item in Model.TeamList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Department" class="form-input-error"></span>
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.Team" class="form-label">
+                        Team    
+                    </label>
+                    <input asp-for="@Model.Team" list="teamlist" class="form-input" />
+                    <datalist id="teamlist">
+                        @foreach (var item in Model.TeamList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Team" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Type" class="form-label">
+                        Default Ticket Type    
+                    </label>
+                    <input asp-for="@Model.Type" list="typelist" class="form-input" />
+                    <datalist id="typelist">
+                        @foreach (var item in Model.TypeList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Type" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Mode" class="form-label">
+                        Mode
+                    </label>
+                    <select asp-for="@Model.Mode" class="form-input" asp-items="@Html.GetEnumSelectList<AgentMode>()" >
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="@Model.Mode" class="form-input-error"></span>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
