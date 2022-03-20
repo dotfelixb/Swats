@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using Swats.Model.Queries;
@@ -48,7 +49,7 @@ public class AgentsController : FrontEndController
                 : View(result);
     }
 
-    public async Task<IActionResult> Edit(Guid id)
+    public async Task<IActionResult> Edit(string id)
     {
         _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
 
@@ -107,7 +108,7 @@ public class AgentsController : FrontEndController
              : View(command);
         }
 
-        command.CreatedBy = userId.ToGuid();
+        command.CreatedBy = userId;
 
         // get user name from email
         command.UserName = command.Email.Split('@').First(); // lisa.paige@swats.app => lisa.paige

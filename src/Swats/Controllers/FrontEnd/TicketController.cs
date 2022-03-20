@@ -3,8 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Model.Commands;
-using Swats.Model.Domain;
-using Swats.Model.Queries;
 
 namespace Swats.Controllers.FrontEnd;
 
@@ -35,7 +33,7 @@ public class TicketController : FrontEndController
     public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
-       
+
         var ticketTypeResult = await _mediatr.Send(new ListTicketTypeCommand { });
         if (ticketTypeResult.IsFailed)
         {

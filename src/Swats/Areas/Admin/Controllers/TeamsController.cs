@@ -1,10 +1,10 @@
 ﻿using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
 using Swats.Model.Commands;
-using Swats.Model.ViewModel;
 using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
@@ -31,7 +31,7 @@ public class TeamsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(IndexAsync)}");
 
-        var query = new ListTeamCommand { };
+        var query = new ListTeamsCommand { };
         var result = await _mediatr.Send(query);
         if (result.IsFailed)
         {
@@ -43,7 +43,7 @@ public class TeamsController : FrontEndController
                 : View(result.Value);
     }
 
-    public async Task<IActionResult> Edit(Guid id)
+    public async Task<IActionResult> Edit(string id)
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(Edit)}");
 
@@ -61,16 +61,27 @@ public class TeamsController : FrontEndController
                 : View(result.Value);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(Create)}");
 
+        var departmentResult = await _mediatr.Send(new ListDepartmentCommand { });
+        if (departmentResult.IsFailed)
+        {
+            return BadRequest(departmentResult.Reasons.FirstOrDefault()?.Message);
+        }
+
+        CreateTeamCommand command = new() 
+        {
+            DepartmentList = departmentResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
+        };
+
         return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/Teams/_Create.cshtml")
-             : View();
+             ? PartialView("~/Areas/Admin/Views/Teams/_Create.cshtml", command)
+             : View(command);
     }
 
-    #endregion
+    #endregion GET
 
     #region POST
 
@@ -92,7 +103,7 @@ public class TeamsController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId.ToGuid();
+        command.CreatedBy = userId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {
@@ -108,6 +119,5 @@ public class TeamsController : FrontEndController
         return RedirectToAction("Edit", new { Id = result.Value });
     }
 
-    #endregion
+    #endregion POST
 }
-

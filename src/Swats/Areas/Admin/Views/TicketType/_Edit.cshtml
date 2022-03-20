@@ -59,17 +59,23 @@
             <input asp-for="@Model.Name" class="form-input" />
         </div>
 
-         @* visibility *@
-                <div class="form-control">
-                    <label asp-for="@Model.Visibility" class="form-label">
-                        Visibility
-                    </label>
-                    <select asp-for="@Model.Visibility" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
-                    </select>
-                </div>
+        @* visibility *@
+        <div class="form-control">
+          <label asp-for="@Model.Visibility" class="form-label">
+            Visibility
+          </label>
+          <select asp-for="@Model.Visibility" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
+           </select>
+        </div>
 
-                   @* color *@
-                <div class="form-control">
+        <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <input asp-for="@Model.Status" class="form-input" />
+                </div>
+        
+        <div class="form-control">
                     <label asp-for="@Model.Color" class="form-label">
                         Color
                     </label>

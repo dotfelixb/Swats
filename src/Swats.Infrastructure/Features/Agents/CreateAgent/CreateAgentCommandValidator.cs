@@ -7,9 +7,9 @@ public class CreateAgentCommandValidator : AbstractValidator<CreateAgentCommand>
 {
     public CreateAgentCommandValidator()
     {
-        RuleFor(r=> r.Email).NotEmpty().EmailAddress();
-        RuleFor(r=> r.FirstName).NotEmpty();
-        RuleFor(r=> r.LastName).NotEmpty();
+        RuleFor(r => r.Email).NotEmpty().EmailAddress();
+        RuleFor(r => r.FirstName).NotEmpty();
+        RuleFor(r => r.LastName).NotEmpty();
         RuleFor(r => r.Mode).NotNull();
 
     }

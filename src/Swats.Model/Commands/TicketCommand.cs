@@ -20,7 +20,7 @@ public class CreateTicketCommand : IRequest<Result>
     public string HelpTopic { get; set; }
     public TicketPriority Priority { get; set; } = TicketPriority.Low;
     public TicketStatus Status { get; set; } = TicketStatus.New;
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 }
 
 public class GetTicketTypeCommand : GetType, IRequest<Result<FetchTicketType>>
@@ -29,4 +29,14 @@ public class GetTicketTypeCommand : GetType, IRequest<Result<FetchTicketType>>
 
 public class ListTicketTypeCommand : ListType, IRequest<Result<IEnumerable<FetchTicketType>>>
 {
+}
+
+public class CreateTicketTypeCommand : IRequest<Result<string>>
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Color { get; set; }
+    public DefaultType Visibility { get; set; }
+    public DefaultStatus Status { get; set; }
+    public string CreatedBy { get; set; }
 }

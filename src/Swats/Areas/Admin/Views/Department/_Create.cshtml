@@ -51,7 +51,6 @@
                         Type
                     </label>
                     <select asp-for="@Model.Type" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
-                        <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Type" class="form-input-error"></span>
                 </div>
@@ -61,7 +60,13 @@
                     <label asp-for="@Model.Manager" class="form-label">
                         Manager
                     </label>
-                    <input asp-for="@Model.Manager" class="form-input" />
+                    <input asp-for="@Model.Manager" list="managerlist" class="form-input" />
+                    <datalist id="managerlist">
+                        @foreach (var item in Model.ManagerList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
                     <span asp-validation-for="@Model.Manager" class="form-input-error"></span>
                 </div>
 
@@ -70,15 +75,8 @@
                     <label asp-for="@Model.BusinessHour" class="form-label">
                         Business Hour
                     </label>
-                    @*<select asp-for="@Model.BusinessHour" class="form-input" >
-                        <option value=""></option>
-                        @foreach (var item in Model.BusinessHours)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>*@
-                    <input asp-for="@Model.BusinessHour" list="timezonelist" class="form-input" />
-                    <datalist id="timezonelist">
+                    <input asp-for="@Model.BusinessHour" list="hourlist" class="form-input" />
+                    <datalist id="hourlist">
                         @foreach (var item in Model.BusinessHours)
                         {
                             <option value="@item.Value">@item.Text</option>
@@ -96,8 +94,15 @@
                     <span asp-validation-for="@Model.OutgoingEmail" class="form-input-error"></span>
                 </div>
 
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
+                </div>
                
-
             </div>
             <div class="grid grid-cols-1 gap-5 py-4">
                 @* body *@

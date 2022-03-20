@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
@@ -10,12 +9,12 @@ namespace Swats.Data.Repository;
 public interface ITicketRepository
 {
     Task<long> GenerateTicketCode(CancellationToken cancellationToken);
-    
+
     Task<int> CreateTicket(Ticket ticket, CancellationToken cancellationToken);
 
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
+    Task<FetchTicketType> GetTicketType(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
@@ -45,6 +44,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                     , description
                     , color
                     , visibility
+                    , status
                     , rowversion
                     , createdby
                     , updatedby)
@@ -54,6 +54,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                     , @Description
                     , @Color
                     , @Visibility
+                    , @Status
                     , @RowVersion
                     , @CreatedBy
                     , @UpdatedBy);
@@ -66,6 +67,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 ticketType.Description,
                 ticketType.Color,
                 ticketType.Visibility,
+                ticketType.Status,
                 ticketType.RowVersion,
                 ticketType.CreatedBy,
                 ticketType.UpdatedBy
@@ -117,7 +119,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken)
+    public Task<FetchTicketType> GetTicketType(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -130,7 +132,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 FROM tickettype t
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id });
         });
     }
 

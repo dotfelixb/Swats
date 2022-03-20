@@ -1,15 +1,11 @@
 ﻿using Htmx;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Controllers;
 using Swats.Extensions;
+using Swats.Model;
 using Swats.Model.Commands;
-using Swats.Model.Domain;
-using Swats.Model.Queries;
-using Swats.Model.ViewModel;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -34,19 +30,19 @@ public class TicketTypeController : FrontEndController
     public async Task<IActionResult> Index()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketTypeController)}::{nameof(Index)}");
-        var query = new ListTicketTypeCommand{};
+        var query = new ListTicketTypeCommand { };
         var result = await _mediatr.Send(query);
-        if(result.IsFailed)
+        if (result.IsFailed)
         {
             return NotFound(result.Reasons.FirstOrDefault()?.Message);
         }
-        
+
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/TicketType/_Index.cshtml",result.Value)
+                ? PartialView("~/Areas/Admin/Views/TicketType/_Index.cshtml", result.Value)
                 : View(result.Value);
     }
 
-    public async Task<IActionResult> Edit(Guid id)
+    public async Task<IActionResult> Edit(string id)
     {
         var query = new GetTicketTypeCommand { Id = id };
         var result = await _mediatr.Send(query);
@@ -80,7 +76,7 @@ public class TicketTypeController : FrontEndController
     {
         // get login user id
         var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        
+
         var msg = $"{Request.Method}::{nameof(TicketTypeController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
 
@@ -91,7 +87,7 @@ public class TicketTypeController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId.ToGuid();
+        command.CreatedBy = userId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {
@@ -104,7 +100,7 @@ public class TicketTypeController : FrontEndController
                : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value});
+        return RedirectToAction("Edit", new { Id = result.Value });
     }
 
     #endregion

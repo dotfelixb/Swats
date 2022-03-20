@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Swats.Model.ViewModel;
 
 namespace Swats.Controllers.FrontEnd;
 

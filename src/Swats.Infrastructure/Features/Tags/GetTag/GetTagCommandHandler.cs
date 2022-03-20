@@ -1,13 +1,9 @@
 ﻿using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Queries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Swats.Infrastructure.Features.Tags.GetTag;
 
@@ -24,7 +20,7 @@ public class GetTagCommandHandler : IRequestHandler<GetTagCommand, Result<FetchT
     {
         var rst = await _manageRepository.GetTag(request.Id, cancellationToken);
 
-        return rst.Id == Guid.Empty
+        return rst.Id.ToGuid() == Guid.Empty
             ? Result.Fail<FetchTag>($"Tag with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }

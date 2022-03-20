@@ -1,11 +1,10 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Identity;
 
 namespace Swats.Model.Domain;
 
 public class AuthUser : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string UserName { get; set; }
     public string NormalizedUserName { get; set; }
     public string Email { get; set; }

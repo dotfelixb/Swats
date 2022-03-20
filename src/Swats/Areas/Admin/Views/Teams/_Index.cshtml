@@ -63,7 +63,7 @@
                     @foreach (var item in Model)
                     {
                         <tr class="px-10 cursor-pointer"
-                            hx-get="/admin/businesshour/edit/@item.Id"
+                            hx-get="/admin/teams/edit/@item.Id"
                             hx-trigger="click"
                             hx-target="#main-swap"
                             hx-swap="outerHTML"
@@ -73,8 +73,8 @@
                             </td>
 
                             <td class="px-3 py-3">
-                                <p class="text-xs">@item.Lead</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.DepartmentName</p>
+                                <p class="text-xs">@item.DepartmentName</p>
+                                <p class="text-xs" style="color: #9b9b9b;">@item.Lead</p>
                             </td>
                             <td class="px-3 py-3">
                                 <p class="text-xs">@item.CreatedByName</p>

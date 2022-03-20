@@ -4,7 +4,7 @@ namespace Swats.Model.Domain;
 
 public class Agent : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }

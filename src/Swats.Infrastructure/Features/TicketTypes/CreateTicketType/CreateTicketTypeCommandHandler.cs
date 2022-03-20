@@ -2,13 +2,14 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.TicketTypes.CreateTicketType;
 
-public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCommand, Result<Guid>>
+public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCommand, Result<string>>
 {
     private readonly ITicketRepository _ticketRepository;
     private readonly IMapper _mapper;
@@ -19,7 +20,7 @@ public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCo
         _mapper = mapper;
     }
 
-    public async Task<Result<Guid>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
         var ticketType = _mapper.Map<CreateTicketTypeCommand, TicketType>(request);
 
@@ -33,8 +34,8 @@ public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCo
             CreatedBy = request.CreatedBy,
         };
 
-        var rst= await _ticketRepository.CreateTicketType(ticketType, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(ticketType.Id) : Result.Fail<Guid>("Not able to create now!");
+        var rst = await _ticketRepository.CreateTicketType(ticketType, auditLog, cancellationToken);
+        return rst > 0 ? Result.Ok(ticketType.Id) : Result.Fail<string>("Not able to create now!");
     }
 }
 

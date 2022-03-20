@@ -1,12 +1,11 @@
-using System.Security.Claims;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Controllers;
 using Swats.Extensions;
+using Swats.Model;
 using Swats.Model.Commands;
-using Swats.Model.Queries;
-using Swats.Model.ViewModel;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -44,7 +43,7 @@ public class BusinessHourController : FrontEndController
                 : View(result.Value);
     }
 
-    public async Task<IActionResult> Edit(Guid id)
+    public async Task<IActionResult> Edit(string id)
     {
         _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Edit)}");
 
@@ -93,7 +92,7 @@ public class BusinessHourController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId.ToGuid();
+        command.CreatedBy = userId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {

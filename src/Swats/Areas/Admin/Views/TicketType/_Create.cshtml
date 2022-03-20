@@ -45,7 +45,6 @@
                     <span asp-validation-for="@Model.Name" class="form-input-error"></span>
                 </div>
 
-                 @* status *@
                 <div class="form-control">
                     <label asp-for="@Model.Visibility" class="form-label">
                         Visibility
@@ -54,6 +53,15 @@
                         <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Visibility" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
 
             </div>

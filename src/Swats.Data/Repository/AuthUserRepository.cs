@@ -131,7 +131,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { Id = Guid.Parse(userId) });
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { Id = userId });
         });
     }
 

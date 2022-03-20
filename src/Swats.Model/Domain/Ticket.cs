@@ -4,7 +4,7 @@ namespace Swats.Model.Domain;
 
 public class Ticket : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Code { get; set; }
     public string Subject { get; set; }
     public string Requester { get; set; }
@@ -15,13 +15,13 @@ public class Ticket : DbAudit
     public Guid Department { get; set; }
     public Guid HelpTopic { get; set; }
     public TicketPriority Priority { get; set; }
-    public TicketStatus Status { get; set; }
+    public TicketStatus TicketStatus { get; set; }
 
 }
 
 public class TicketType : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Name { get; set; }
     public string Description { get; set; }
     public string Color { get; set; }

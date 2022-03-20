@@ -2,19 +2,19 @@
 
 public enum DefaultType
 {
-    Public,
+    Public = 1,
     Private
 }
 
 public enum DefaultStatus
 {
-    Active,
+    Active = 1,
     Inactive
 }
 
 public enum TicketPriority
 {
-    Low,
+    Low = 1,
     Normal,
     High,
     Important
@@ -22,7 +22,7 @@ public enum TicketPriority
 
 public enum TicketSource
 {
-    App,
+    App = 1,
     Web,
     Call,
     Api,
@@ -30,7 +30,7 @@ public enum TicketSource
 
 public enum TicketStatus
 {
-    New,
+    New = 1,
     Open, // Read Only except Requester
 
     Approved, // Ready for Assignee by Ticket Admin
@@ -45,18 +45,18 @@ public enum TicketStatus
 
 public enum CommentSource
 {
-    Internal,
+    Internal = 1,
     External
 }
 
 public enum AttachmentSource
 {
-    Ticket,
+    Ticket = 1,
     Comment
 }
 
 public enum AgentMode
 {
-    Agent,
+    Agent = 1,
     User
 }
