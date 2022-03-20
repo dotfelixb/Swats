@@ -4,7 +4,7 @@ namespace Swats.Model.Domain;
 
 public class Ticket : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Code { get; set; }
     public string Subject { get; set; }
     public string Requester { get; set; }

@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Agents.CreateAgent;
 
-public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Result<Guid>>
+public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Result<string>>
 {
     private readonly IAgentRepository _agentRepository;
     private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
     }
 
 
-    public async Task<Result<Guid>> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
     {
         var agent = _mapper.Map<CreateAgentCommand, Agent>(request);
 
@@ -36,6 +36,6 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
         };
 
         var rst = await _agentRepository.CreateAgent(agent, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(agent.Id.ToGuid()) : Result.Fail<Guid>("Not able to create now!");
+        return rst > 0 ? Result.Ok(agent.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

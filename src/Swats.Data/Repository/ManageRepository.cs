@@ -12,7 +12,7 @@ public interface IManageRepository
 
     Task<int> CreateBusinessHour(BusinessHour businessHour, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<FetchBusinessHour> GetBusinessHour(Guid id, CancellationToken cancellationToken);
+    Task<FetchBusinessHour> GetBusinessHour(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
@@ -22,7 +22,7 @@ public interface IManageRepository
 
     Task<int> CreateTag(Tag tag, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<FetchTag> GetTag(Guid id, CancellationToken cancellationToken);
+    Task<FetchTag> GetTag(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
@@ -32,7 +32,7 @@ public interface IManageRepository
 
     Task<int> CreateDepartment(Department department, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<FetchDepartment> GetDepartment(Guid id, CancellationToken cancellationToken);
+    Task<FetchDepartment> GetDepartment(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchDepartment>> ListDepartments(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
@@ -119,7 +119,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    public Task<FetchBusinessHour> GetBusinessHour(Guid id, CancellationToken cancellationToken)
+    public Task<FetchBusinessHour> GetBusinessHour(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -166,7 +166,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         throw new NotImplementedException();
     }
 
-    public Task<FetchTag> GetTag(Guid id, CancellationToken cancellationToken)
+    public Task<FetchTag> GetTag(string id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -258,7 +258,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    public Task<FetchDepartment> GetDepartment(Guid id, CancellationToken cancellationToken)
+    public Task<FetchDepartment> GetDepartment(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 

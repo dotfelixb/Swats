@@ -2,7 +2,7 @@
 
 public class GetType
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 }
 
 public class ListType

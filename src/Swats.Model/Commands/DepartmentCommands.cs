@@ -8,7 +8,7 @@ namespace Swats.Model.Commands;
 
 #region Department
 
-public class CreateDepartmentCommand : IRequest<Result<Guid>>
+public class CreateDepartmentCommand : IRequest<Result<string>>
 {
     public string Name { get; set; }
     public string Manager { get; set; }
@@ -18,7 +18,7 @@ public class CreateDepartmentCommand : IRequest<Result<Guid>>
     public string OutgoingEmail { get; set; }
     public DefaultType Type { get; set; }
     public string Response { get; set; }
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 }
 
 public class GetDepartmentCommand : GetType, IRequest<Result<FetchDepartment>>
@@ -33,7 +33,7 @@ public class ListDepartmentCommand : ListType, IRequest<Result<IEnumerable<Fetch
 
 #region Team
 
-public class CreateTeamCommand : IRequest<Result<Guid>>
+public class CreateTeamCommand : IRequest<Result<string>>
 {
     public string Name { get; set; }
     public string Department { get; set; }
@@ -42,12 +42,11 @@ public class CreateTeamCommand : IRequest<Result<Guid>>
     public IEnumerable<SelectListItem> LeadList { get; set; } = Enumerable.Empty<SelectListItem>();
     public DefaultStatus Status { get; set; }
     public string Note { get; set; }
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 }
 
-public class GetTeamCommand : IRequest<Result<FetchTeam>>
+public class GetTeamCommand : GetType, IRequest<Result<FetchTeam>>
 {
-    public Guid Id { get; set; }
 }
 
 public class ListTeamCommand : ListType, IRequest<Result<IEnumerable<FetchTeam>>>

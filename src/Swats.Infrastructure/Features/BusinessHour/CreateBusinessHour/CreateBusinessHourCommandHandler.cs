@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.BusinessHour.CreateBusinessHour;
 
-public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHourCommand, Result<Guid>>
+public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHourCommand, Result<string>>
 {
     private readonly IManageRepository _manageRepository;
     private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHo
         _mapper = mapper;
     }
 
-    public async Task<Result<Guid>> Handle(CreateBusinessHourCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateBusinessHourCommand request, CancellationToken cancellationToken)
     {
         var businessHour = _mapper.Map<CreateBusinessHourCommand, Model.Domain.BusinessHour>(request);
 
@@ -35,7 +35,7 @@ public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHo
         };
 
         var rst = await _manageRepository.CreateBusinessHour(businessHour, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(businessHour.Id.ToGuid()) : Result.Fail<Guid>("Not able to create now!");
+        return rst > 0 ? Result.Ok(businessHour.Id) : Result.Fail<string>("Not able to create now!");
     }
 }
 

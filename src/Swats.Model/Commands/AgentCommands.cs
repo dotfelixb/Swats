@@ -6,7 +6,7 @@ using Swats.Model.Queries;
 
 namespace Swats.Model.Commands;
 
-public class CreateAgentCommand : IRequest<Result<Guid>>
+public class CreateAgentCommand : IRequest<Result<string>>
 {
     public string UserName { get; set; }
     public string Email { get; set; }
@@ -22,12 +22,11 @@ public class CreateAgentCommand : IRequest<Result<Guid>>
     public string Type { get; set; }
     public IEnumerable<SelectListItem> TypeList { get; set; } = Enumerable.Empty<SelectListItem>();
     public AgentMode Mode { get; set; }
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 }
 
-public class GetAgentCommand : IRequest<Result<FetchedAgent>>
+public class GetAgentCommand : GetType, IRequest<Result<FetchedAgent>>
 {
-    public Guid Id { get; set; }
 }
 
 public class ListAgentCommand : IRequest<Result<IEnumerable<FetchedAgent>>>

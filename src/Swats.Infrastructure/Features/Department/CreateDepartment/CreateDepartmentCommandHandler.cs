@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Department.CreateDepartment;
 
-public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, Result<Guid>>
+public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, Result<string>>
 {
     private readonly IManageRepository _manageRepository;
     private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
         _mapper = mapper;
     }
 
-    public async Task<Result<Guid>> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
         var department = _mapper.Map<CreateDepartmentCommand, Model.Domain.Department>(request);
 
@@ -35,6 +35,6 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
         };
 
         var rst = await _manageRepository.CreateDepartment(department, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(department.Id.ToGuid()) : Result.Fail<Guid>("Not able to create now!");
+        return rst > 0 ? Result.Ok(department.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

@@ -14,7 +14,7 @@ public interface ITicketRepository
 
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken);
+    Task<FetchTicketType> GetTicketType(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
@@ -116,7 +116,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public Task<FetchTicketType> GetTicketType(Guid id, CancellationToken cancellationToken)
+    public Task<FetchTicketType> GetTicketType(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 

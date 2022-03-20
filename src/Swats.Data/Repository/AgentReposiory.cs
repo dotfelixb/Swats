@@ -9,7 +9,7 @@ namespace Swats.Data.Repository;
 public interface IAgentRepository
 {
     Task<int> CreateAgent(Agent agent, DbAuditLog audit, CancellationToken cancellationToken);
-    Task<FetchedAgent> GetAgent(Guid id, CancellationToken cancellationToken);
+    Task<FetchedAgent> GetAgent(string id, CancellationToken cancellationToken);
     Task<IEnumerable<FetchedAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 }
 
@@ -24,7 +24,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
         throw new NotImplementedException();
     }
 
-    public Task<FetchedAgent> GetAgent(Guid id, CancellationToken cancellationToken)
+    public Task<FetchedAgent> GetAgent(string id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

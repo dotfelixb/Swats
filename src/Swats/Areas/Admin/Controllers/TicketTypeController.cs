@@ -42,7 +42,7 @@ public class TicketTypeController : FrontEndController
                 : View(result.Value);
     }
 
-    public async Task<IActionResult> Edit(Guid id)
+    public async Task<IActionResult> Edit(string id)
     {
         var query = new GetTicketTypeCommand { Id = id };
         var result = await _mediatr.Send(query);
@@ -87,7 +87,7 @@ public class TicketTypeController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId.ToGuid();
+        command.CreatedBy = userId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {

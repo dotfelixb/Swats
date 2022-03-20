@@ -25,7 +25,6 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         cancellationToken.ThrowIfCancellationRequested();
 
         var ticket = _mapper.Map<CreateTicketCommand, Ticket>(request);
-        ticket.Id = NewId.NextGuid();
         ticket.UpdatedBy = request.CreatedBy;
 
         var code = await _ticketRepository.GenerateTicketCode(cancellationToken);

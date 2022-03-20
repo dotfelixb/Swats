@@ -20,7 +20,7 @@ public class CreateTicketCommand : IRequest<Result>
     public string HelpTopic { get; set; }
     public TicketPriority Priority { get; set; } = TicketPriority.Low;
     public TicketStatus Status { get; set; } = TicketStatus.New;
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 }
 
 public class GetTicketTypeCommand : GetType, IRequest<Result<FetchTicketType>>

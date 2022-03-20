@@ -42,7 +42,7 @@ public class DepartmentController : FrontEndController
                 : View(result.Value);
     }
 
-    public async Task<IActionResult> Edit(Guid id)
+    public async Task<IActionResult> Edit(string id)
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Edit)}");
 
@@ -100,7 +100,7 @@ public class DepartmentController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId.ToGuid();
+        command.CreatedBy = userId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {
