@@ -1,7 +1,7 @@
-@model IndexPartial
+@model IEnumerable<FetchHelpTopic>
 
 @{
     ViewData["Title"] = "Help Topics";
 }
 
-@await Html.PartialAsync("~/Areas/Admin/Views/_Index.cshtml", Model)
+@await Html.PartialAsync("~/Areas/Admin/Views/HelpTopic/_Index.cshtml", Model)

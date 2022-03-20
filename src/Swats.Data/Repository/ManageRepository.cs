@@ -49,6 +49,16 @@ public interface IManageRepository
     Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
     #endregion Teams
+
+    #region HelpTopic
+
+    Task<int> CreateHelpTopic(HelpTopic helpTopic, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<FetchHelpTopic> GetHelpTopic(string id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchHelpTopic>> ListHelpTopics(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+
+    #endregion HelpTopic
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -454,4 +464,125 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
     }
 
     #endregion Team
+
+    #region HelpTopic
+
+    public Task<int> CreateHelpTopic(HelpTopic helpTopic, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                INSERT INTO public.helptopic
+                    (id
+                    , topic
+                    , ""type""
+                    , department
+                    , note
+                    , status
+                    , rowversion
+                    , createdby
+                    , updatedby)
+                VALUES(@Id
+                    , @Topic
+                    , @Type
+                    , @Department
+                    , @Note
+                    , @Status
+                    , @RowVersion
+                    , @CreatedBy
+                    , @UpdatedBy);
+                ";
+
+            var crst = await conn.ExecuteAsync(cmd, new
+            {
+                helpTopic.Id,
+                helpTopic.Topic,
+                helpTopic.Type,
+                helpTopic.Department,
+                helpTopic.Note,
+                helpTopic.Status,
+                helpTopic.RowVersion,
+                helpTopic.CreatedBy,
+                helpTopic.UpdatedBy
+            });
+
+            var logCmd = @"
+                INSERT INTO public.helptopicauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var lrst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return crst + lrst;
+        });
+    }
+
+    public Task<FetchHelpTopic> GetHelpTopic(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.updatedby) AS UpdatedByName
+                    , d.""name"" AS departmentname
+                FROM helptopic h
+                LEFT JOIN department d ON d.id = h.department 
+                WHERE h.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
+        });
+    }
+
+    public Task<IEnumerable<FetchHelpTopic>> ListHelpTopics(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND h.deleted = FALSE ";
+            var query = $@"
+                SELECT h.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.updatedby) AS UpdatedByName
+                    , d.""name"" AS departmentname
+                FROM helptopic h
+                LEFT JOIN department d ON d.id = h.department
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchHelpTopic>(query, new { offset, limit });
+        });
+    }
+
+    #endregion
 }

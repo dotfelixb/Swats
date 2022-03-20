@@ -6,6 +6,6 @@ public static class TypeExtensions
     {
         return Guid.TryParse(value, out var rst)
             ? rst
-            : throw new InvalidOperationException(nameof(value));
+            : Guid.Empty;
     }
 }

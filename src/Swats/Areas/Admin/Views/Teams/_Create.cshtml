@@ -11,14 +11,12 @@
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
                     <button class="btn-default"
-                        hx-post="/admin/teams" 
+                        hx-get="/admin/teams" 
                         hx-trigger="click" 
                         hx-target="#main-swap" 
                         hx-swap="outerHTML"
-                        hx-push-url="true"
-                        >
-                        <div class="flex flex-row ">
-                            <div class="flex "> </div> 
+                        hx-push-url="true">
+                        <div class="flex flex-row "> 
                             <div class="flex">Cancel</div>
                        </div>
                     </button> 
@@ -29,10 +27,10 @@
                         hx-target="#main-swap" 
                         hx-swap="outerHTML"
                         hx-push-url="true">
-                       <div class="flex flex-row ">
+                       <div class="flex flex-row">
                             <div class="mr-2 flex items-center "> 
                                 <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
-                                </div> 
+                            </div> 
                             <div class="flex">Save</div>
                        </div>
                     </button>

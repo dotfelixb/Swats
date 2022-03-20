@@ -23,11 +23,19 @@
     <None Remove="Features\BusinessHour\CreateBusinessHour\" />
     <None Remove="Features\BusinessHour\ListBusinessHour\" />
     <None Remove="Features\BusinessHour\GetBusinessHour\" />
+    <None Remove="Features\HelpTopic\" />
+    <None Remove="Features\HelpTopic\GetHelpTopic\" />
+    <None Remove="Features\HelpTopic\CreateHelpTopic\" />
+    <None Remove="Features\HelpTopic\ListHelpTopics\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\BusinessHour\" />
     <Folder Include="Features\BusinessHour\CreateBusinessHour\" />
     <Folder Include="Features\BusinessHour\ListBusinessHour\" />
     <Folder Include="Features\BusinessHour\GetBusinessHour\" />
+    <Folder Include="Features\HelpTopic\" />
+    <Folder Include="Features\HelpTopic\GetHelpTopic\" />
+    <Folder Include="Features\HelpTopic\CreateHelpTopic\" />
+    <Folder Include="Features\HelpTopic\ListHelpTopics\" />
   </ItemGroup>
 </Project>

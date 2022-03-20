@@ -1,15 +1,15 @@
-﻿@model IEnumerable<FetchTeam>
+@model IEnumerable<FetchHelpTopic>
 @{
 
 }
 
 <div id="main-swap">
     <section class="flex w-full font-bold text-2xl pb-5">
-        <div class="flex w-1/2">Teams</div>
+        <div class="flex w-1/2">Help Topic</div>
         <div class="flex w-1/2 justify-end">
             <div class="">
                 <button class="btn-primary" 
-                    hx-get="/admin/teams/create"
+                    hx-get="/admin/helptopic/create"
                     hx-trigger="click" 
                     hx-target="#main-swap"
                     hx-swap="outerHTML" 
@@ -49,8 +49,11 @@
                             <p>Name</p>
                         </th>
                         <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Lead</p>
-                            <p style="color: #6b6b6b;">Department</p>
+                            <p>Department</p>
+                        </th>
+                         <th class="px-3 py-3 font-semibold text-xs">
+                            <p>Type</p>
+                            <p style="color: #6b6b6b;">Status</p>
                         </th>
                         <th class="px-3 py-3 font-semibold text-xs">
                             <p>Created By</p>
@@ -63,18 +66,20 @@
                     @foreach (var item in Model)
                     {
                         <tr class="px-10 cursor-pointer"
-                            hx-get="/admin/teams/edit/@item.Id"
+                            hx-get="/admin/helptopic/edit/@item.Id"
                             hx-trigger="click"
                             hx-target="#main-swap"
                             hx-swap="outerHTML"
                             hx-push-url="true">
                             <td class="px-3 py-1">
-                                <p class="text-xs">@item.Name </p>
+                                <p class="text-xs">@item.Topic</p>
                             </td>
-
                             <td class="px-3 py-3">
                                 <p class="text-xs">@item.DepartmentName</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.Lead</p>
+                            </td>
+                             <td class="px-3 py-3">
+                                <p class="text-xs">@item.Type</p>
+                                <p class="text-xs" style="color: #9b9b9b;">@item.Status</p>
                             </td>
                             <td class="px-3 py-3">
                                 <p class="text-xs">@item.CreatedByName</p>

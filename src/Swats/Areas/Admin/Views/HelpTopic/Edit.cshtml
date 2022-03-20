@@ -1,0 +1,7 @@
+@model FetchHelpTopic
+
+@{
+  ViewData["Title"] = Model.Topic;
+}
+
+@await Html.PartialAsync("~/Areas/Admin/Views/HelpTopic/_Edit.cshtml", Model)

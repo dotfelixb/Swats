@@ -283,6 +283,38 @@ CREATE TABLE teamauditlog
 	, FOREIGN KEY (target) REFERENCES team(id) ON DELETE CASCADE
 );
 
+CREATE TABLE helptopic
+(
+    id BPCHAR(50) PRIMARY KEY
+    , topic VARCHAR(50)
+    , type INT
+    , department BPCHAR(50)
+    , defeaultdepartment BPCHAR(50)
+    , note TEXT	
+    , status INT
+	, rowversion BPCHAR(50) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(50)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
+	, FOREIGN KEY (defeaultdepartment) REFERENCES department (id) ON DELETE CASCADE
+);
+
+CREATE TABLE helptopicauditlog
+(
+    id BPCHAR(50) PRIMARY KEY
+	, target BPCHAR(50)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES helptopic(id) ON DELETE CASCADE
+);
+
 --
 --CREATE TABLE ticket
 --(
