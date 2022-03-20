@@ -4,6 +4,7 @@ namespace Swats.Model.Queries;
 
 public class FetchDepartment : Department
 {
+    public string BusinessHourName { get; set; }
 }
 
 public class FetchTeam : Team

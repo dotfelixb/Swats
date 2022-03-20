@@ -11,7 +11,7 @@
             <div class="">
                 <button class="btn-primary" hx-get="/admin/department/create" hx-trigger="click" hx-target="#main-swap"
                         hx-swap="outerHTML" hx-push-url="true">
-                    New Hour
+                    New Department
                 </button>
             </div>
         </div>
@@ -42,7 +42,17 @@
             <table class="w-full table-auto">
                 <thead>
                     <tr class="text-left px-3 bg-indigo-50">
-                        
+                        <th class="px-3 py-3 font-semibold text-xs">
+                            <p>Name</p>
+                        </th>
+                        <th class="px-3 py-3 font-semibold text-xs">
+                            <p>Manager</p>
+                            <p style="color: #6b6b6b;">Type</p>
+                        </th>
+                         <th class="px-3 py-3 font-semibold text-xs">
+                            <p>Business Hour</p>
+                            <p style="color: #6b6b6b;">Outgoing Email</p>
+                        </th>
                         <th class="px-3 py-3 font-semibold text-xs">
                             <p>Created By</p>
                             <p style="color: #6b6b6b;">Created At</p>
@@ -59,7 +69,17 @@
                             hx-target="#main-swap"
                             hx-swap="outerHTML"
                             hx-push-url="true">
-                          
+                          <td class="px-3 py-3">
+                                <p class="text-xs">@item.Name</p>
+                            </td>
+                            <td class="px-3 py-3">
+                                <p class="text-xs">@item.Manager</p>
+                                <p class="text-xs" style="color: #9b9b9b;">@item.Type</p>
+                            </td>
+                            <td class="px-3 py-3">
+                                <p class="text-xs">@item.BusinessHour</p>
+                                <p class="text-xs" style="color: #9b9b9b;">@item.OutgoingEmail</p>
+                            </td>
                             <td class="px-3 py-3">
                                 <p class="text-xs">@item.CreatedByName</p>
                                 <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>

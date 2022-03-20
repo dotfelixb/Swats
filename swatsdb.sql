@@ -190,9 +190,9 @@ CREATE TABLE businesshour
 	, holidays VARCHAR[][]
 	, rowversion BPCHAR(50) NOT NULL
 	, deleted BOOLEAN DEFAULT(FALSE)
-    , createdby UUID
+    , createdby BPCHAR(50)
 	, createdat TIMESTAMPTZ DEFAULT(now())
-	, updatedby UUID
+	, updatedby BPCHAR(50)
 	, updatedat TIMESTAMPTZ DEFAULT(now())
 );
 
@@ -204,7 +204,7 @@ CREATE TABLE businesshourauditlog
 	, description VARCHAR(150) NOT NULL
 	, objectname VARCHAR(50) NOT NULL
 	, objectdata VARCHAR NOT NULL
-    , createdby UUID
+    , createdby BPCHAR(50)
 	, createdat TIMESTAMPTZ DEFAULT(now())
 	, FOREIGN KEY (target) REFERENCES businesshour(id) ON DELETE CASCADE
 );
@@ -240,7 +240,7 @@ CREATE TABLE agentauditlog
 	, objectdata VARCHAR NOT NULL
     , createdby BPCHAR(50)
 	, createdat TIMESTAMPTZ DEFAULT(now())
-	, FOREIGN KEY (target) REFERENCES department(id) ON DELETE CASCADE
+	, FOREIGN KEY (target) REFERENCES agent(id) ON DELETE CASCADE
 );
 
 CREATE TABLE department

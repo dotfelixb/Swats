@@ -30,6 +30,8 @@ public interface IManageRepository
 
     #region Department
 
+    Task<long> GenerateDepartmentCode(CancellationToken cancellationToken);
+
     Task<int> CreateDepartment(Department department, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<FetchDepartment> GetDepartment(string id, CancellationToken cancellationToken);
@@ -180,6 +182,18 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     #region Department
 
+    public Task<long> GenerateDepartmentCode(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var query = "SELECT NEXTVAL('DepartmentCode');";
+
+            return conn.QuerySingleAsync<long>(query);
+        });
+    }
+
     public Task<int> CreateDepartment(Department department, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -268,8 +282,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT d.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
+                    , b.""name"" AS businesshourname
                 FROM department d
-                WHERE id = @Id";
+                LEFT JOIN businesshour b ON b.id = d.businesshour 
+                WHERE d.id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
         });

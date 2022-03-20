@@ -1,0 +1,7 @@
+@model FetchDepartment
+
+@{
+  ViewData["Title"] = Model.Name;
+}
+
+@await Html.PartialAsync("~/Areas/Admin/Views/Department/_Edit.cshtml", Model)

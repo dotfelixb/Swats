@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
+using Swats.Infrastructure.Extensions;
 using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
@@ -22,7 +23,10 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
 
     public async Task<Result<string>> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
+        var code = await _manageRepository.GenerateDepartmentCode(cancellationToken);
+
         var department = _mapper.Map<CreateDepartmentCommand, Model.Domain.Department>(request);
+        department.Code = code.FormatCode(prefix: "DT");
 
         var auditLog = new DbAuditLog
         {
