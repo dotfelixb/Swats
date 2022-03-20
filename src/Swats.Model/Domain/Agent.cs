@@ -10,8 +10,9 @@ public class Agent : DbAudit
     public string Email { get; set; }
     public string Mobile { get; set; }
     public string Telephone { get; set; }
-    public Guid Timezone { get; set; }
-    public Guid Department { get; set; }
-    public Guid Team { get; set; }
+    public string Timezone { get; set; }
+    public string Department { get; set; }
+    public string Team { get; set; }
+    public string Type { get; set; }
     public AgentMode Mode { get; set; }
 }

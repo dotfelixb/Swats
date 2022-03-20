@@ -2,6 +2,6 @@
 
 namespace Swats.Model.Queries;
 
-public class FetchedAgent : Agent
+public class FetchAgent : Agent
 {
 }

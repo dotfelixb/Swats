@@ -8,6 +8,7 @@ namespace Swats.Model.Commands;
 
 public class CreateAgentCommand : IRequest<Result<string>>
 {
+    public string Id { get; set; }
     public string UserName { get; set; }
     public string Email { get; set; }
     public string FirstName { get; set; }
@@ -23,13 +24,14 @@ public class CreateAgentCommand : IRequest<Result<string>>
     public IEnumerable<SelectListItem> TypeList { get; set; } = Enumerable.Empty<SelectListItem>();
     public AgentMode Mode { get; set; }
     public string CreatedBy { get; set; }
+    public string Note { get; set; }
 }
 
-public class GetAgentCommand : GetType, IRequest<Result<FetchedAgent>>
+public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
 {
 }
 
-public class ListAgentCommand : IRequest<Result<IEnumerable<FetchedAgent>>>
+public class ListAgentCommand : IRequest<Result<IEnumerable<FetchAgent>>>
 {
     public int Offset { get; set; }
     public int Limit { get; set; }

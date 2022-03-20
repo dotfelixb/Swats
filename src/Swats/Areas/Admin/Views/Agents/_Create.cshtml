@@ -161,7 +161,16 @@
                     </select>
                     <span asp-validation-for="@Model.Mode" class="form-input-error"></span>
                 </div>
-
+            </div>
+             <div class="grid grid-cols-1 gap-5 py-4">
+                @* body *@
+                <div class="form-control">
+                    <label asp-for="@Model.Note" class="form-label">
+                        Agent Signature
+                    </label>
+                    <textarea asp-for="@Model.Note" class="form-input" cols="30" rows="10"></textarea>
+                    <span asp-validation-for="@Model.Note" class="form-input-error"></span>
+                </div>
             </div>
         </div>
     </form>

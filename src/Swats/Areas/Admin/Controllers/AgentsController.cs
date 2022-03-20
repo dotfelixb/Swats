@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Htmx;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -38,15 +39,20 @@ public class AgentsController : FrontEndController
 
     #region GET
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
 
-        var result = Enumerable.Empty<FetchedAgent>();
+        var query = new ListAgentCommand { };
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed)
+        {
+            return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        }
 
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/Agents/_Index.cshtml", result)
-                : View(result);
+                ? PartialView("~/Areas/Admin/Views/Agents/_Index.cshtml", result.Value)
+                : View(result.Value);
     }
 
     public async Task<IActionResult> Edit(string id)
@@ -59,10 +65,10 @@ public class AgentsController : FrontEndController
         {
             return NotFound(result.Reasons.FirstOrDefault()?.Message);
         }
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agent/edit/{id}".GenerateQrCode();
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
 
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/Agent/_Edit.cshtml", result.Value)
+                ? PartialView("~/Areas/Admin/Views/Agents/_Edit.cshtml", result.Value)
                 : View(result.Value);
     }
 
@@ -76,8 +82,22 @@ public class AgentsController : FrontEndController
             return BadRequest(ticketypeResult.Reasons.FirstOrDefault()?.Message);
         }
 
+        var deaprtmentList = await _mediatr.Send(new ListDepartmentCommand { });
+        if (deaprtmentList.IsFailed)
+        {
+            return BadRequest(deaprtmentList.Reasons.FirstOrDefault()?.Message);
+        }
+
+        var teamList = await _mediatr.Send(new ListTeamsCommand { });
+        if (teamList.IsFailed)
+        {
+            return BadRequest(deaprtmentList.Reasons.FirstOrDefault()?.Message);
+        }
+
         CreateAgentCommand command = new()
         {
+            DepartmentList = deaprtmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
             TypeList = ticketypeResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
         };
 
@@ -98,6 +118,7 @@ public class AgentsController : FrontEndController
 
         // get login user id
         var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        var newUserId = NewId.NextGuid().ToString();
 
         if (!ModelState.IsValid)
         {
@@ -108,7 +129,8 @@ public class AgentsController : FrontEndController
              : View(command);
         }
 
-        command.CreatedBy = userId;
+        command.Id = newUserId; // without this agent creation fail
+        command.CreatedBy = userId; 
 
         // get user name from email
         command.UserName = command.Email.Split('@').First(); // lisa.paige@swats.app => lisa.paige
@@ -119,6 +141,7 @@ public class AgentsController : FrontEndController
         // email before at '@' symbol and @1
         var password = $"{command.UserName}@1";
         var user = _mapper.Map<CreateAgentCommand, AuthUser>(command);
+
         var userResult = await _userManager.CreateAsync(user, password);
         if (!userResult.Succeeded)
         {

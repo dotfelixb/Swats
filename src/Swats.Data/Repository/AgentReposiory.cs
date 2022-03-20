@@ -10,9 +10,9 @@ public interface IAgentRepository
 {
     Task<int> CreateAgent(Agent agent, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    Task<FetchedAgent> GetAgent(string id, CancellationToken cancellationToken);
+    Task<FetchAgent> GetAgent(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchedAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 }
 
 public class AgentReposiory : BasePostgresRepository, IAgentRepository
@@ -36,6 +36,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                     , timezone
                     , department
                     , team
+                    , type
                     , status
                     , ""mode""
                     , rowversion
@@ -50,6 +51,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                     , @Timezone
                     , @Department
                     , @Team
+                    , @Type
                     , @Status
                     , @Mode
                     , @RowVersion
@@ -68,6 +70,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 agent.Timezone,
                 agent.Department,
                 agent.Team,
+                agent.Type,
                 agent.Status,
                 agent.Mode,
                 agent.RowVersion,
@@ -109,41 +112,41 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
         });
     }
 
-    public Task<FetchedAgent> GetAgent(string id, CancellationToken cancellationToken)
+    public Task<FetchAgent> GetAgent(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         return WithConnection(async conn =>
         {
             var query = @"
-                SELECT b.*
-	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.createdby) AS CreatedByName
-	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.updatedby) AS UpdatedByName
-                FROM agent b
+                SELECT g.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
+                FROM agent g
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchedAgent>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new { Id = id });
         });
     }
 
-    public Task<IEnumerable<FetchedAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         return WithConnection(async conn =>
         {
-            var _includeDeleted = includeDeleted ? " " : " AND b.deleted = FALSE ";
+            var _includeDeleted = includeDeleted ? " " : " AND g.deleted = FALSE ";
             var query = $@"
-                SELECT b.*
-	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.createdby) AS CreatedByName
-	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.updatedby) AS UpdatedByName
-                FROM agent b
+                SELECT g.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
+                FROM agent g
                 WHERE 1=1
                 {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchedAgent>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchAgent>(query, new { offset, limit });
         });
     }
 }

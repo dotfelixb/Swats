@@ -6,8 +6,8 @@
 -- CREATE DATABASE swats;
 
 -- sequences
-CREATE SEQUENCE TicketCode INCREMENT 1 START 1;
-CREATE SEQUENCE DepartmentCode INCREMENT 1 START 1;
+-- CREATE SEQUENCE TicketCode INCREMENT 1 START 1;
+-- CREATE SEQUENCE DepartmentCode INCREMENT 1 START 1;
 
 CREATE TABLE authuser 
 (
@@ -216,43 +216,6 @@ CREATE TABLE departmentauditlog
 	, FOREIGN KEY (target) REFERENCES department(id) ON DELETE CASCADE
 );
 
-CREATE TABLE agent
-(
-    id bpchar(50) PRIMARY KEY
-	, email VARCHAR(50)
-	, firstname VARCHAR(50)
-	, lastname VARCHAR(50)
-	, mobile VARCHAR(50)
-	, telephone VARCHAR(50)
-	, timezone VARCHAR(50)
-	, department BPCHAR(50)
-	, tickettype BPCHAR(50)
-	, status INT
-	, mode INT
-	, rowversion BPCHAR(50) NOT NULL
-	, deleted BOOLEAN DEFAULT(FALSE)
-    , createdby BPCHAR(50)
-	, createdat TIMESTAMPTZ DEFAULT(now())
-	, updatedby BPCHAR(50)
-	, updatedat TIMESTAMPTZ DEFAULT(now())
-	, FOREIGN KEY (id) REFERENCES authuser(id) ON DELETE CASCADE
-	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
-	, FOREIGN KEY (tickettype) REFERENCES tickettype(id) ON DELETE CASCADE
-);
-
-CREATE TABLE agentauditlog
-(
-    id BPCHAR(50) PRIMARY KEY
-	, target BPCHAR(50)
-	, actionname VARCHAR(50) NOT NULL
-	, description VARCHAR(150) NOT NULL
-	, objectname VARCHAR(50) NOT NULL
-	, objectdata VARCHAR NOT NULL
-    , createdby BPCHAR(50)
-	, createdat TIMESTAMPTZ DEFAULT(now())
-	, FOREIGN KEY (target) REFERENCES agent(id) ON DELETE CASCADE
-);
-
 CREATE TABLE team
 (
     id BPCHAR(50) PRIMARY KEY
@@ -267,7 +230,6 @@ CREATE TABLE team
 	, updatedby BPCHAR(50)
 	, updatedat TIMESTAMPTZ DEFAULT(now())
 	, FOREIGN KEY (department) REFERENCES department (id) ON DELETE CASCADE
-	, FOREIGN KEY (lead) REFERENCES agent(id) ON DELETE CASCADE
 );
 
 CREATE TABLE teamauditlog
@@ -281,6 +243,48 @@ CREATE TABLE teamauditlog
     , createdby BPCHAR(50)
 	, createdat TIMESTAMPTZ DEFAULT(now())
 	, FOREIGN KEY (target) REFERENCES team(id) ON DELETE CASCADE
+);
+
+CREATE TABLE agent
+(
+    id bpchar(50) PRIMARY KEY
+	, email VARCHAR(50)
+	, firstname VARCHAR(50)
+	, lastname VARCHAR(50)
+	, mobile VARCHAR(50)
+	, telephone VARCHAR(50)
+	, timezone VARCHAR(50)
+	, department BPCHAR(50)
+	, team BPCHAR(50)
+	, tickettype BPCHAR(50)
+	, status INT
+	, mode INT
+	, note TEXT
+	, rowversion BPCHAR(50) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(50)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (id) REFERENCES authuser(id) ON DELETE CASCADE
+	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
+	, FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE
+	, FOREIGN KEY (tickettype) REFERENCES tickettype(id) ON DELETE CASCADE
+);
+
+ALTER TABLE public.agent ADD CONSTRAINT agent_team_fkey FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE;
+
+CREATE TABLE agentauditlog
+(
+    id BPCHAR(50) PRIMARY KEY
+	, target BPCHAR(50)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES agent(id) ON DELETE CASCADE
 );
 
 CREATE TABLE helptopic
