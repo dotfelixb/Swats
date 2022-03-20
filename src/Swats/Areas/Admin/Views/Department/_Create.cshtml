@@ -51,7 +51,6 @@
                         Type
                     </label>
                     <select asp-for="@Model.Type" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
-                        <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Type" class="form-input-error"></span>
                 </div>

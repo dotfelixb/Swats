@@ -66,10 +66,9 @@
                     <span asp-validation-for="@Model.Department" class="form-input-error"></span>
                 </div>
 
-                
                 <div class="form-control">
                     <label asp-for="@Model.Lead" class="form-label">
-                        Lead
+                        Team Lead
                     </label>
                     <input asp-for="@Model.Lead" list="leadlist" class="form-input" />
                     <datalist id="leadlist">
@@ -79,6 +78,26 @@
                         }
                     </datalist>
                     <span asp-validation-for="@Model.Lead" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 py-4">
+                @* body *@
+                <div class="form-control">
+                    <label asp-for="@Model.Note" class="form-label">
+                        Default Note
+                    </label>
+                    <textarea asp-for="@Model.Note" class="form-input" cols="30" rows="5"></textarea>
+                    <span asp-validation-for="@Model.Note" class="form-input-error"></span>
                 </div>
             </div>
         </div>

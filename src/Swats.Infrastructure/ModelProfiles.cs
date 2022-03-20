@@ -26,6 +26,9 @@ public class ModelProfiles : AutoMapper.Profile
         CreateMap<CreateDepartmentCommand, Department>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
+        CreateMap<CreateTeamCommand, Team>()
+           .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+
         /**
          *.ForMember(d => d.ParentCustomer,
          *          opt => opt.MapFrom(s => s.ParentCustomer.ToGuid()))

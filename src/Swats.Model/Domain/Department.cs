@@ -16,8 +16,9 @@ public class Department : DbAudit
 
 public class Team : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Name { get; set; }
-    public Guid Department { get; set; }
-    public Guid Lead { get; set; }
+    public string Department { get; set; }
+    public string Lead { get; set; }
+    public string Note { get; set; }
 }

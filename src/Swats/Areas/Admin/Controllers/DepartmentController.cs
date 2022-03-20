@@ -26,6 +26,8 @@ public class DepartmentController : FrontEndController
         _mediatr = mediatr;
     }
 
+    #region GET
+
     public async Task<IActionResult> Index()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Index)}");
@@ -79,6 +81,8 @@ public class DepartmentController : FrontEndController
              ? PartialView("~/Areas/Admin/Views/Department/_Create.cshtml", command)
              : View(command);
     }
+
+    #endregion
 
     #region POST
 

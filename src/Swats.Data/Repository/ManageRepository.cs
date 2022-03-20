@@ -42,9 +42,13 @@ public interface IManageRepository
 
     #region Teams
 
+    Task<int> CreateTeam(Team team, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<FetchTeam> GetTeam(string id, CancellationToken cancellationToken);
+
     Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
-    #endregion
+    #endregion Teams
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -292,10 +296,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
                     , b.""name"" AS businesshourname
-                    , CONCAT(a.firstname, ' ', a.lastname) as ManagerName
+                    , CONCAT(g.firstname, ' ', g.lastname) as ManagerName
                 FROM department d
-                LEFT JOIN businesshour b ON b.id = d.businesshour 
-                LEFT JOIN agent a on a.id = d.manager
+                LEFT JOIN businesshour b ON b.id = d.businesshour
+                LEFT JOIN agent g on g.id = d.manager
                 WHERE d.id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
@@ -313,7 +317,11 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT d.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
-                FROM department b
+                    , b.""name"" AS businesshourname
+                    , CONCAT(g.firstname, ' ', g.lastname) as ManagerName
+                FROM department d
+                LEFT JOIN businesshour b ON b.id = d.businesshour
+                LEFT JOIN agent g on g.id = d.manager
                 WHERE 1=1
                 {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
@@ -327,8 +335,100 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     #region Team
 
-    public
-    Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<int> CreateTeam(Team team, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                INSERT INTO public.team
+                    (id
+                    , ""name""
+                    , department
+                    , ""lead""
+                    , status
+                    , rowversion
+                    , createdby
+                    , updatedby)
+                VALUES(@Id
+                    , @Name
+                    , @Department
+                    , @Lead
+                    , @Status
+                    , @RowVersion
+                    , @CreatedBy
+                    , @UpdatedBy);
+                ";
+
+            var crst = await conn.ExecuteAsync(cmd, new
+            {
+                team.Id,
+                team.Name,
+                team.Department,
+                team.Lead,
+                team.Status,
+                team.RowVersion,
+                team.CreatedBy,
+                team.UpdatedBy
+            });
+
+            var logCmd = @"
+                INSERT INTO public.teamauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var lrst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return crst + lrst;
+        });
+    }
+
+    public Task<FetchTeam> GetTeam(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                    , d.""name"" AS departmentname
+                    , CONCAT(g.firstname, ' ', g.lastname) as LeadName
+                FROM team t
+                LEFT JOIN department d ON d.id = t.department
+                LEFT JOIN agent g on g.id = d.manager
+                WHERE t.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new { Id = id });
+        });
+    }
+
+    public Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -339,7 +439,11 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT t.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                    , d.""name"" AS departmentname
+                    , CONCAT(g.firstname, ' ', g.lastname) as LeadName
                 FROM team t
+                LEFT JOIN department d ON d.id = t.department
+                LEFT JOIN agent g on g.id = d.manager
                 WHERE 1=1
                 {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
@@ -349,5 +453,5 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    #endregion
+    #endregion Team
 }

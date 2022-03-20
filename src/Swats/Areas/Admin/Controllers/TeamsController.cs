@@ -1,9 +1,9 @@
 ﻿using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
-using Swats.Model;
 using Swats.Model.Commands;
 using System.Security.Claims;
 
@@ -61,16 +61,27 @@ public class TeamsController : FrontEndController
                 : View(result.Value);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(Create)}");
 
+        var departmentResult = await _mediatr.Send(new ListDepartmentCommand { });
+        if (departmentResult.IsFailed)
+        {
+            return BadRequest(departmentResult.Reasons.FirstOrDefault()?.Message);
+        }
+
+        CreateTeamCommand command = new() 
+        {
+            DepartmentList = departmentResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
+        };
+
         return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/Teams/_Create.cshtml")
-             : View();
+             ? PartialView("~/Areas/Admin/Views/Teams/_Create.cshtml", command)
+             : View(command);
     }
 
-    #endregion
+    #endregion GET
 
     #region POST
 
@@ -108,6 +119,5 @@ public class TeamsController : FrontEndController
         return RedirectToAction("Edit", new { Id = result.Value });
     }
 
-    #endregion
+    #endregion POST
 }
-

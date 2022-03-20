@@ -23,16 +23,13 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
 
     public async Task<Result<string>> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
-        var code = await _manageRepository.GenerateDepartmentCode(cancellationToken);
-
         var department = _mapper.Map<CreateDepartmentCommand, Model.Domain.Department>(request);
-        department.Code = code.FormatCode(prefix: "DT");
 
         var auditLog = new DbAuditLog
         {
             Target = department.Id,
             ActionName = "department.create",
-            Description = "added department hour",
+            Description = "added department",
             ObjectName = "department",
             ObjectData = JsonSerializer.Serialize(department),
             CreatedBy = request.CreatedBy,
