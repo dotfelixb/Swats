@@ -44,6 +44,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                     , description
                     , color
                     , visibility
+                    , status
                     , rowversion
                     , createdby
                     , updatedby)
@@ -53,6 +54,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                     , @Description
                     , @Color
                     , @Visibility
+                    , @Status
                     , @RowVersion
                     , @CreatedBy
                     , @UpdatedBy);
@@ -65,6 +67,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 ticketType.Description,
                 ticketType.Color,
                 ticketType.Visibility,
+                ticketType.Status,
                 ticketType.RowVersion,
                 ticketType.CreatedBy,
                 ticketType.UpdatedBy

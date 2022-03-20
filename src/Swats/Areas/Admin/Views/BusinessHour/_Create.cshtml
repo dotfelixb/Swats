@@ -52,13 +52,12 @@
                     <span asp-validation-for="@Model.Name" class="form-input-error"></span>
                 </div>
 
-                 @* status *@
+                @* status *@
                 <div class="form-control">
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
                     <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
-                        <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>

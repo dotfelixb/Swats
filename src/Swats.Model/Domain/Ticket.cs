@@ -15,7 +15,7 @@ public class Ticket : DbAudit
     public Guid Department { get; set; }
     public Guid HelpTopic { get; set; }
     public TicketPriority Priority { get; set; }
-    public TicketStatus Status { get; set; }
+    public TicketStatus TicketStatus { get; set; }
 
 }
 

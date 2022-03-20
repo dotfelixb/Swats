@@ -292,6 +292,7 @@ CREATE TABLE teamauditlog
 --    , requester BPCHAR(50)
 --    , AssignedTo BPCHAR(50)
 --    , Source BPCHAR(50)
+--    , TicketStatus BPCHAR(50)
 --);
 --
 --CREATE TABLE Source

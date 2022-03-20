@@ -39,6 +39,12 @@ public interface IManageRepository
     Task<IEnumerable<FetchDepartment>> ListDepartments(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
     #endregion Department
+
+    #region Teams
+
+    Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+
+    #endregion
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -209,6 +215,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     , outgoingemail
                     , ""type""
                     , response
+                    , status
                     , rowversion
                     , createdby
                     , updatedby)
@@ -219,6 +226,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     , @OutgoingEmail
                     , @Type
                     , @Response
+                    , @Status
                     , @RowVersion
                     , @CreatedBy
                     , @UpdatedBy);
@@ -234,6 +242,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 department.Type,
                 department.Response,
                 department.RowVersion,
+                department.Status,
                 department.CreatedBy,
                 department.UpdatedBy
             });
@@ -283,8 +292,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
                     , b.""name"" AS businesshourname
+                    , CONCAT(a.firstname, ' ', a.lastname) as ManagerName
                 FROM department d
                 LEFT JOIN businesshour b ON b.id = d.businesshour 
+                LEFT JOIN agent a on a.id = d.manager
                 WHERE d.id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
@@ -297,11 +308,11 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
         return WithConnection(async conn =>
         {
-            var _includeDeleted = includeDeleted ? " " : " AND b.deleted = FALSE ";
+            var _includeDeleted = includeDeleted ? " " : " AND d.deleted = FALSE ";
             var query = $@"
-                SELECT b.*
-	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.createdby) AS CreatedByName
-	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.updatedby) AS UpdatedByName
+                SELECT d.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
                 FROM department b
                 WHERE 1=1
                 {_includeDeleted}
@@ -313,4 +324,30 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
     }
 
     #endregion Department
+
+    #region Team
+
+    public
+    Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
+            var query = $@"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM team t
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchTeam>(query, new { offset, limit });
+        });
+    }
+
+    #endregion
 }

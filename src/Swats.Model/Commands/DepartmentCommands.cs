@@ -17,6 +17,7 @@ public class CreateDepartmentCommand : IRequest<Result<string>>
     public IEnumerable<SelectListItem> BusinessHours { get; set; } = Enumerable.Empty<SelectListItem>();
     public string OutgoingEmail { get; set; }
     public DefaultType Type { get; set; }
+    public DefaultStatus Status { get; set; }
     public string Response { get; set; }
     public string CreatedBy { get; set; }
 }
@@ -49,7 +50,7 @@ public class GetTeamCommand : GetType, IRequest<Result<FetchTeam>>
 {
 }
 
-public class ListTeamCommand : ListType, IRequest<Result<IEnumerable<FetchTeam>>>
+public class ListTeamsCommand : ListType, IRequest<Result<IEnumerable<FetchTeam>>>
 {
 }
 

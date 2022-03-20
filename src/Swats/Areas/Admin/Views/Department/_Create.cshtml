@@ -95,8 +95,15 @@
                     <span asp-validation-for="@Model.OutgoingEmail" class="form-input-error"></span>
                 </div>
 
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
+                </div>
                
-
             </div>
             <div class="grid grid-cols-1 gap-5 py-4">
                 @* body *@

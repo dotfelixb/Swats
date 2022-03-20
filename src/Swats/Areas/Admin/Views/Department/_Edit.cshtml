@@ -63,6 +63,13 @@
           </div>
 
           <div class="form-control">
+                    <label asp-for="@Model.ManagerName" class="form-label">
+                        Manager
+                    </label>
+                    <input asp-for="@Model.ManagerName" class="form-input" />
+          </div>
+
+          <div class="form-control">
                     <label asp-for="@Model.BusinessHourName" class="form-label">
                         Business Hour
                     </label>
@@ -75,6 +82,13 @@
                         Outgoing Email
                     </label>
                     <input asp-for="@Model.OutgoingEmail" class="form-input" />
+          </div>
+
+          <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <input asp-for="@Model.Status" class="form-input" />
           </div>
       </div>
 

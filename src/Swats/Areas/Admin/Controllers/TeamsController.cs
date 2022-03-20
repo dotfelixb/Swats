@@ -31,7 +31,7 @@ public class TeamsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(IndexAsync)}");
 
-        var query = new ListTeamCommand { };
+        var query = new ListTeamsCommand { };
         var result = await _mediatr.Send(query);
         if (result.IsFailed)
         {
