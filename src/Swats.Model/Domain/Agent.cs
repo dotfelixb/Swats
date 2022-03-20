@@ -15,4 +15,5 @@ public class Agent : DbAudit
     public string Team { get; set; }
     public string Type { get; set; }
     public AgentMode Mode { get; set; }
+    public string Note { get; set; }
 }

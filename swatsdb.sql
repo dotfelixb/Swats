@@ -268,7 +268,6 @@ CREATE TABLE agent
 	, updatedat TIMESTAMPTZ DEFAULT(now())
 	, FOREIGN KEY (id) REFERENCES authuser(id) ON DELETE CASCADE
 	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
-	, FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE
 	, FOREIGN KEY (tickettype) REFERENCES tickettype(id) ON DELETE CASCADE
 );
 

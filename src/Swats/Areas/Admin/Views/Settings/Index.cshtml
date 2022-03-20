@@ -15,9 +15,9 @@
     </section>
 
     <div class="admin-grid">
-        <div>
+       @* <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "person", title = "Users", location="/admin/user" })
-        </div>
+        </div>*@
         <div>
             @await Component.InvokeAsync("PanelLinkCard", new { iconName = "headset", title = "Agents", location="/admin/agents" })
         </div>

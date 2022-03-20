@@ -1,0 +1,132 @@
+﻿@model FetchAgent
+
+@{
+    var name = $"{Model.FirstName} {Model.LastName}";
+}
+
+<div id="main-swap">
+    <section class="flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">@name</div>
+        <div class="flex w-1/2 justify-end">
+            <div class="">
+                @* <button class="btn-primary"
+                      hx-get="/admin/tickettype/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
+                      hx-push-url="true">
+                      New Ticket Type
+                    </button> *@
+            </div>
+        </div>
+    </section>
+
+    <div class="w-full flex flex-row">
+        <div style="width: 220px" class="">
+            <div class=" pr-2">
+                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@name" />
+            </div>
+            <ul class="edit-sidebar py-5">
+                <li>
+                    <div class="">Created By</div>
+                    <div class="">@Model.CreatedByName</div>
+                </li>
+                <li>
+                    <div>
+                        <div>Created At</div>
+                        <div>@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Updated By</div>
+                        <div>@Model.UpdatedByName</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Updated At</div>
+                        <div>@Model.UpdatedAt.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @* name *@
+                 <div class="form-control">
+                    <label asp-for="@Model.Email" class="form-label">
+                        Email
+                    </label>
+                    <input asp-for="@Model.Email" class="form-input" />
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.Mobile" class="form-label">
+                        Mobile
+                    </label>
+                    <input asp-for="@Model.Mobile" class="form-input" />
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.FirstName" class="form-label">
+                        First name
+                    </label>
+                    <input asp-for="@Model.FirstName" class="form-input" />
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.LastName" class="form-label">
+                        Last name
+                    </label>
+                    <input asp-for="@Model.LastName" class="form-input" />
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.DepartmentName" class="form-label">
+                        Department
+                    </label>
+                    <input asp-for="@Model.DepartmentName" class="form-input" />
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.TeamName" class="form-label">
+                        Team
+                    </label>
+                    <input asp-for="@Model.TeamName" class="form-input" />
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.TypeName" class="form-label">
+                        Default aTicket Type
+                    </label>
+                    <input asp-for="@Model.TypeName" class="form-input" />
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
+                    </select>
+                </div>
+
+                @* color *@
+                <div class="form-control">
+                    <label asp-for="@Model.Timezone" class="form-label">
+                        Timezone
+                    </label>
+                    <input asp-for="@Model.Timezone" class="form-input" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 py-4">
+                @* description *@
+                <div class="form-control">
+                    <label asp-for="@Model.Note" class="form-label">
+                        Signature
+                    </label>
+                    <textarea asp-for="@Model.Note" class="form-input" cols="30" rows="10"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

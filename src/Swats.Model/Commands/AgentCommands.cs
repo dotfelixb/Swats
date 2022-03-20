@@ -31,9 +31,6 @@ public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
 {
 }
 
-public class ListAgentCommand : IRequest<Result<IEnumerable<FetchAgent>>>
+public class ListAgentCommand : ListType, IRequest<Result<IEnumerable<FetchAgent>>>
 {
-    public int Offset { get; set; }
-    public int Limit { get; set; }
-    public bool Deleted { get; set; }
 }

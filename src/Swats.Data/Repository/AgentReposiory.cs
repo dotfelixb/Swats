@@ -36,7 +36,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                     , timezone
                     , department
                     , team
-                    , type
+                    , tickettype
                     , status
                     , ""mode""
                     , rowversion
@@ -122,8 +122,14 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 SELECT g.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
+	                , d.""name"" AS departmentname
+	                , t.""name"" AS teamname
+                    , tt.""name"" AS typename
                 FROM agent g
-                WHERE id = @Id";
+                LEFT JOIN department d ON d.id = g.department
+                LEFT JOIN team t ON t.id = g.team
+                LEFT JOIN tickettype tt ON tt.id = g.tickettype
+                WHERE g.id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new { Id = id });
         });
@@ -140,9 +146,15 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 SELECT g.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
+	                , d.""name"" AS departmentname
+	                , t.""name"" AS teamname
+                    , tt.""name"" AS typename
                 FROM agent g
-                WHERE 1=1
-                {_includeDeleted}
+                LEFT JOIN department d ON d.id = g.department
+                LEFT JOIN team t ON t.id = g.team
+                LEFT JOIN tickettype tt ON tt.id = g.tickettype
+                WHERE 1 = 1
+                { _includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
