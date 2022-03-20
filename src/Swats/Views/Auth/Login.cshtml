@@ -3,7 +3,7 @@
 @{
     Layout = "_AuthLayout";
     ViewData["Title"] = "Login";
-    var loginStatus = @TempData["LoginStatus"]?.ToString();
+    var loginStatus = @TempData["LoginStatus"]?.ToString() ?? "";
 
 }
 

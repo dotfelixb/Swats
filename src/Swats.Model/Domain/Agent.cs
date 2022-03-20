@@ -13,4 +13,5 @@ public class Agent : DbAudit
     public Guid Timezone { get; set; }
     public Guid Department { get; set; }
     public Guid Team { get; set; }
+    public AgentMode Mode { get; set; }
 }

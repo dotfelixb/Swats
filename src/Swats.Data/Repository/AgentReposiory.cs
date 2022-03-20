@@ -8,8 +8,10 @@ namespace Swats.Data.Repository;
 
 public interface IAgentRepository
 {
-    Task<int> CreateAgent(Agent agent, DbAuditLog audit, CancellationToken cancellationToken);
+    Task<int> CreateAgent(Agent agent, DbAuditLog auditLog, CancellationToken cancellationToken);
+
     Task<FetchedAgent> GetAgent(string id, CancellationToken cancellationToken);
+
     Task<IEnumerable<FetchedAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 }
 
@@ -19,14 +21,109 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
     {
     }
 
-    public Task<int> CreateAgent(Agent agent, DbAuditLog audit, CancellationToken cancellationToken)
+    public Task<int> CreateAgent(Agent agent, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                INSERT INTO public.agent
+                    (id
+                    , email
+                    , firstname
+                    , lastname
+                    , mobile
+                    , telephone
+                    , timezone
+                    , department
+                    , team
+                    , status
+                    , ""mode""
+                    , rowversion
+                    , createdby
+                    , updatedby)
+                VALUES(@Id
+                    , @Email
+                    , @FirstName
+                    , @LastName
+                    , @Mobile
+                    , @Telephone
+                    , @Timezone
+                    , @Department
+                    , @Team
+                    , @Status
+                    , @Mode
+                    , @RowVersion
+                    , @CreatedBy
+                    , @UpdatedBy);
+                ";
+
+            var ctt = await conn.ExecuteAsync(cmd, new
+            {
+                agent.Id,
+                agent.Email,
+                agent.FirstName,
+                agent.LastName,
+                agent.Mobile,
+                agent.Telephone,
+                agent.Timezone,
+                agent.Department,
+                agent.Team,
+                agent.Status,
+                agent.Mode,
+                agent.RowVersion,
+                agent.CreatedBy,
+                agent.UpdatedBy
+            });
+
+            var logCmd = @"
+                INSERT INTO public.agentauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var cl = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return ctt + cl;
+        });
     }
 
     public Task<FetchedAgent> GetAgent(string id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT b.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = b.updatedby) AS UpdatedByName
+                FROM agent b
+                WHERE id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchedAgent>(query, new { Id = id });
+        });
     }
 
     public Task<IEnumerable<FetchedAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)

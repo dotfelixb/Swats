@@ -549,7 +549,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         return WithConnection(async conn =>
         {
             var query = @"
-                SELECT t.*
+                SELECT h.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.updatedby) AS UpdatedByName
                     , d.""name"" AS departmentname

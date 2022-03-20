@@ -26,9 +26,11 @@ public class HelpTopicController : FrontEndController
         _mediatr = mediatr;
     }
 
+    #region GET
+
     public async Task<IActionResult> Index()
     {
-         _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Index)}");
+        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Index)}");
 
         var query = new ListHelpTopicsCommand { };
         var result = await _mediatr.Send(query);
@@ -42,12 +44,30 @@ public class HelpTopicController : FrontEndController
                 : View(result.Value);
     }
 
+    public async Task<IActionResult> Edit(string id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Edit)}");
+
+        var query = new GetHelpTopicCommand { Id = id };
+        var result = await _mediatr.Send(query);
+
+        if (result.IsFailed)
+        {
+            return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        }
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/helptopic/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+                ? PartialView("~/Areas/Admin/Views/helptopic/_Edit.cshtml", result.Value)
+                : View(result.Value);
+    }
+
     public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Create)}");
 
-        var departmentResult = await _mediatr.Send(new ListDepartmentCommand{});
-        if(departmentResult.IsFailed)
+        var departmentResult = await _mediatr.Send(new ListDepartmentCommand { });
+        if (departmentResult.IsFailed)
         {
             return BadRequest(departmentResult.Reasons.FirstOrDefault()?.Message);
         }
@@ -58,9 +78,11 @@ public class HelpTopicController : FrontEndController
         };
 
         return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/HelpTopic/_Create.cshtml",command)
+             ? PartialView("~/Areas/Admin/Views/HelpTopic/_Create.cshtml", command)
              : View(command);
     }
+
+    #endregion
 
     #region POST
 

@@ -24,6 +24,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddIdentity<AuthUser, AuthRole>(o =>
 {
     o.Password.RequireDigit = false;
+    o.Password.RequireNonAlphanumeric = false;
+    o.Password.RequireUppercase = false;
 }).AddDefaultTokenProviders();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

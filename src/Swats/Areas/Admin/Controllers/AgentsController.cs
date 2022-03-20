@@ -116,8 +116,10 @@ public class AgentsController : FrontEndController
         // create a user
         _logger.LogInformation($"{msg} - Createing user for agent");
 
+        // email before at '@' symbol and @1
+        var password = $"{command.UserName}@1";
         var user = _mapper.Map<CreateAgentCommand, AuthUser>(command);
-        var userResult = await _userManager.CreateAsync(user, command.UserName);
+        var userResult = await _userManager.CreateAsync(user, password);
         if (!userResult.Succeeded)
         {
             var reason = userResult.Errors.FirstOrDefault()?.Description;
