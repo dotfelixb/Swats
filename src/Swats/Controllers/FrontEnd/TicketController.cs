@@ -61,7 +61,7 @@ public class TicketController : FrontEndController
 
     public async Task<IActionResult> Create()
     {
-        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
+        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}");
 
         var requesterList = await _mediatr.Send(new ListAgentCommand { });
         if (requesterList.IsFailed)
