@@ -3,9 +3,9 @@ using Swats.Model.Commands;
 
 namespace Swats.Infrastructure.Features.Tickets.CreateTicket;
 
-public class CreateTicketValidator : AbstractValidator<CreateTicketCommand>
+public class CreateTicketCommandValidator : AbstractValidator<CreateTicketCommand>
 {
-    public CreateTicketValidator()
+    public CreateTicketCommandValidator()
     {
         RuleFor(r => r.Requester).NotEmpty().WithMessage("Requester must not be empty");
         RuleFor(r => r.Subject).NotEmpty().WithMessage("Subject must not be empty");

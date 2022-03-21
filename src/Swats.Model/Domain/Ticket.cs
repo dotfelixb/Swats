@@ -9,14 +9,14 @@ public class Ticket : DbAudit
     public string Subject { get; set; }
     public string Requester { get; set; }
     public string Body { get; set; }
-    public Guid Assignee { get; set; }
-    public Guid Source { get; set; }
-    public Guid Type { get; set; }
-    public Guid Department { get; set; }
-    public Guid HelpTopic { get; set; }
+    public string ExternalAgent { get; set; }
+    public string AssignedTo { get; set; }
+    public TicketSource Source { get; set; }
+    public string TicketType { get; set; }
+    public string Department { get; set; }
+    public string Team { get; set; }
+    public string HelpTopic { get; set; }
     public TicketPriority Priority { get; set; }
-    public TicketStatus TicketStatus { get; set; }
-
 }
 
 public class TicketType : DbAudit

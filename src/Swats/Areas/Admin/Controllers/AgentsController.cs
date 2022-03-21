@@ -82,21 +82,21 @@ public class AgentsController : FrontEndController
             return BadRequest(ticketypeResult.Reasons.FirstOrDefault()?.Message);
         }
 
-        var deaprtmentList = await _mediatr.Send(new ListDepartmentCommand { });
-        if (deaprtmentList.IsFailed)
+        var departmentList = await _mediatr.Send(new ListDepartmentCommand { });
+        if (departmentList.IsFailed)
         {
-            return BadRequest(deaprtmentList.Reasons.FirstOrDefault()?.Message);
+            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
         }
 
         var teamList = await _mediatr.Send(new ListTeamsCommand { });
         if (teamList.IsFailed)
         {
-            return BadRequest(deaprtmentList.Reasons.FirstOrDefault()?.Message);
+            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
         }
 
         CreateAgentCommand command = new()
         {
-            DepartmentList = deaprtmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
             TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
             TypeList = ticketypeResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
         };

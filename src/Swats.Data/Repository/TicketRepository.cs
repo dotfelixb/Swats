@@ -8,9 +8,19 @@ namespace Swats.Data.Repository;
 
 public interface ITicketRepository
 {
+    #region Ticket
+
     Task<long> GenerateTicketCode(CancellationToken cancellationToken);
 
-    Task<int> CreateTicket(Ticket ticket, CancellationToken cancellationToken);
+    Task<int> CreateTicket(Ticket ticket, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<FetchTicket> GetTicket(string id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+
+    #endregion Ticket
+
+    #region Ticket Type
 
     Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken);
 
@@ -18,6 +28,7 @@ public interface ITicketRepository
 
     Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
+    #endregion Ticket Type
 }
 
 public class TicketRepository : BasePostgresRepository, ITicketRepository
@@ -26,12 +37,173 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
     {
     }
 
-    public Task<int> CreateTicket(Ticket ticket, CancellationToken cancellationToken)
+    #region Ticket
+
+    public Task<int> CreateTicket(Ticket ticket, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        throw new NotImplementedException();
+        return WithConnection(async conn =>
+        {
+            var cmd = $@"
+                    INSERT INTO public.ticket
+                        (id
+                        , code
+                        , subject
+                        , requester
+                        , body
+                        , externalagent
+                        , assignedto
+                        , ""source""
+                        , tickettype
+                        , department
+                        , team
+                        , helptopic
+                        , priority
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(
+                        @Id
+                        , @Code
+                        , @Subject
+                        , @Requester
+                        , @Body
+                        , @ExternalAgent
+                        , @AssignedTo
+                        , @Source
+                        , @TicketType
+                        , @Department
+                        , @Team
+                        , @HelpTopic
+                        , @Priority
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy);
+                    ";
+
+            var ctt = await conn.ExecuteAsync(cmd, new
+            {
+                ticket.Id,
+                ticket.Code,
+                ticket.Subject,
+                ticket.Requester,
+                ticket.Body,
+                ticket.ExternalAgent,
+                ticket.AssignedTo,
+                ticket.Source,
+                ticket.TicketType,
+                ticket.Department,
+                ticket.Team,
+                ticket.HelpTopic,
+                ticket.Priority,
+                ticket.Status,
+                ticket.RowVersion,
+                ticket.CreatedBy,
+                ticket.UpdatedBy
+            });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var cl = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return ctt + cl;
+        });
     }
+
+    public Task<long> GenerateTicketCode(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var query = "SELECT NEXTVAL('TicketCode');";
+
+            return conn.QuerySingleAsync<long>(query);
+        });
+    }
+
+    public Task<FetchTicket> GetTicket(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                    , d.""name"" AS departmentname
+                    , m.""name"" as teamname
+                    , CONCAT(g.firstname, ' ', g.lastname) as assignedtoname
+                FROM ticket t
+                LEFT JOIN department d ON d.id = t.department
+                LEFT JOIN team m on m.id = t.team
+                LEFT JOIN agent g on g.id = t.assignedto
+                WHERE t.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new { Id = id });
+        });
+    }
+
+    public Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
+            var query = $@"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                    , d.""name"" AS departmentname
+                    , m.""name"" as teamname
+                    , CONCAT(g.firstname, ' ', g.lastname) as assignedtoname
+                FROM ticket t
+                LEFT JOIN department d ON d.id = t.department
+                LEFT JOIN team m on m.id = t.team
+                LEFT JOIN agent g on g.id = t.assignedto
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchTicket>(query, new { offset, limit });
+        });
+    }
+
+    #endregion Ticket
+
+    #region Ticket Type
 
     public Task<int> CreateTicketType(TicketType ticketType, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
@@ -107,18 +279,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public Task<long> GenerateTicketCode(CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return WithConnection(conn =>
-        {
-            var query = "SELECT NEXTVAL('TicketCode');";
-
-            return conn.QuerySingleAsync<long>(query);
-        });
-    }
-
     public Task<FetchTicketType> GetTicketType(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -156,4 +316,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             return await conn.QueryAsync<FetchTicketType>(query, new { offset, limit });
         });
     }
+
+    #endregion Ticket Type
 }

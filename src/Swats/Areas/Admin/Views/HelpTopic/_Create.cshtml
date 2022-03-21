@@ -1,7 +1,20 @@
 @model CreateHelpTopicCommand
 
 @{
+    var createError =  TempData["CreateError"]?.ToString() ?? "";
+}
 
+@if (!string.IsNullOrWhiteSpace(createError))
+{
+    <div _="init transition my opacity to 0% over 7 seconds" 
+        class="absolute top-0 right-0 px-5 py-1 z-50">
+        <div  class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
+             <div class="pr-3">
+                <ion-icon name="close-circle" style="color: white;"></ion-icon> 
+             </div> 
+            <div>@createError</div>
+        </div>
+    </div>
 }
 
 <div id="main-swap">

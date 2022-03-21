@@ -116,7 +116,7 @@
                     </label>
                     <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
                     <datalist id="departmentlist">
-                        @foreach (var item in Model.TeamList)
+                        @foreach (var item in Model.DepartmentList)
                         {
                             <option value="@item.Value">@item.Text</option>
                         }

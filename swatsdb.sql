@@ -318,31 +318,50 @@ CREATE TABLE helptopicauditlog
 	, FOREIGN KEY (target) REFERENCES helptopic(id) ON DELETE CASCADE
 );
 
---
---CREATE TABLE ticket
---(
---    id BPCHAR(50) PRIMARY KEY
---    , code VARCHAR(20)
---    , title VARCHAR(50)
---    , requester BPCHAR(50)
---    , AssignedTo BPCHAR(50)
---    , Source BPCHAR(50)
---    , TicketStatus BPCHAR(50)
---);
---
---CREATE TABLE Source
---(
---    id BPCHAR(50) PRIMARY KEY
---    , code VARCHAR(10)
---    , displayname VARCHAR(50)
---	, deleted BOOLEAN DEFAULT(FALSE)
---    , createdby BPCHAR(50)
---	, createdat TIMESTAMPTZ DEFAULT(now())
---	, updatedby BPCHAR(50)
---	, updatedat TIMESTAMPTZ DEFAULT(now())
---);
---
---
+
+CREATE TABLE ticket
+(
+    id BPCHAR(50) PRIMARY KEY
+    , code VARCHAR(20)
+    , subject VARCHAR(50)
+    , requester VARCHAR(50)
+    , body TEXT
+    , externalagent VARCHAR(50) 
+    , assignedto BPCHAR(50)
+    , source INT
+    , tickettype BPCHAR(50)
+    , department BPCHAR(50)
+    , team BPCHAR(50)
+    , helptopic BPCHAR(50)
+    , priority INT
+    , status INT
+	, rowversion BPCHAR(50) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(50)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (tickettype) REFERENCES tickettype(id) ON DELETE CASCADE
+	, FOREIGN KEY (department) REFERENCES department(id) ON DELETE CASCADE
+	, FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE
+	, FOREIGN KEY (helptopic) REFERENCES helptopic(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE ticketauditlog
+(
+    id BPCHAR(50) PRIMARY KEY
+	, target BPCHAR(50)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES ticket(id) ON DELETE CASCADE
+);
+
+
 --CREATE TABLE table
 --(
 --    id BPCHAR(50) PRIMARY KEY
@@ -354,6 +373,7 @@ CREATE TABLE helptopicauditlog
 --	, updatedby BPCHAR(50)
 --	, updatedat TIMESTAMPTZ DEFAULT(now())
 --);
+
 --
 --CREATE TABLE auditlog
 --(

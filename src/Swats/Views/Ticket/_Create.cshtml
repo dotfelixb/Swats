@@ -1,7 +1,20 @@
 @model CreateTicketCommand
 
 @{
+    var createError =  TempData["CreateError"]?.ToString() ?? "";
+}
 
+@if (!string.IsNullOrWhiteSpace(createError))
+{
+    <div _="init transition my opacity to 0% over 7 seconds" 
+        class="absolute top-0 right-0 px-5 py-1 z-50">
+        <div  class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
+             <div class="pr-3">
+                <ion-icon name="close-circle" style="color: white;"></ion-icon> 
+             </div> 
+            <div>@createError</div>
+        </div>
+    </div>
 }
 
 <div id="main-swap">
@@ -44,9 +57,15 @@
                 @* requester *@
                 <div class="form-control">
                     <label asp-for="@Model.Requester" class="form-label">
-                        Requester
+                       Requester
                     </label>
-                    <input asp-for="@Model.Requester" class="form-input" />
+                    <input asp-for="@Model.Requester" list="requesterlist" class="form-input" />
+                    <datalist id="requesterlist">
+                        @foreach (var item in Model.RequesterList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
                     <span asp-validation-for="@Model.Requester" class="form-input-error"></span>
                 </div>
 
@@ -60,12 +79,18 @@
                 </div>
 
                 @* assignee *@
-                <div class="form-control">
-                    <label asp-for="@Model.Assignee" class="form-label">
+               <div class="form-control">
+                    <label asp-for="@Model.AssignedTo" class="form-label">
                         Assigned To
                     </label>
-                    <input asp-for="@Model.Assignee" class="form-input" />
-                    <span asp-validation-for="@Model.Assignee" class="form-input-error"></span>
+                    <input asp-for="@Model.AssignedTo" list="assigneelist" class="form-input" />
+                    <datalist id="assigneelist">
+                        @foreach (var item in Model.RequesterList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.AssignedTo" class="form-input-error"></span>
                 </div>
 
                 @* source *@
@@ -74,33 +99,70 @@
                         Source
                     </label>
                     <select asp-for="@Model.Source" class="form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
-                        <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Source" class="form-input-error"></span>
                 </div>
 
+                <div class="form-control">
+                    <label asp-for="@Model.Priority" class="form-label">
+                        Priority
+                    </label>
+                    <select asp-for="@Model.Priority" class="form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
+                    </select>
+                    <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
+                </div>
+
                 @* type *@
-            <div class="form-control">
-                <label asp-for="@Model.Type" class="form-label">
-                    Type
-                </label>
-                <select asp-for="@Model.Type" class="form-input">
-                    <option value=""></option>
-                    @foreach (var item in Model.TicketTypes)
+                <div class="form-control">
+                    <label asp-for="@Model.TicketType" class="form-label">
+                        Default Ticket Type
+                    </label>
+                    <input asp-for="@Model.TicketType" list="typelist" class="form-input" />
+                    <datalist id="typelist">
+                        @foreach (var item in Model.TypeList)
                         {
                             <option value="@item.Value">@item.Text</option>
                         }
-                </select>
-                <span asp-validation-for="@Model.Type" class="form-input-error"></span>
-            </div>
+                    </datalist>
+                    <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
+                </div>
 
                 @* department *@
                 <div class="form-control">
                     <label asp-for="@Model.Department" class="form-label">
                         Department
                     </label>
-                    <input asp-for="@Model.Department" class="form-input" />
+                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
+                    <datalist id="departmentlist">
+                        @foreach (var item in Model.DepartmentList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
                     <span asp-validation-for="@Model.Department" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Team" class="form-label">
+                        Team
+                    </label>
+                    <input asp-for="@Model.Team" list="departmentlist" class="form-input" />
+                    <datalist id="departmentlist">
+                        @foreach (var item in Model.TeamList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.Team" class="form-input-error"></span>
                 </div>
 
                 @* help topic *@
@@ -108,7 +170,13 @@
                     <label asp-for="@Model.HelpTopic" class="form-label">
                         Help Topic
                     </label>
-                    <input asp-for="@Model.HelpTopic" class="form-input" />
+                    <input asp-for="@Model.HelpTopic" list="departmentlist" class="form-input" />
+                    <datalist id="departmentlist">
+                        @foreach (var item in Model.HelpTopicList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
                     <span asp-validation-for="@Model.HelpTopic" class="form-input-error"></span>
                 </div>
 

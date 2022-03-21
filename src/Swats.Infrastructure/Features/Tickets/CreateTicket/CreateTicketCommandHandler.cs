@@ -6,10 +6,11 @@ using Swats.Data.Repository;
 using Swats.Infrastructure.Extensions;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
+using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Tickets.CreateTicket;
 
-public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, Result>
+public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, Result<string>>
 {
     private readonly ITicketRepository _ticketRepository;
     private readonly IMapper _mapper;
@@ -20,23 +21,25 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         _mapper = mapper;
     }
 
-    public async Task<Result> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
 
         var ticket = _mapper.Map<CreateTicketCommand, Ticket>(request);
         ticket.UpdatedBy = request.CreatedBy;
 
         var code = await _ticketRepository.GenerateTicketCode(cancellationToken);
-        ticket.Code = code.FormatCode();
+        ticket.Code = code.FormatCode("#PT-"); // Get Prefix from appsettings
 
-        var result = await _ticketRepository.CreateTicket(ticket, cancellationToken);
-
-        if (result < 1)
+        var auditLog = new DbAuditLog
         {
-            return Result.Fail("Not able to create ticket");
-        }
+            Target = ticket.Id,
+            ActionName = "ticket.create",
+            Description = "added ticket",
+            ObjectName = "ticket",
+            ObjectData = JsonSerializer.Serialize(ticket),
+            CreatedBy = request.CreatedBy,
+        };
 
-        return Result.Ok().WithSuccess("Created Ticket");
-    }
-}
+        var rst = await _ticketRepository.CreateTicket(ticket, auditLog, cancellationToken);
+        return rst > 0 ? Result.Ok(ticket.Id) : Result.Fail<string>("Not able to create now!");
+    } }
