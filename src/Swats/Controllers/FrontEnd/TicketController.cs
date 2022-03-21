@@ -87,13 +87,20 @@ public class TicketController : FrontEndController
             return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
         }
 
+        var helptopicList = await _mediatr.Send(new ListHelpTopicsCommand { });
+        if (helptopicList.IsFailed)
+        {
+            return BadRequest(helptopicList.Reasons.FirstOrDefault()?.Message);
+        }
+
         CreateTicketCommand command = new()
         {
             AssigneeList = requesterList.Value.Select(s => new SelectListItem { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
             RequesterList = requesterList.Value.Select(s => new SelectListItem { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
             DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
             TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TypeList = ticketTypeList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
+            TypeList = ticketTypeList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            HelpTopicList = helptopicList.Value.Select(s => new SelectListItem { Text = s.Topic, Value = s.Id.ToString() })
         };
 
         return Request.IsHtmx()

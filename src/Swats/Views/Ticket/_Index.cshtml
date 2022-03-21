@@ -70,6 +70,8 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        var requesterName = Guid.TryParse(item.Requester, out var rst) ? item.RequesterName : item.Requester;
+
                         <tr class="px-10 cursor-pointer"
                             hx-get="/ticket/edit/@item.Id"
                             hx-trigger="click"
@@ -81,7 +83,7 @@
                                 <p class="text-xs" style="color: #9b9b9b;">@item.Subject</p>
                             </td>
                              <td class="px-3 py-3">
-                                <p class="text-xs">@item.Requester</p>
+                                <p class="text-xs">@requesterName</p>
                                 <p class="text-xs" style="color: #9b9b9b;">@item.AssignedToName</p>
                             </td>
                             <td class="px-3 py-3">

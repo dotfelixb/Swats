@@ -131,21 +131,6 @@
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
 
-                @* type *@
-                <div class="form-control">
-                    <label asp-for="@Model.TicketType" class="form-label">
-                        Default Ticket Type
-                    </label>
-                    <input asp-for="@Model.TicketType" list="typelist" class="form-input" />
-                    <datalist id="typelist">
-                        @foreach (var item in Model.TypeList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </datalist>
-                    <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
-                </div>
-
                 @* department *@
                 <div class="form-control">
                     <label asp-for="@Model.Department" class="form-label">
@@ -165,8 +150,8 @@
                     <label asp-for="@Model.Team" class="form-label">
                         Team
                     </label>
-                    <input asp-for="@Model.Team" list="departmentlist" class="form-input" />
-                    <datalist id="departmentlist">
+                    <input asp-for="@Model.Team" list="teamlist" class="form-input" />
+                    <datalist id="teamlist">
                         @foreach (var item in Model.TeamList)
                         {
                             <option value="@item.Value">@item.Text</option>
@@ -175,13 +160,28 @@
                     <span asp-validation-for="@Model.Team" class="form-input-error"></span>
                 </div>
 
+                 @* type *@
+                <div class="form-control">
+                    <label asp-for="@Model.TicketType" class="form-label">
+                        Default Ticket Type
+                    </label>
+                    <input asp-for="@Model.TicketType" list="typelist" class="form-input" />
+                    <datalist id="typelist">
+                        @foreach (var item in Model.TypeList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </datalist>
+                    <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
+                </div>
+
                 @* help topic *@
                 <div class="form-control">
                     <label asp-for="@Model.HelpTopic" class="form-label">
                         Help Topic
                     </label>
-                    <input asp-for="@Model.HelpTopic" list="departmentlist" class="form-input" />
-                    <datalist id="departmentlist">
+                    <input asp-for="@Model.HelpTopic" list="helptopiclist" class="form-input" />
+                    <datalist id="helptopiclist">
                         @foreach (var item in Model.HelpTopicList)
                         {
                             <option value="@item.Value">@item.Text</option>

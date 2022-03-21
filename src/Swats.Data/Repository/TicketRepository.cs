@@ -163,11 +163,17 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
                     , d.""name"" AS departmentname
                     , m.""name"" as teamname
+                    , tt.""name"" as tickettypename
+                    , h.topic as helptopicname
+                    , CONCAT(r.firstname, ' ', r.lastname) as requestername
                     , CONCAT(g.firstname, ' ', g.lastname) as assignedtoname
                 FROM ticket t
                 LEFT JOIN department d ON d.id = t.department
                 LEFT JOIN team m on m.id = t.team
                 LEFT JOIN agent g on g.id = t.assignedto
+                LEFT JOIN tickettype tt on tt.id = t.tickettype
+                LEFT JOIN helptopic h on h.id = t.helptopic
+                LEFT JOIN agent r on r.id = t.requester
                 WHERE t.id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new { Id = id });
@@ -187,11 +193,17 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
                     , d.""name"" AS departmentname
                     , m.""name"" as teamname
+                    , tt.""name"" as tickettypename
+                    , h.topic as helptopicname
+                    , CONCAT(r.firstname, ' ', r.lastname) as requestername
                     , CONCAT(g.firstname, ' ', g.lastname) as assignedtoname
                 FROM ticket t
                 LEFT JOIN department d ON d.id = t.department
                 LEFT JOIN team m on m.id = t.team
                 LEFT JOIN agent g on g.id = t.assignedto
+                LEFT JOIN tickettype tt on tt.id = t.tickettype
+                LEFT JOIN helptopic h on h.id = t.helptopic
+                LEFT JOIN agent r on r.id = t.requester
                 WHERE 1=1
                 {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
