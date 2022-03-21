@@ -1,5 +1,4 @@
-﻿@model IEnumerable<FetchTicket>
-
+﻿@model IEnumerable<FetchTag>
 @{
 
 }
@@ -7,21 +6,25 @@
 <div id="main-swap">
     <section>
         @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []{ new SelectListItem{Text = "Home", Value = "/"}}, 
-            currentPage = "Ticket"
+            crumbs = new []
+            { 
+                new SelectListItem{Text = "Home", Value = "/"}, 
+                new SelectListItem {Text="Admin", Value="/admin"}
+            }, 
+            currentPage = "Tags"
         })
     </section>
-    <section class="flex w-full items-center font-bold text-2xl pb-5">
-        <div class="flex w-1/2">Tickets</div>
-        <div class="flex w-1/2 items-center justify-end">
-            <div class="flex justify-center">
+    <section class="flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">Tags</div>
+        <div class="flex w-1/2 justify-end">
+            <div class="">
                 <button class="btn-primary" 
-                    hx-get="/ticket/create"
+                    hx-get="/admin/tags/create"
                     hx-trigger="click" 
                     hx-target="#main-swap"
                     hx-swap="outerHTML" 
                     hx-push-url="true">
-                    New Ticket
+                    New Tag
                 </button>
             </div>
         </div>
@@ -53,12 +56,11 @@
                 <thead>
                     <tr class="text-left px-3 bg-indigo-50">
                         <th class="px-3 py-3 font-semibold text-xs">
-                            <p></p>
-                            <p style="color: #6b6b6b;">Subject</p>
+                            <p>Name</p>
                         </th>
-                         <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Requester</p>
-                            <p style="color: #6b6b6b;">Assigned To</p>
+                        <th class="px-3 py-3 font-semibold text-xs">
+                            <p>Visibility</p>
+                            <p style="color: #6b6b6b;">Status</p>
                         </th>
                         <th class="px-3 py-3 font-semibold text-xs">
                             <p>Created By</p>
@@ -71,18 +73,17 @@
                     @foreach (var item in Model)
                     {
                         <tr class="px-10 cursor-pointer"
-                            hx-get="/ticket/edit/@item.Id"
+                            hx-get="/admin/tags/edit/@item.Id"
                             hx-trigger="click"
                             hx-target="#main-swap"
                             hx-swap="outerHTML"
                             hx-push-url="true">
-                            <td class="px-3 py-3">
-                                <p class="text-xs">@item.Code</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.Subject</p>
+                            <td class="px-3 py-1">
+                                <p class="text-xs">@item.Name </p>
                             </td>
                              <td class="px-3 py-3">
-                                <p class="text-xs">@item.Requester</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.AssignedToName</p>
+                                <p class="text-xs">@item.Visibility</p>
+                                <p class="text-xs" style="color: #9b9b9b;">@item.Status </p>
                             </td>
                             <td class="px-3 py-3">
                                 <p class="text-xs">@item.CreatedByName</p>

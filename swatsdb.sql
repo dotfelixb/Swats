@@ -361,6 +361,36 @@ CREATE TABLE ticketauditlog
 	, FOREIGN KEY (target) REFERENCES ticket(id) ON DELETE CASCADE
 );
 
+CREATE TABLE tags
+(
+    id BPCHAR(50) PRIMARY KEY
+    , name VARCHAR(50)
+    , note TEXT
+    , color VARCHAR(20)
+    , visibility INT
+    , status INT
+	, rowversion BPCHAR(50) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(50)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+
+CREATE TABLE tagsauditlog
+(
+    id BPCHAR(50) PRIMARY KEY
+	, target BPCHAR(50)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(50)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES tags(id) ON DELETE CASCADE
+);
+
 
 --CREATE TABLE table
 --(

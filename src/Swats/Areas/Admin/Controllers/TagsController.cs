@@ -27,9 +27,9 @@ public class TagsController : FrontEndController
 
     #region GET
 
-    public async Task<IActionResult> IndexAsync()
+    public async Task<IActionResult> Index()
     {
-        _logger.LogInformation($"{Request.Method}::{nameof(TagsController)}::{nameof(IndexAsync)}");
+        _logger.LogInformation($"{Request.Method}::{nameof(TagsController)}::{nameof(Index)}");
 
         var query = new ListTagsCommand { };
         var result = await _mediatr.Send(query);
@@ -39,7 +39,7 @@ public class TagsController : FrontEndController
         }
 
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/Teams/_Index.cshtml", result.Value)
+                ? PartialView("~/Areas/Admin/Views/Tags/_Index.cshtml", result.Value)
                 : View(result.Value);
     }
 
@@ -49,15 +49,15 @@ public class TagsController : FrontEndController
 
         var query = new GetTagCommand { Id = id };
         var result = await _mediatr.Send(query);
-
         if (result.IsFailed)
         {
             return NotFound(result.Reasons.FirstOrDefault()?.Message);
         }
+        
         result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/tags/edit/{id}".GenerateQrCode();
 
         return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/tags/_Edit.cshtml", result.Value)
+                ? PartialView("~/Areas/Admin/Views/Tags/_Edit.cshtml", result.Value)
                 : View(result.Value);
     }
 
@@ -66,7 +66,7 @@ public class TagsController : FrontEndController
         _logger.LogInformation($"{Request.Method}::{nameof(TagsController)}::{nameof(Create)}");
 
         return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/tags/_Create.cshtml")
+             ? PartialView("~/Areas/Admin/Views/Tags/_Create.cshtml")
              : View();
     }
 
@@ -75,7 +75,7 @@ public class TagsController : FrontEndController
     #region POST
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateTeamCommand command)
+    public async Task<IActionResult> Create(CreateTagCommand command)
     {
         var msg = $"{Request.Method}::{nameof(TagsController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
@@ -88,7 +88,7 @@ public class TagsController : FrontEndController
             _logger.LogError($"{msg} - Invalid Model state");
 
             return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/tags/_Create.cshtml", command)
+                ? PartialView("~/Areas/Admin/Views/Tags/_Create.cshtml", command)
                 : View(command);
         }
 
@@ -101,7 +101,7 @@ public class TagsController : FrontEndController
             TempData["CreateError"] = reason;
 
             return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/tags/_Create.cshtml", command)
+                ? PartialView("~/Areas/Admin/Views/Tags/_Create.cshtml", command)
                 : View(command);
         }
 

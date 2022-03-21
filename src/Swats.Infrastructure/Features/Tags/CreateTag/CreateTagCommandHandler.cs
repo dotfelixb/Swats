@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using System.Text.Json;
@@ -27,9 +26,9 @@ public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Result<
         var auditLog = new DbAuditLog
         {
             Target = tag.Id,
-            ActionName = "businesshour.create",
-            Description = "added business hour",
-            ObjectName = "tickettype",
+            ActionName = "tag.create",
+            Description = "added tag hour",
+            ObjectName = "tag",
             ObjectData = JsonSerializer.Serialize(tag),
             CreatedBy = request.CreatedBy,
         };

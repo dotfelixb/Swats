@@ -27,9 +27,9 @@ public class TeamsController : FrontEndController
 
     #region GET
 
-    public async Task<IActionResult> IndexAsync()
+    public async Task<IActionResult> Index()
     {
-        _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(IndexAsync)}");
+        _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(Index)}");
 
         var query = new ListTeamsCommand { };
         var result = await _mediatr.Send(query);
@@ -65,15 +65,15 @@ public class TeamsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(Create)}");
 
-        var departmentResult = await _mediatr.Send(new ListDepartmentCommand { });
-        if (departmentResult.IsFailed)
+        var departmentList = await _mediatr.Send(new ListDepartmentCommand { });
+        if (departmentList.IsFailed)
         {
-            return BadRequest(departmentResult.Reasons.FirstOrDefault()?.Message);
+            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
         }
 
         CreateTeamCommand command = new() 
         {
-            DepartmentList = departmentResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
         };
 
         return Request.IsHtmx()

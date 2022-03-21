@@ -66,15 +66,15 @@ public class HelpTopicController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Create)}");
 
-        var departmentResult = await _mediatr.Send(new ListDepartmentCommand { });
-        if (departmentResult.IsFailed)
+        var departmentList = await _mediatr.Send(new ListDepartmentCommand { });
+        if (departmentList.IsFailed)
         {
-            return BadRequest(departmentResult.Reasons.FirstOrDefault()?.Message);
+            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
         }
 
         CreateHelpTopicCommand command = new()
         {
-            DepartmentList = departmentResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
         };
 
         return Request.IsHtmx()

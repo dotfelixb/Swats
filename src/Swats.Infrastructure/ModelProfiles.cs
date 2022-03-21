@@ -32,6 +32,9 @@ public class ModelProfiles : AutoMapper.Profile
         CreateMap<CreateHelpTopicCommand, HelpTopic>()
           .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
+        CreateMap<CreateTagCommand, Tag>()
+         .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+
         /**
          *.ForMember(d => d.ParentCustomer,
          *          opt => opt.MapFrom(s => s.ParentCustomer.ToGuid()))

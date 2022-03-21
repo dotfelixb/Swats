@@ -185,17 +185,115 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     public Task<int> CreateTag(Tag tag, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                    INSERT INTO public.tags
+                        (id
+                        , ""name""
+                        , note
+                        , color
+                        , visibility
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(@Id
+                        , @Name
+                        , @Note
+                        , @Color
+                        , @Visibility
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy);
+                    ";
+
+            var crst = await conn.ExecuteAsync(cmd, new
+            {
+                tag.Id,
+                tag.Name,
+                tag.Note,
+                tag.Color,
+                tag.Visibility,
+                tag.Status,
+                tag.RowVersion,
+                tag.CreatedBy,
+                tag.UpdatedBy
+            });
+
+            var logCmd = @"
+                INSERT INTO public.tagsauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var lrst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return crst + lrst;
+        });
     }
 
     public Task<FetchTag> GetTag(string id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM tags t
+                WHERE t.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new { Id = id });
+        });
     }
 
     public Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
+            var query = $@"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM tags t
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchTag>(query, new { offset, limit });
+        });
     }
 
     #endregion Tag
@@ -554,7 +652,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.updatedby) AS UpdatedByName
                     , d.""name"" AS departmentname
                 FROM helptopic h
-                LEFT JOIN department d ON d.id = h.department 
+                LEFT JOIN department d ON d.id = h.department
                 WHERE h.id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
@@ -584,5 +682,5 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    #endregion
+    #endregion HelpTopic
 }

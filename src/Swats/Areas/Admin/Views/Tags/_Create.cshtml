@@ -18,6 +18,17 @@
 }
 
 <div id="main-swap">
+    <section>
+        @await Component.InvokeAsync("Breadcrumbs", new {
+            crumbs = new []
+            { 
+                new SelectListItem{Text = "Home", Value = "/"}, 
+                new SelectListItem {Text="Admin", Value="/admin"},
+                new SelectListItem{Text = "Tags", Value = "/admin/tags"}
+            }, 
+            currentPage = "New Tag"
+        })
+    </section>
     <form asp-controller="Tags" asp-action="Create" method="post">
         <section class=" flex w-full font-bold text-2xl pb-5">
             <div class="flex w-1/2">New Tag</div>
@@ -56,6 +67,24 @@
                     </label>
                     <input asp-for="@Model.Name" class="form-input" />
                     <span asp-validation-for="@Model.Name" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Visibility" class="form-label">
+                        Visibility
+                    </label>
+                    <select asp-for="@Model.Visibility" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
+                    </select>
+                    <span asp-validation-for="@Model.Visibility" class="form-input-error"></span>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
 
                 @* color *@

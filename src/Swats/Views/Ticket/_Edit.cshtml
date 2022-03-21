@@ -5,6 +5,16 @@
 }
 
 <div id="main-swap">
+    <section>
+        @await Component.InvokeAsync("Breadcrumbs", new {
+            crumbs = new []
+            { 
+                new SelectListItem{Text = "Home", Value = "/"}, 
+                new SelectListItem {Text="Ticket", Value="/ticket"}
+            }, 
+            currentPage = "Edit"
+        })
+    </section>
     <section class="flex w-full font-bold text-2xl pb-5">
         <div class="flex w-1/2">@name</div>
         <div class="flex w-1/2 justify-end">

@@ -18,6 +18,16 @@
 }
 
 <div id="main-swap">
+    <section>
+        @await Component.InvokeAsync("Breadcrumbs", new {
+            crumbs = new []
+            { 
+                new SelectListItem{Text = "Home", Value = "/"}, 
+                new SelectListItem {Text="Ticket", Value="/ticket"}
+            }, 
+            currentPage = "New Ticket"
+        })
+    </section>
     <form asp-controller="Ticket" asp-action="Create" method="post">
         <section class=" flex w-full font-bold text-2xl pb-5">
             <div class="flex w-1/2">New Ticket</div>
