@@ -22,11 +22,16 @@
     @*header*@
     <header style="height: 48px;" class="w-full flex flex-row px-5 bg-white drop-shadow-md">
             <div class="flex">
-                @* @await Component.InvokeAsync("PanelLinkCard", new {iconName = "headset", title = "Agents", location = "/admin/agents"}) *@
             </div>
              <div class="w-full flex"></div>
-            
-                @await Component.InvokeAsync("AccountMenu")
+            <div class="flex items-center">
+                   <a href="/user">
+                <div class="flex justify-center items-center rounded-full cursor-pointer bg-indigo-500 text-white hover:ring-2 hover:bg-indigo-500" 
+                    style="width: 32px; height: 32px;">
+                        <ion-icon name="person-circle-outline" style="font-size: 18px;"></ion-icon>
+                </div>
+                   </a>
+            </div>
     </header>
 
     <main class="relative w-full flex-auto px-3 md:px-16 lg:px-36 py-8 h-screen overflow-y-auto">

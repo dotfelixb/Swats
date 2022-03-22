@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MassTransit;
 using MediatR;
+using Swats.Model.Queries;
 
 namespace Swats.Model.Commands;
 
@@ -19,4 +20,8 @@ public class LoginLogCommand : IRequest<Result> {
     public string Platform { get; set; }
     public string Browser { get; set; }
     public string Address { get; set; }
+}
+
+public class GetUserCommand : GetType, IRequest<Result<FetchUser>>
+{
 }

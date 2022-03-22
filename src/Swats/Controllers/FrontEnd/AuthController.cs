@@ -110,7 +110,7 @@ public class AuthController : FrontEndController
                 authProperties);
 
             _logger.LogInformation($"{msg} - Login success for user [{command.UserName}]");
-            return LocalRedirect(returnUrl);
+            return LocalRedirect(returnUrl ?? "/");
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");

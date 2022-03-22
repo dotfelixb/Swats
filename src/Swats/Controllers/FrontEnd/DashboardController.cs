@@ -13,8 +13,6 @@ public class DashboardController : FrontEndController
 
     public IActionResult Index()
     {
-        _logger.LogInformation($"{Request.Headers["User-Agent"]}");
-        
         return View();
     }
 }

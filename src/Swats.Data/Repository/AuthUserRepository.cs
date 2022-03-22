@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
+using Swats.Model.Queries;
 
 namespace Swats.Data.Repository;
 
 public interface IAuthUserRepository
 {
     Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken);
+
+    Task<FetchUser> GetUser(string id, CancellationToken cancellationToken);
 }
 
 public class AuthUserRepository : BasePostgresRepository
@@ -419,6 +422,24 @@ public class AuthUserRepository : BasePostgresRepository
                 audit.Address
             });
             return result;
+        });
+    }
+
+    public Task<FetchUser> GetUser(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT u.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = u.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = u.updatedby) AS UpdatedByName
+                FROM authuser u
+                WHERE u.id = @Id";
+
+            var rst = await conn.QueryFirstOrDefaultAsync<FetchUser>(query, new {Id = id});
+            return rst;
         });
     }
 

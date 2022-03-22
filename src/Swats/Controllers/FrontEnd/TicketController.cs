@@ -57,7 +57,6 @@ public class TicketController : FrontEndController
     public async Task<IActionResult> Create()
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}");
-        _logger.LogInformation($"Guid Length - {Guid.Empty.ToString().Length}");
 
         var requesterList = await _mediatr.Send(new ListAgentCommand());
         if (requesterList.IsFailed) return BadRequest(requesterList.Reasons.FirstOrDefault()?.Message);
@@ -67,10 +66,7 @@ public class TicketController : FrontEndController
 
         var departmentList = await _mediatr.Send(new ListDepartmentCommand());
         if (departmentList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-        var departmentListValue =
-            departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()});
-        TempData["DepartmentList"] = JsonSerializer.Serialize(departmentListValue);
-
+       
         var teamList = await _mediatr.Send(new ListTeamsCommand());
         if (teamList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
 
@@ -83,7 +79,7 @@ public class TicketController : FrontEndController
                 {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
             RequesterList = requesterList.Value.Select(s => new SelectListItem
                 {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
-            DepartmentList = departmentListValue,
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
             TeamList = teamList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
             TypeList = ticketTypeList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
             HelpTopicList =
@@ -96,7 +92,6 @@ public class TicketController : FrontEndController
     }
 
     #endregion
-
 
     #region POST
 
