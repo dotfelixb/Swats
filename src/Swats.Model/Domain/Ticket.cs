@@ -28,7 +28,9 @@ public class TicketType : DbAudit
     public DefaultType Visibility { get; set; }
 }
 
-public class TicketTypeAuditLog : DbAuditLog { }
+public class TicketTypeAuditLog : DbAuditLog
+{
+}
 
 public class TicketFellow : DbAudit
 {

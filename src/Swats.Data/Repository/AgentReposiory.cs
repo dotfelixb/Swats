@@ -12,7 +12,8 @@ public interface IAgentRepository
 
     Task<FetchAgent> GetAgent(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 }
 
 public class AgentReposiory : BasePostgresRepository, IAgentRepository
@@ -131,11 +132,12 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 LEFT JOIN tickettype tt ON tt.id = g.tickettype
                 WHERE g.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -154,11 +156,11 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 LEFT JOIN team t ON t.id = g.team
                 LEFT JOIN tickettype tt ON tt.id = g.tickettype
                 WHERE 1 = 1
-                { _includeDeleted}
+                {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchAgent>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchAgent>(query, new {offset, limit});
         });
     }
 }

@@ -6,12 +6,13 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Admin", Value="/admin"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"}
+            },
             currentPage = "Agents"
         })
     </section>
@@ -19,12 +20,12 @@
         <div class="flex w-1/2">Agents</div>
         <div class="flex w-1/2 justify-end">
             <div class="">
-                <button class="btn-primary" 
-                    hx-get="/admin/agents/create"
-                    hx-trigger="click" 
-                    hx-target="#main-swap"
-                    hx-swap="outerHTML" 
-                    hx-push-url="true">
+                <button class="btn-primary"
+                        hx-get="/admin/agents/create"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
                     New Agent
                 </button>
             </div>
@@ -36,12 +37,12 @@
         <div class="grid grid-cols-5 gap-4 px-5 py-5">
             <div>
                 <div class="w-full">
-                    <input class="form-input-search" placeholder="Name" />
+                    <input class="form-input-search" placeholder="Name"/>
                 </div>
             </div>
             <div>
                 <div class="w-full">
-                    <input class="form-input-search" placeholder="Name" />
+                    <input class="form-input-search" placeholder="Name"/>
                 </div>
             </div>
         </div>
@@ -55,56 +56,58 @@
         <div class="w-full border-t-2 border-gray-50">
             <table class="w-full table-auto">
                 <thead>
-                    <tr class="text-left px-3 bg-indigo-50">
-                        <th class="px-3 py-3 font-semibold text-xs">
-                            <p>First name</p>
-                            <p style="color: #6b6b6b;">Last name</p>
-                        </th>
-                        <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Email</p>
-                            <p style="color: #6b6b6b;">Mobile</p>
-                        </th>
-                         <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Department</p>
-                            <p style="color: #6b6b6b;">Team</p>
-                        </th>
-                        <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Created By</p>
-                            <p style="color: #6b6b6b;">Created At</p>
-                        </th>
-                        <th></th>
-                    </tr>
+                <tr class="text-left px-3 bg-indigo-50">
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>First name</p>
+                        <p style="color: #6b6b6b;">Email</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Last name</p>
+                        <p style="color: #6b6b6b;">Mobile</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Department</p>
+                        <p style="color: #6b6b6b;">Team</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Created By</p>
+                        <p style="color: #6b6b6b;">Created At</p>
+                    </th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr class="px-10 cursor-pointer"
-                            hx-get="/admin/agents/edit/@item.Id"
-                            hx-trigger="click"
-                            hx-target="#main-swap"
-                            hx-swap="outerHTML"
-                            hx-push-url="true">
-                            <td class="px-3 py-3">
-                                <p class="text-xs">@item.FirstName</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.LastName</p>
-                            </td>
-                            <td class="px-3 py-3">
-                                <p class="text-xs">@item.Email</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.Mobile</p>
-                            </td>
-                             <td class="px-3 py-3">
-                                <p class="text-xs">@item.DepartmentName</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.TeamName</p>
-                            </td>
-                            <td class="px-3 py-3">
-                                <p class="text-xs">@item.CreatedByName</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
-                            </td>
-                            <td>
-                                <span class="text-gray-300"><ion-icon name="chatbubbles"></ion-icon></span>
-                            </td>
-                        </tr>
-                    }
+                @foreach (var item in Model)
+                {
+                    <tr class="px-10 cursor-pointer"
+                        hx-get="/admin/agents/edit/@item.Id"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.FirstName</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.Email</p>
+                        </td>
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.LastName</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.Mobile</p>
+                        </td>
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.DepartmentName</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.TeamName</p>
+                        </td>
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.CreatedByName</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
+                        </td>
+                        <td>
+                            <span class="text-gray-300">
+                                <ion-icon name="chatbubbles"></ion-icon>
+                            </span>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>

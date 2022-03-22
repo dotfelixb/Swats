@@ -7,12 +7,13 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Ticket", Value="/ticket"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Ticket", Value = "/ticket"}
+            },
             currentPage = Model.Code
         })
     </section>
@@ -32,7 +33,7 @@
     <div class="w-full flex flex-row">
         <div style="width: 220px" class="">
             <div class=" pr-2">
-                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@Model.Subject" />
+                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@Model.Subject"/>
             </div>
             <ul class="edit-sidebar py-5">
                 <li>
@@ -63,74 +64,74 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @* name *@
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@requesterName" class="form-label">
                         Requester
                     </label>
-                    <input asp-for="@requesterName" class="form-input" />
+                    <input asp-for="@requesterName" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.Subject" class="form-label">
                         Subject
                     </label>
-                    <input asp-for="@Model.Subject" class="form-input" />
+                    <input asp-for="@Model.Subject" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.AssignedToName" class="form-label">
                         Assigned To
                     </label>
-                    <input asp-for="@Model.AssignedToName" class="form-input" />
+                    <input asp-for="@Model.AssignedToName" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.Source" class="form-label">
                         Source
                     </label>
-                    <input asp-for="@Model.Source" class="form-input" />
+                    <input asp-for="@Model.Source" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.Priority" class="form-label">
                         Priority
                     </label>
-                    <input asp-for="@Model.Priority" class="form-input" />
+                    <input asp-for="@Model.Priority" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <input asp-for="@Model.Status" class="form-input" />
+                    <input asp-for="@Model.Status" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.DepartmentName" class="form-label">
                         Department
                     </label>
-                    <input asp-for="@Model.DepartmentName" class="form-input" />
+                    <input asp-for="@Model.DepartmentName" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.TeamName" class="form-label">
                         Team
                     </label>
-                    <input asp-for="@Model.TeamName" class="form-input" />
+                    <input asp-for="@Model.TeamName" class="form-input"/>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.TicketTypeName" class="form-label">
                         Default Ticket Type
                     </label>
-                    <input asp-for="@Model.TicketTypeName" class="form-input" />
+                    <input asp-for="@Model.TicketTypeName" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.HelpTopicName" class="form-label">
                         Help Topic
                     </label>
-                    <input asp-for="@Model.HelpTopicName" class="form-input" />
+                    <input asp-for="@Model.HelpTopicName" class="form-input"/>
                 </div>
 
             </div>

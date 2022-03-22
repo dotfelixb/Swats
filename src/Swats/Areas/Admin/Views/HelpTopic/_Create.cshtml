@@ -1,17 +1,17 @@
 @model CreateHelpTopicCommand
 
 @{
-    var createError =  TempData["CreateError"]?.ToString() ?? "";
+    var createError = TempData["CreateError"]?.ToString() ?? "";
 }
 
 @if (!string.IsNullOrWhiteSpace(createError))
 {
-    <div _="init transition my opacity to 0% over 7 seconds" 
-        class="absolute top-0 right-0 px-5 py-1 z-50">
-        <div  class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
-             <div class="pr-3">
-                <ion-icon name="close-circle" style="color: white;"></ion-icon> 
-             </div> 
+    <div _="init transition my opacity to 0% over 7 seconds"
+         class="absolute top-0 right-0 px-5 py-1 z-50">
+        <div class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
+            <div class="pr-3">
+                <ion-icon name="close-circle" style="color: white;"></ion-icon>
+            </div>
             <div>@createError</div>
         </div>
     </div>
@@ -19,13 +19,14 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Admin", Value="/admin"},
-                new SelectListItem{Text = "Help Topic", Value = "/admin/helptopic"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"},
+                new SelectListItem {Text = "Help Topic", Value = "/admin/helptopic"}
+            },
             currentPage = "New Help Topic"
         })
     </section>
@@ -35,28 +36,28 @@
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
                     <button class="btn-default"
-                        hx-get="/admin/helptopic" 
-                        hx-trigger="click" 
-                        hx-target="#main-swap" 
-                        hx-swap="outerHTML"
-                        hx-push-url="true">
+                            hx-get="/admin/helptopic"
+                            hx-trigger="click"
+                            hx-target="#main-swap"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
                         <div class="flex flex-row">
                             <div class="flex">Cancel</div>
-                       </div>
-                    </button> 
+                        </div>
+                    </button>
                     <span class="mr-4"></span>
-                     <button class="btn-primary"
-                        hx-post="/admin/helptopic/create" 
-                        hx-trigger="click" 
-                        hx-target="#main-swap" 
-                        hx-swap="outerHTML"
-                        hx-push-url="true">
-                       <div class="flex flex-row ">
-                            <div class="mr-2 flex items-center "> 
+                    <button class="btn-primary"
+                            hx-post="/admin/helptopic/create"
+                            hx-trigger="click"
+                            hx-target="#main-swap"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
+                        <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center ">
                                 <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
-                            </div> 
+                            </div>
                             <div class="flex">Save</div>
-                       </div>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -70,7 +71,7 @@
                     <label asp-for="@Model.Topic" class="form-label">
                         Topic
                     </label>
-                    <input asp-for="@Model.Topic" class="form-input" />
+                    <input asp-for="@Model.Topic" class="form-input"/>
                     <span asp-validation-for="@Model.Topic" class="form-input-error"></span>
                 </div>
 
@@ -79,7 +80,7 @@
                     <label asp-for="@Model.Type" class="form-label">
                         Type
                     </label>
-                    <select asp-for="@Model.Type" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()" >
+                    <select asp-for="@Model.Type" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
                         <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Type" class="form-input-error"></span>
@@ -90,7 +91,7 @@
                     <label asp-for="@Model.Department" class="form-label">
                         Linked Department
                     </label>
-                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
+                    <input asp-for="@Model.Department" list="departmentlist" class="form-input"/>
                     <datalist id="departmentlist">
                         @foreach (var item in Model.DepartmentList)
                         {
@@ -114,7 +115,7 @@
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()" >
+                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
                         <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
@@ -126,7 +127,7 @@
                 @* note *@
                 <div class="form-control">
                     <label asp-for="@Model.Note" class="form-label">
-                       Note
+                        Note
                     </label>
                     <textarea asp-for="@Model.Note" class="form-input" cols="30" rows="10"></textarea>
                     <span asp-validation-for="@Model.Note" class="form-input-error"></span>

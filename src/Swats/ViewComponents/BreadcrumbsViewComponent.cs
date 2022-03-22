@@ -5,10 +5,6 @@ namespace Swats.ViewComponents;
 
 public class BreadcrumbsViewComponent : ViewComponent
 {
-    public BreadcrumbsViewComponent()
-    {
-    }
-
     public async Task<IViewComponentResult> InvokeAsync(SelectListItem[] crumbs, string currentPage)
     {
         return await Task.Run(() => View(Tuple.Create(crumbs, currentPage)));

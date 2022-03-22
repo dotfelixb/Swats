@@ -15,7 +15,8 @@ public class ListTeamsCommandHandler : IRequestHandler<ListTeamsCommand, Result<
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchTeam>>> Handle(ListTeamsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchTeam>>> Handle(ListTeamsCommand request,
+        CancellationToken cancellationToken)
     {
         var rst = await _manageRepository.ListTeams(request.Offset, request.Limit, request.Deleted, cancellationToken);
 

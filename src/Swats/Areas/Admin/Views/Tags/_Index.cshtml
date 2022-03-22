@@ -5,12 +5,13 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Admin", Value="/admin"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"}
+            },
             currentPage = "Tags"
         })
     </section>
@@ -18,12 +19,12 @@
         <div class="flex w-1/2">Tags</div>
         <div class="flex w-1/2 justify-end">
             <div class="">
-                <button class="btn-primary" 
-                    hx-get="/admin/tags/create"
-                    hx-trigger="click" 
-                    hx-target="#main-swap"
-                    hx-swap="outerHTML" 
-                    hx-push-url="true">
+                <button class="btn-primary"
+                        hx-get="/admin/tags/create"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
                     New Tag
                 </button>
             </div>
@@ -35,12 +36,12 @@
         <div class="grid grid-cols-5 gap-4 px-5 py-5">
             <div>
                 <div class="w-full">
-                    <input class="form-input-search" placeholder="Name" />
+                    <input class="form-input-search" placeholder="Name"/>
                 </div>
             </div>
             <div>
                 <div class="w-full">
-                    <input class="form-input-search" placeholder="Name" />
+                    <input class="form-input-search" placeholder="Name"/>
                 </div>
             </div>
         </div>
@@ -54,46 +55,48 @@
         <div class="w-full border-t-2 border-gray-50">
             <table class="w-full table-auto">
                 <thead>
-                    <tr class="text-left px-3 bg-indigo-50">
-                        <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Name</p>
-                        </th>
-                        <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Visibility</p>
-                            <p style="color: #6b6b6b;">Status</p>
-                        </th>
-                        <th class="px-3 py-3 font-semibold text-xs">
-                            <p>Created By</p>
-                            <p style="color: #6b6b6b;">Created At</p>
-                        </th>
-                        <th></th>
-                    </tr>
+                <tr class="text-left px-3 bg-indigo-50">
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Name</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Visibility</p>
+                        <p style="color: #6b6b6b;">Status</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Created By</p>
+                        <p style="color: #6b6b6b;">Created At</p>
+                    </th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr class="px-10 cursor-pointer"
-                            hx-get="/admin/tags/edit/@item.Id"
-                            hx-trigger="click"
-                            hx-target="#main-swap"
-                            hx-swap="outerHTML"
-                            hx-push-url="true">
-                            <td class="px-3 py-1">
-                                <p class="text-xs">@item.Name </p>
-                            </td>
-                             <td class="px-3 py-3">
-                                <p class="text-xs">@item.Visibility</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.Status </p>
-                            </td>
-                            <td class="px-3 py-3">
-                                <p class="text-xs">@item.CreatedByName</p>
-                                <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
-                            </td>
-                            <td>
-                                <span class="text-gray-300"><ion-icon name="chatbubbles"></ion-icon></span>
-                            </td>
-                        </tr>
-                    }
+                @foreach (var item in Model)
+                {
+                    <tr class="px-10 cursor-pointer"
+                        hx-get="/admin/tags/edit/@item.Id"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
+                        <td class="px-3 py-1">
+                            <p class="text-xs">@item.Name </p>
+                        </td>
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.Visibility</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.Status </p>
+                        </td>
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.CreatedByName</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
+                        </td>
+                        <td>
+                            <span class="text-gray-300">
+                                <ion-icon name="chatbubbles"></ion-icon>
+                            </span>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>

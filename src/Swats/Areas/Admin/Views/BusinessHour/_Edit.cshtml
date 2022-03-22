@@ -6,13 +6,14 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Admin", Value="/admin"},
-                new SelectListItem{Text = "Business Hour", Value = "/admin/businesshour"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"},
+                new SelectListItem {Text = "Business Hour", Value = "/admin/businesshour"}
+            },
             currentPage = Model.Name
         })
     </section>
@@ -32,7 +33,7 @@
     <div class="w-full flex flex-row">
         <div style="width: 220px" class="">
             <div class=" pr-2">
-                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@Model.Name" />
+                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@Model.Name"/>
             </div>
             <ul class="edit-sidebar py-5">
                 <li>
@@ -67,7 +68,7 @@
                     <label asp-for="@Model.Name" class="form-label">
                         Name
                     </label>
-                    <input asp-for="@Model.Name" class="form-input" />
+                    <input asp-for="@Model.Name" class="form-input"/>
                 </div>
 
                 <div class="form-control">
@@ -83,7 +84,7 @@
                     <label asp-for="@Model.Timezone" class="form-label">
                         Timezone
                     </label>
-                    <input asp-for="@Model.Timezone" class="form-input" />
+                    <input asp-for="@Model.Timezone" class="form-input"/>
                 </div>
             </div>
 

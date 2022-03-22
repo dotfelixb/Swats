@@ -1,12 +1,11 @@
-﻿using Htmx;
+﻿using System.Security.Claims;
+using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
-using Swats.Model;
 using Swats.Model.Commands;
-using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -25,64 +24,6 @@ public class DepartmentController : FrontEndController
         _logger = logger;
         _mediatr = mediatr;
     }
-
-    #region GET
-
-    public async Task<IActionResult> Index()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Index)}");
-
-        var query = new ListDepartmentCommand { };
-        var result = await _mediatr.Send(query);
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/Department/_Index.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Edit(string id)
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Edit)}");
-
-        var query = new GetDepartmentCommand { Id = id };
-        var result = await _mediatr.Send(query);
-
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/department/edit/{id}".GenerateQrCode();
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/department/_Edit.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Create()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Create)}");
-
-        var businesshourResult = await _mediatr.Send(new ListBusinessHourCommand { });
-        if (businesshourResult.IsFailed)
-        {
-            return BadRequest(businesshourResult.Reasons.FirstOrDefault()?.Message);
-        }
-
-        CreateDepartmentCommand command = new()
-        {
-            BusinessHours = businesshourResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
-        };
-
-        return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/Department/_Create.cshtml", command)
-             : View(command);
-    }
-
-    #endregion
 
     #region POST
 
@@ -117,7 +58,57 @@ public class DepartmentController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
+    }
+
+    #endregion
+
+    #region GET
+
+    public async Task<IActionResult> Index()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Index)}");
+
+        var query = new ListDepartmentCommand();
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/Department/_Index.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Edit)}");
+
+        var query = new GetDepartmentCommand {Id = id};
+        var result = await _mediatr.Send(query);
+
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/department/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/department/_Edit.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Create)}");
+
+        var businesshourResult = await _mediatr.Send(new ListBusinessHourCommand());
+        if (businesshourResult.IsFailed) return BadRequest(businesshourResult.Reasons.FirstOrDefault()?.Message);
+
+        CreateDepartmentCommand command = new()
+        {
+            BusinessHours =
+                businesshourResult.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()})
+        };
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/Department/_Create.cshtml", command)
+            : View(command);
     }
 
     #endregion

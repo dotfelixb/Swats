@@ -5,12 +5,6 @@ namespace Swats.ViewComponents;
 
 public class RecentTicketViewComponent : ViewComponent
 {
-    public RecentTicketViewComponent()
-    {
-
-    }
-
-
     public async Task<IViewComponentResult> InvokeAsync()
     {
         // Hook to Db
@@ -23,43 +17,48 @@ public class RecentTicketViewComponent : ViewComponent
     {
         return new List<RecentTicket>
         {
-            new RecentTicket {
+            new()
+            {
                 Id = Guid.NewGuid(),
                 Title = "Swats Application Down",
-                Tags = new []{ "Urgent", "Application" },
+                Tags = new[] {"Urgent", "Application"},
                 CreatedAt = DateTimeOffset.UtcNow.AddDays(-12)
             },
-             new RecentTicket {
+            new()
+            {
                 Id = Guid.NewGuid(),
                 Title = "Schedule pending validation",
-                Tags = new []{ "TA", "Application" },
+                Tags = new[] {"TA", "Application"},
                 CreatedAt = DateTimeOffset.UtcNow.AddDays(-10)
             },
-            new RecentTicket {
+            new()
+            {
                 Id = Guid.NewGuid(),
                 Title = "Payment matching issues",
-                Tags = new []{ "TA", "Application", "Matching" },
+                Tags = new[] {"TA", "Application", "Matching"},
                 CreatedAt = DateTimeOffset.UtcNow.AddDays(-8)
             },
-             new RecentTicket {
+            new()
+            {
                 Id = Guid.NewGuid(),
                 Title = "Tools Downtime",
-                Tags = new []{ "Tools", "Application",  },
+                Tags = new[] {"Tools", "Application"},
                 CreatedAt = DateTimeOffset.UtcNow.AddDays(-8)
             },
-             new RecentTicket {
+            new()
+            {
                 Id = Guid.NewGuid(),
                 Title = "Deals sync issues",
-                Tags = new []{ "TA", "CRM", "Application" },
+                Tags = new[] {"TA", "CRM", "Application"},
                 CreatedAt = DateTimeOffset.UtcNow.AddDays(-5)
             },
-             new RecentTicket {
+            new()
+            {
                 Id = Guid.NewGuid(),
                 Title = "Portal Certification Error",
-                Tags = new []{ "Members Portal", "CRM", "SSL" },
+                Tags = new[] {"Members Portal", "CRM", "SSL"},
                 CreatedAt = DateTimeOffset.UtcNow
-            },
+            }
         };
     }
 }
-

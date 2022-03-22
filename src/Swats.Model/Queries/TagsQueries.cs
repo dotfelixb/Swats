@@ -2,4 +2,6 @@
 
 namespace Swats.Model.Queries;
 
-public class FetchTag : Tag { }
+public class FetchTag : Tag
+{
+}

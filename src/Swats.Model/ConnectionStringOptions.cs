@@ -1,7 +1,6 @@
-﻿namespace Swats.Model
+﻿namespace Swats.Model;
+
+public class ConnectionStringOptions
 {
-    public class ConnectionStringOptions
-    {
-        public string Default { get; set; }
-    }
+    public string Default { get; set; }
 }

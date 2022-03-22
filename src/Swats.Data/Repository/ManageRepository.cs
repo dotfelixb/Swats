@@ -14,7 +14,8 @@ public interface IManageRepository
 
     Task<FetchBusinessHour> GetBusinessHour(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000,
+        bool includeDeleted = false, CancellationToken cancellationToken = default);
 
     #endregion Business Hour
 
@@ -24,7 +25,8 @@ public interface IManageRepository
 
     Task<FetchTag> GetTag(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion Tags
 
@@ -36,7 +38,8 @@ public interface IManageRepository
 
     Task<FetchDepartment> GetDepartment(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchDepartment>> ListDepartments(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchDepartment>> ListDepartments(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion Department
 
@@ -46,7 +49,8 @@ public interface IManageRepository
 
     Task<FetchTeam> GetTeam(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion Teams
 
@@ -56,7 +60,8 @@ public interface IManageRepository
 
     Task<FetchHelpTopic> GetHelpTopic(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchHelpTopic>> ListHelpTopics(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchHelpTopic>> ListHelpTopics(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion HelpTopic
 }
@@ -69,7 +74,8 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     #region Business Hour
 
-    public Task<int> CreateBusinessHour(BusinessHour businessHour, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> CreateBusinessHour(BusinessHour businessHour, DbAuditLog auditLog,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -154,11 +160,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businesshour b
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000,
+        bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -175,7 +182,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchBusinessHour>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchBusinessHour>(query, new {offset, limit});
         });
     }
 
@@ -271,11 +278,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM tags t
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -292,7 +300,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTag>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTag>(query, new {offset, limit});
         });
     }
 
@@ -410,11 +418,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE d.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchDepartment>> ListDepartments(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchDepartment>> ListDepartments(int offset = 0, int limit = 1000,
+        bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -435,7 +444,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchDepartment>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchDepartment>(query, new {offset, limit});
         });
     }
 
@@ -532,11 +541,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -557,7 +567,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTeam>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTeam>(query, new {offset, limit});
         });
     }
 
@@ -655,11 +665,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN department d ON d.id = h.department
                 WHERE h.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchHelpTopic>> ListHelpTopics(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchHelpTopic>> ListHelpTopics(int offset = 0, int limit = 1000,
+        bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -678,7 +689,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchHelpTopic>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchHelpTopic>(query, new {offset, limit});
         });
     }
 

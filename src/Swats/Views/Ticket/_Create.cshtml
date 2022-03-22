@@ -1,207 +1,222 @@
 @model CreateTicketCommand
 
 @{
-    var createError =  TempData["CreateError"]?.ToString() ?? "";
+    var createError = TempData["CreateError"]?.ToString() ?? "";
 }
 
 @if (!string.IsNullOrWhiteSpace(createError))
 {
-    <div _="init transition my opacity to 0% over 7 seconds" 
-        class="absolute top-0 right-0 px-5 py-1 z-50">
-        <div  class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
-             <div class="pr-3">
-                <ion-icon name="close-circle" style="color: white;"></ion-icon> 
-             </div> 
+    <div _="init transition my opacity to 0% over 7 seconds"
+         class="absolute top-0 right-0 px-5 py-1 z-50">
+        <div class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
+            <div class="pr-3">
+                <ion-icon name="close-circle" style="color: white;"></ion-icon>
+            </div>
             <div>@createError</div>
         </div>
     </div>
 }
 
 <div id="main-swap">
-    <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Ticket", Value="/ticket"}
-            }, 
-            currentPage = "New Ticket"
-        })
-    </section>
-    <form asp-controller="Ticket" asp-action="Create" method="post">
-        <section class=" flex w-full font-bold text-2xl pb-5">
-            <div class="flex w-1/2">New Ticket</div>
-            <div class="flex w-1/2 justify-end">
-                <div class="flex flex-row">
-                    <button class="btn-default"
-                        hx-get="/ticket" 
-                        hx-trigger="click" 
-                        hx-target="#main-swap" 
+<section>
+    @await Component.InvokeAsync("Breadcrumbs", new
+    {
+        crumbs = new[]
+        {
+            new SelectListItem {Text = "Home", Value = "/"},
+            new SelectListItem {Text = "Ticket", Value = "/ticket"}
+        },
+        currentPage = "New Ticket"
+    })
+</section>
+<form asp-controller="Ticket" asp-action="Create" method="post">
+    <section class=" flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">New Ticket</div>
+        <div class="flex w-1/2 justify-end">
+            <div class="flex flex-row">
+                <button class="btn-default"
+                        hx-get="/ticket"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
                         hx-swap="outerHTML"
                         hx-push-url="true">
-                        <div class="flex flex-row "> 
-                            <div class="flex">Cancel</div>
-                       </div>
-                    </button> 
-                    <span class="mr-4"></span>
-                     <button class="btn-primary"
-                        hx-post="/ticket/create" 
-                        hx-trigger="click" 
-                        hx-target="#main-swap" 
+                    <div class="flex flex-row ">
+                        <div class="flex">Cancel</div>
+                    </div>
+                </button>
+                <span class="mr-4"></span>
+                <button class="btn-primary"
+                        hx-post="/ticket/create"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
                         hx-swap="outerHTML"
                         hx-push-url="true">
-                       <div class="flex flex-row ">
-                            <div class="mr-2 flex items-center "> 
-                                <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
-                            </div> 
-                            <div class="flex">Save</div>
-                       </div>
-                    </button>
-                </div>
+                    <div class="flex flex-row ">
+                        <div class="mr-2 flex items-center ">
+                            <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
+                        </div>
+                        <div class="flex">Save</div>
+                    </div>
+                </button>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+    <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                @* requester *@
-                <div class="form-control">
-                    <label asp-for="@Model.Requester" class="form-label">
-                       Requester
-                    </label>
-                    <input asp-for="@Model.Requester" list="requesterlist" class="form-input" />
-                    <datalist id="requesterlist">
-                        @foreach (var item in Model.RequesterList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </datalist>
-                    <span asp-validation-for="@Model.Requester" class="form-input-error"></span>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            @* requester *@
+            <div class="form-control">
+                <label asp-for="@Model.Requester" class="form-label">
+                    Requester
+                </label>
+                <input asp-for="@Model.Requester" list="requesterlist" class="form-input"/>
+                <datalist id="requesterlist">
+                    @foreach (var item in Model.RequesterList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+                <span asp-validation-for="@Model.Requester" class="form-input-error"></span>
+            </div>
 
-                @* subject *@
-                <div class="form-control">
-                    <label asp-for="@Model.Subject" class="form-label">
-                        Subject
-                    </label>
-                    <input asp-for="@Model.Subject" class="form-input" />
-                    <span asp-validation-for="@Model.Subject" class="form-input-error"></span>
-                </div>
+            @* subject *@
+            <div class="form-control">
+                <label asp-for="@Model.Subject" class="form-label">
+                    Subject
+                </label>
+                <input asp-for="@Model.Subject" class="form-input"/>
+                <span asp-validation-for="@Model.Subject" class="form-input-error"></span>
+            </div>
 
-                @* assignee *@
-               <div class="form-control">
-                    <label asp-for="@Model.AssignedTo" class="form-label">
-                        Assigned To
-                    </label>
-                    <input asp-for="@Model.AssignedTo" list="assigneelist" class="form-input" />
-                    <datalist id="assigneelist">
-                        @foreach (var item in Model.RequesterList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </datalist>
-                    <span asp-validation-for="@Model.AssignedTo" class="form-input-error"></span>
-                </div>
+            @* assignee *@
+            <div class="form-control">
+                <label asp-for="@Model.AssignedTo" class="form-label">
+                    Assigned To
+                </label>
+                <input asp-for="@Model.AssignedTo" list="assigneelist" class="form-input"/>
+                <datalist id="assigneelist">
+                    @foreach (var item in Model.RequesterList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+                <span asp-validation-for="@Model.AssignedTo" class="form-input-error"></span>
+            </div>
 
-                @* source *@
-                <div class="form-control">
-                    <label asp-for="@Model.Source" class="form-label">
-                        Source
-                    </label>
-                    <select asp-for="@Model.Source" class="form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
-                    </select>
-                    <span asp-validation-for="@Model.Source" class="form-input-error"></span>
-                </div>
+            @* source *@
+            <div class="form-control">
+                <label asp-for="@Model.Source" class="form-label">
+                    Source
+                </label>
+                <select asp-for="@Model.Source" class="form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
+                </select>
+                <span asp-validation-for="@Model.Source" class="form-input-error"></span>
+            </div>
 
-                <div class="form-control">
-                    <label asp-for="@Model.Priority" class="form-label">
-                        Priority
-                    </label>
-                    <select asp-for="@Model.Priority" class="form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
-                    </select>
-                    <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
-                </div>
+            <div class="form-control">
+                <label asp-for="@Model.Priority" class="form-label">
+                    Priority
+                </label>
+                <select asp-for="@Model.Priority" class="form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
+                </select>
+                <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
+            </div>
 
-                <div class="form-control">
-                    <label asp-for="@Model.Status" class="form-label">
-                        Status
-                    </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
-                    </select>
-                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
-                </div>
+            <div class="form-control">
+                <label asp-for="@Model.Status" class="form-label">
+                    Status
+                </label>
+                <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
+                </select>
+                <span asp-validation-for="@Model.Status" class="form-input-error"></span>
+            </div>
 
-                @* department *@
-                <div class="form-control">
+            @* department *@
+            <div class="form-control">
+                <label asp-for="@Model.Department" class="form-label">
+                    Department
+                </label>
+                <input asp-for="@Model.Department" list="departmentlist" class="form-input"/>
+                <datalist id="departmentlist">
+                    @foreach (var item in Model.DepartmentList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+                <span asp-validation-for="@Model.Department" class="form-input-error"></span>
+            </div>
+
+            @* department *@
+            @* <div class="form-control">
                     <label asp-for="@Model.Department" class="form-label">
                         Department
                     </label>
-                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
-                    <datalist id="departmentlist">
+                    <select asp-for="@Model.Department" class="form-input">
                         @foreach (var item in Model.DepartmentList)
                         {
                             <option value="@item.Value">@item.Text</option>
                         }
-                    </datalist>
+                    </select>
                     <span asp-validation-for="@Model.Department" class="form-input-error"></span>
-                </div>
+                </div> *@
 
-                <div class="form-control">
-                    <label asp-for="@Model.Team" class="form-label">
-                        Team
-                    </label>
-                    <input asp-for="@Model.Team" list="teamlist" class="form-input" />
-                    <datalist id="teamlist">
-                        @foreach (var item in Model.TeamList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </datalist>
-                    <span asp-validation-for="@Model.Team" class="form-input-error"></span>
-                </div>
-
-                 @* type *@
-                <div class="form-control">
-                    <label asp-for="@Model.TicketType" class="form-label">
-                        Default Ticket Type
-                    </label>
-                    <input asp-for="@Model.TicketType" list="typelist" class="form-input" />
-                    <datalist id="typelist">
-                        @foreach (var item in Model.TypeList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </datalist>
-                    <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
-                </div>
-
-                @* help topic *@
-                <div class="form-control">
-                    <label asp-for="@Model.HelpTopic" class="form-label">
-                        Help Topic
-                    </label>
-                    <input asp-for="@Model.HelpTopic" list="helptopiclist" class="form-input" />
-                    <datalist id="helptopiclist">
-                        @foreach (var item in Model.HelpTopicList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </datalist>
-                    <span asp-validation-for="@Model.HelpTopic" class="form-input-error"></span>
-                </div>
-
+            <div class="form-control">
+                <label asp-for="@Model.Team" class="form-label">
+                    Team
+                </label>
+                <input asp-for="@Model.Team" list="teamlist" class="form-input"/>
+                <datalist id="teamlist">
+                    @foreach (var item in Model.TeamList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+                <span asp-validation-for="@Model.Team" class="form-input-error"></span>
             </div>
-            <div class="grid grid-cols-1 gap-5 py-4">
-                @* body *@
-                <div class="form-control">
-                    <label asp-for="@Model.Body" class="form-label">
-                        Description
-                    </label>
-                    <textarea asp-for="@Model.Body" class="form-input" cols="30" rows="10"></textarea>
-                    <span asp-validation-for="@Model.Body" class="form-input-error"></span>
 
-                </div>
+            @* type *@
+            <div class="form-control">
+                <label asp-for="@Model.TicketType" class="form-label">
+                    Default Ticket Type
+                </label>
+                <input asp-for="@Model.TicketType" list="typelist" class="form-input"/>
+                <datalist id="typelist">
+                    @foreach (var item in Model.TypeList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+                <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
+            </div>
+
+            @* help topic *@
+            <div class="form-control">
+                <label asp-for="@Model.HelpTopic" class="form-label">
+                    Help Topic
+                </label>
+                <input asp-for="@Model.HelpTopic" list="helptopiclist" class="form-input"/>
+                <datalist id="helptopiclist">
+                    @foreach (var item in Model.HelpTopicList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+                <span asp-validation-for="@Model.HelpTopic" class="form-input-error"></span>
+            </div>
+
+        </div>
+        <div class="grid grid-cols-1 gap-5 py-4">
+            @* body *@
+            <div class="form-control">
+                <label asp-for="@Model.Body" class="form-label">
+                    Description
+                </label>
+                <textarea asp-for="@Model.Body" class="form-input" cols="30" rows="10"></textarea>
+                <span asp-validation-for="@Model.Body" class="form-input-error"></span>
+
             </div>
         </div>
-    </form>
+    </div>
+</form>
 </div>

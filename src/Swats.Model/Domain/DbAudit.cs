@@ -1,17 +1,19 @@
 ﻿using MassTransit;
-using Swats.Model.Domain;
 
 namespace Swats.Model.Domain;
 
 public class DbAudit
 {
     #region UI Props
+
     public string ImageCode { get; set; }
     public string CreatedByName { get; set; }
     public string UpdatedByName { get; set; }
+
     #endregion
 
     #region Db Props
+
     public DefaultStatus Status { get; set; }
     public string RowVersion { get; set; } = Guid.NewGuid().ToString();
     public bool Deleted { get; set; }
@@ -19,6 +21,7 @@ public class DbAudit
     public DateTimeOffset CreatedAt { get; set; }
     public string UpdatedBy { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
+
     #endregion
 }
 

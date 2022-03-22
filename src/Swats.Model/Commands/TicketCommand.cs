@@ -41,7 +41,6 @@ public class ListTicketCommand : ListType, IRequest<Result<IEnumerable<FetchTick
 
 #endregion
 
-
 #region Ticket Type
 
 public class CreateTicketTypeCommand : IRequest<Result<string>>

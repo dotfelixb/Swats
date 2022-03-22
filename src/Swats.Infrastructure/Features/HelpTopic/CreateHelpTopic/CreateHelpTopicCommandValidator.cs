@@ -11,4 +11,3 @@ public class CreateHelpTopicCommandValidator : AbstractValidator<CreateHelpTopic
         RuleFor(r => r.Department).NotEmpty();
     }
 }
-

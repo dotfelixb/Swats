@@ -16,7 +16,8 @@ public interface ITicketRepository
 
     Task<FetchTicket> GetTicket(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion Ticket
 
@@ -26,7 +27,8 @@ public interface ITicketRepository
 
     Task<FetchTicketType> GetTicketType(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion Ticket Type
 }
@@ -45,7 +47,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 
         return WithConnection(async conn =>
         {
-            var cmd = $@"
+            var cmd = @"
                     INSERT INTO public.ticket
                         (id
                         , code
@@ -176,11 +178,12 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 LEFT JOIN agent r on r.id = t.requester
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -209,7 +212,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicket>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTicket>(query, new {offset, limit});
         });
     }
 
@@ -221,7 +224,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
     {
         return WithConnection(async conn =>
         {
-            var cmd = $@"
+            var cmd = @"
                 INSERT INTO public.tickettype
                     (id
                     , ""name""
@@ -304,11 +307,12 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 FROM tickettype t
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new {Id = id});
         });
     }
 
-    public Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000, bool includeDeleted = false, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchTicketType>> ListTicketTypes(int offset = 0, int limit = 1000,
+        bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -325,7 +329,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicketType>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTicketType>(query, new {offset, limit});
         });
     }
 

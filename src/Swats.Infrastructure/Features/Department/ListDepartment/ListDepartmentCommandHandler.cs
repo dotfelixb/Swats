@@ -15,9 +15,11 @@ public class ListDepartmentCommandHandler : IRequestHandler<ListDepartmentComman
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchDepartment>>> Handle(ListDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchDepartment>>> Handle(ListDepartmentCommand request,
+        CancellationToken cancellationToken)
     {
-        var rst = await _manageRepository.ListDepartments(request.Offset, request.Limit, request.Deleted, cancellationToken);
+        var rst = await _manageRepository.ListDepartments(request.Offset, request.Limit, request.Deleted,
+            cancellationToken);
 
         return Result.Ok(rst);
     }

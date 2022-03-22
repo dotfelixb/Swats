@@ -25,7 +25,7 @@ public enum TicketSource
     App = 1,
     Web,
     Call,
-    Api,
+    Api
 }
 
 public enum TicketStatus
@@ -40,7 +40,7 @@ public enum TicketStatus
     Review, // Same as Pending but can be comment on
 
     Close, // Only Approval User
-    Deleted,
+    Deleted
 }
 
 public enum CommentSource

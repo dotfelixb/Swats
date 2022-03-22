@@ -17,10 +17,8 @@ public class CreateTagCommand : IRequest<Result<string>>
 
 public class GetTagCommand : GetType, IRequest<Result<FetchTag>>
 {
-
 }
 
 public class ListTagsCommand : ListType, IRequest<Result<IEnumerable<FetchTag>>>
 {
-
 }

@@ -1,19 +1,18 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using FluentResults;
-using MassTransit;
 using MediatR;
 using Swats.Data.Repository;
 using Swats.Infrastructure.Extensions;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
-using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Tickets.CreateTicket;
 
 public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, Result<string>>
 {
-    private readonly ITicketRepository _ticketRepository;
     private readonly IMapper _mapper;
+    private readonly ITicketRepository _ticketRepository;
 
     public CreateTicketCommandHandler(ITicketRepository ticketRepository, IMapper mapper)
     {
@@ -23,7 +22,6 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
 
     public async Task<Result<string>> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
     {
-
         var ticket = _mapper.Map<CreateTicketCommand, Ticket>(request);
         ticket.UpdatedBy = request.CreatedBy;
 
@@ -37,9 +35,10 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
             Description = "added ticket",
             ObjectName = "ticket",
             ObjectData = JsonSerializer.Serialize(ticket),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _ticketRepository.CreateTicket(ticket, auditLog, cancellationToken);
         return rst > 0 ? Result.Ok(ticket.Id) : Result.Fail<string>("Not able to create now!");
-    } }
+    }
+}

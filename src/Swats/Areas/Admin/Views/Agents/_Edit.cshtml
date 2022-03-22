@@ -6,13 +6,14 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Admin", Value="/admin"},
-                new SelectListItem{Text = "Agent", Value = "/admin/agents"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"},
+                new SelectListItem {Text = "Agent", Value = "/admin/agents"}
+            },
             currentPage = name
         })
     </section>
@@ -32,7 +33,7 @@
     <div class="w-full flex flex-row">
         <div style="width: 220px" class="">
             <div class=" pr-2">
-                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@name" />
+                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@name"/>
             </div>
             <ul class="edit-sidebar py-5">
                 <li>
@@ -63,53 +64,53 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @* name *@
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.Email" class="form-label">
                         Email
                     </label>
-                    <input asp-for="@Model.Email" class="form-input" />
+                    <input asp-for="@Model.Email" class="form-input"/>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.Mobile" class="form-label">
                         Mobile
                     </label>
-                    <input asp-for="@Model.Mobile" class="form-input" />
+                    <input asp-for="@Model.Mobile" class="form-input"/>
                 </div>
 
                 <div class="form-control">
                     <label asp-for="@Model.FirstName" class="form-label">
                         First name
                     </label>
-                    <input asp-for="@Model.FirstName" class="form-input" />
+                    <input asp-for="@Model.FirstName" class="form-input"/>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.LastName" class="form-label">
                         Last name
                     </label>
-                    <input asp-for="@Model.LastName" class="form-input" />
+                    <input asp-for="@Model.LastName" class="form-input"/>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.DepartmentName" class="form-label">
                         Department
                     </label>
-                    <input asp-for="@Model.DepartmentName" class="form-input" />
+                    <input asp-for="@Model.DepartmentName" class="form-input"/>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.TeamName" class="form-label">
                         Team
                     </label>
-                    <input asp-for="@Model.TeamName" class="form-input" />
+                    <input asp-for="@Model.TeamName" class="form-input"/>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.TypeName" class="form-label">
                         Default aTicket Type
                     </label>
-                    <input asp-for="@Model.TypeName" class="form-input" />
+                    <input asp-for="@Model.TypeName" class="form-input"/>
                 </div>
 
                 <div class="form-control">
@@ -125,7 +126,7 @@
                     <label asp-for="@Model.Timezone" class="form-label">
                         Timezone
                     </label>
-                    <input asp-for="@Model.Timezone" class="form-input" />
+                    <input asp-for="@Model.Timezone" class="form-input"/>
                 </div>
             </div>
 

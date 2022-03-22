@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,8 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o =>
 {
-    o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-}).AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+    o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+}).AddFluentValidation(f =>
+    f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
 builder.Services.AddAutoMapper(typeof(ModelProfiles));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -64,11 +66,11 @@ app.UseAuthorization();
 //app.UseSwatsSeed();
 
 app.MapAreaControllerRoute(
-    name: "areadefault",
-    areaName: "admin",
-    pattern: "admin/{controller=Settings}/{action=Index}/{id?}");
+    "areadefault",
+    "admin",
+    "admin/{controller=Settings}/{action=Index}/{id?}");
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+    "default",
+    "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();

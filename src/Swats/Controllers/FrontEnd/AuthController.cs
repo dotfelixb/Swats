@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -6,14 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Swats.Infrastructure.Features.Users.Register;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
-using System.Security.Claims;
 
 namespace Swats.Controllers.FrontEnd;
 
 public class AuthController : FrontEndController
 {
-    private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
+    private readonly UserManager<AuthUser> _userManager;
 
     public AuthController(UserManager<AuthUser> userManager
         , SignInManager<AuthUser> signInManager)
@@ -55,7 +55,8 @@ public class AuthController : FrontEndController
             return View(command);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(command.UserName, command.Password, command.RememberMe, lockoutOnFailure: false);
+        var result =
+            await _signInManager.PasswordSignInAsync(command.UserName, command.Password, command.RememberMe, false);
         if (result.Succeeded)
         {
             var user = await _userManager.FindByNameAsync(command.UserName);
@@ -67,18 +68,20 @@ public class AuthController : FrontEndController
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.Email, user.Email)
             };
 
-            var claimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+            var claimPrincipal =
+                new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
             var authProperties = new AuthenticationProperties
             {
                 IsPersistent = command.RememberMe
             };
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal, authProperties);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal,
+                authProperties);
             return LocalRedirect(returnUrl);
         }
 

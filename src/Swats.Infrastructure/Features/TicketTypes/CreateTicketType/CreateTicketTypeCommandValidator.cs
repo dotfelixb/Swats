@@ -10,4 +10,3 @@ public class CreateTicketTypeCommandValidator : AbstractValidator<CreateTicketTy
         RuleFor(r => r.Name).NotNull();
     }
 }
-

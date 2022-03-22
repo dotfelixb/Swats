@@ -1,17 +1,17 @@
 ﻿@model CreateAgentCommand
 
 @{
-    var createError =  TempData["CreateError"]?.ToString() ?? "";
+    var createError = TempData["CreateError"]?.ToString() ?? "";
 }
 
 @if (!string.IsNullOrWhiteSpace(createError))
 {
-    <div _="init transition my opacity to 0% over 7 seconds" 
-        class="absolute top-0 right-0 px-5 py-1 z-50">
-        <div  class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
-             <div class="pr-3">
-                <ion-icon name="close-circle" style="color: white;"></ion-icon> 
-             </div> 
+    <div _="init transition my opacity to 0% over 7 seconds"
+         class="absolute top-0 right-0 px-5 py-1 z-50">
+        <div class="flex flex-row bg-red-400 rounded px-5 py-1 text-white drop-shadow-lg">
+            <div class="pr-3">
+                <ion-icon name="close-circle" style="color: white;"></ion-icon>
+            </div>
             <div>@createError</div>
         </div>
     </div>
@@ -19,13 +19,14 @@
 
 <div id="main-swap">
     <section>
-        @await Component.InvokeAsync("Breadcrumbs", new {
-            crumbs = new []
-            { 
-                new SelectListItem{Text = "Home", Value = "/"}, 
-                new SelectListItem {Text="Admin", Value="/admin"},
-                new SelectListItem{Text = "Agent", Value = "/admin/agents"}
-            }, 
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"},
+                new SelectListItem {Text = "Agent", Value = "/admin/agents"}
+            },
             currentPage = "Create"
         })
     </section>
@@ -35,29 +36,29 @@
             <div class="flex w-1/2 justify-end">
                 <div class="flex flex-row">
                     <button class="btn-default"
-                        hx-get="/admin/agents" 
-                        hx-trigger="click" 
-                        hx-target="#main-swap" 
-                        hx-swap="outerHTML"
-                        hx-push-url="true">
+                            hx-get="/admin/agents"
+                            hx-trigger="click"
+                            hx-target="#main-swap"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
                         <div class="flex flex-row">
-                            <div class="flex "> </div> 
+                            <div class="flex "> </div>
                             <div class="flex">Cancel</div>
-                       </div>
-                    </button> 
+                        </div>
+                    </button>
                     <span class="mr-4"></span>
-                     <button class="btn-primary"
-                        hx-post="/admin/agents/create" 
-                        hx-trigger="click" 
-                        hx-target="#main-swap" 
-                        hx-swap="outerHTML"
-                        hx-push-url="true">
-                       <div class="flex flex-row ">
-                            <div class="mr-2 flex items-center "> 
+                    <button class="btn-primary"
+                            hx-post="/admin/agents/create"
+                            hx-trigger="click"
+                            hx-target="#main-swap"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
+                        <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center ">
                                 <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
-                            </div> 
+                            </div>
                             <div class="flex">Save</div>
-                       </div>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -66,12 +67,12 @@
         <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                
+
                 <div class="form-control">
                     <label asp-for="@Model.Email" class="form-label">
                         Email
                     </label>
-                    <input asp-for="@Model.Email" class="form-input" />
+                    <input asp-for="@Model.Email" class="form-input"/>
                     <span asp-validation-for="@Model.Email" class="form-input-error"></span>
                 </div>
 
@@ -79,15 +80,15 @@
                     <label asp-for="@Model.Mobile" class="form-label">
                         Mobile
                     </label>
-                    <input asp-for="@Model.Mobile" class="form-input" />
+                    <input asp-for="@Model.Mobile" class="form-input"/>
                     <span asp-validation-for="@Model.Mobile" class="form-input-error"></span>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.FirstName" class="form-label">
                         First Name
                     </label>
-                    <input asp-for="@Model.FirstName" class="form-input" />
+                    <input asp-for="@Model.FirstName" class="form-input"/>
                     <span asp-validation-for="@Model.FirstName" class="form-input-error"></span>
                 </div>
 
@@ -95,25 +96,25 @@
                     <label asp-for="@Model.LastName" class="form-label">
                         Last Name
                     </label>
-                    <input asp-for="@Model.LastName" class="form-input" />
+                    <input asp-for="@Model.LastName" class="form-input"/>
                     <span asp-validation-for="@Model.LastName" class="form-input-error"></span>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.Telephone" class="form-label">
                         Telephone
                     </label>
-                    <input asp-for="@Model.Telephone" class="form-input" />
+                    <input asp-for="@Model.Telephone" class="form-input"/>
                     <span asp-validation-for="@Model.Telephone" class="form-input-error"></span>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.Timezone" class="form-label">
                         Agent Time zone
                     </label>
-                    <input asp-for="@Model.Timezone" list="timezonelist" class="form-input" />
+                    <input asp-for="@Model.Timezone" list="timezonelist" class="form-input"/>
                     <datalist id="timezonelist">
-                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
+                        @foreach (var item in TimeZoneInfo.GetSystemTimeZones())
                         {
                             <option value="@item.Id">@item.DisplayName</option>
                         }
@@ -121,11 +122,11 @@
                     <span asp-validation-for="@Model.Timezone" class="form-input-error"></span>
                 </div>
 
-                  <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.Department" class="form-label">
                         Department
                     </label>
-                    <input asp-for="@Model.Department" list="departmentlist" class="form-input" />
+                    <input asp-for="@Model.Department" list="departmentlist" class="form-input"/>
                     <datalist id="departmentlist">
                         @foreach (var item in Model.DepartmentList)
                         {
@@ -135,11 +136,11 @@
                     <span asp-validation-for="@Model.Department" class="form-input-error"></span>
                 </div>
 
-                 <div class="form-control">
+                <div class="form-control">
                     <label asp-for="@Model.Team" class="form-label">
-                        Team    
+                        Team
                     </label>
-                    <input asp-for="@Model.Team" list="teamlist" class="form-input" />
+                    <input asp-for="@Model.Team" list="teamlist" class="form-input"/>
                     <datalist id="teamlist">
                         @foreach (var item in Model.TeamList)
                         {
@@ -151,9 +152,9 @@
 
                 <div class="form-control">
                     <label asp-for="@Model.Type" class="form-label">
-                        Default Ticket Type    
+                        Default Ticket Type
                     </label>
-                    <input asp-for="@Model.Type" list="typelist" class="form-input" />
+                    <input asp-for="@Model.Type" list="typelist" class="form-input"/>
                     <datalist id="typelist">
                         @foreach (var item in Model.TypeList)
                         {
@@ -167,13 +168,13 @@
                     <label asp-for="@Model.Mode" class="form-label">
                         Mode
                     </label>
-                    <select asp-for="@Model.Mode" class="form-input" asp-items="@Html.GetEnumSelectList<AgentMode>()" >
+                    <select asp-for="@Model.Mode" class="form-input" asp-items="@Html.GetEnumSelectList<AgentMode>()">
                         <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Mode" class="form-input-error"></span>
                 </div>
             </div>
-             <div class="grid grid-cols-1 gap-5 py-4">
+            <div class="grid grid-cols-1 gap-5 py-4">
                 @* body *@
                 <div class="form-control">
                     <label asp-for="@Model.Note" class="form-label">

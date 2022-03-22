@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Data;
+using Microsoft.Extensions.Options;
 using Npgsql;
 using Swats.Model;
-using System.Data;
 
 namespace Swats.Data;
 
@@ -18,7 +18,7 @@ public abstract class BasePostgresRepository
     private IDbConnection GetConnection()
     {
         var connectionString = _connectionStrings.Default
-            ?? throw new ArgumentNullException(nameof(_connectionStrings.Default));
+                               ?? throw new ArgumentNullException(nameof(_connectionStrings.Default));
 
         return new NpgsqlConnection(connectionString);
     }

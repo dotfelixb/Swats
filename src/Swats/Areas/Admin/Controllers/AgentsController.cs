@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Htmx;
 using MassTransit;
 using MediatR;
@@ -7,11 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
-using Swats.Model.Queries;
-using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -20,8 +18,8 @@ public class AgentsController : FrontEndController
 {
     private readonly IHttpContextAccessor _httpAccessor;
     private readonly ILogger<AgentsController> _logger;
-    private readonly IMediator _mediatr;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediatr;
     private readonly UserManager<AuthUser> _userManager;
 
     public AgentsController(IHttpContextAccessor httpAccessor
@@ -36,77 +34,6 @@ public class AgentsController : FrontEndController
         _mapper = mapper;
         _userManager = userManager;
     }
-
-    #region GET
-
-    public async Task<IActionResult> Index()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
-
-        var query = new ListAgentCommand { };
-        var result = await _mediatr.Send(query);
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/Agents/_Index.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Edit(string id)
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
-
-        var query = new GetAgentCommand { Id = id };
-        var result = await _mediatr.Send(query);
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/Agents/_Edit.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Create()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Create)}");
-
-        var ticketypeResult = await _mediatr.Send(new ListTicketTypeCommand { });
-        if (ticketypeResult.IsFailed)
-        {
-            return BadRequest(ticketypeResult.Reasons.FirstOrDefault()?.Message);
-        }
-
-        var departmentList = await _mediatr.Send(new ListDepartmentCommand { });
-        if (departmentList.IsFailed)
-        {
-            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        var teamList = await _mediatr.Send(new ListTeamsCommand { });
-        if (teamList.IsFailed)
-        {
-            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        CreateAgentCommand command = new()
-        {
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TypeList = ticketypeResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
-        };
-
-        return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/Agents/_Create.cshtml", command)
-             : View(command);
-    }
-
-    #endregion GET
 
     #region POST
 
@@ -125,12 +52,12 @@ public class AgentsController : FrontEndController
             _logger.LogError($"{msg} - Invalid Model state");
 
             return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/Agents/_Create.cshtml", command)
-             : View(command);
+                ? PartialView("~/Areas/Admin/Views/Agents/_Create.cshtml", command)
+                : View(command);
         }
 
         command.Id = newUserId; // without this agent creation fail
-        command.CreatedBy = userId; 
+        command.CreatedBy = userId;
 
         // get user name from email
         command.UserName = command.Email.Split('@').First(); // lisa.paige@swats.app => lisa.paige
@@ -167,8 +94,65 @@ public class AgentsController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
+
+    #region GET
+
+    public async Task<IActionResult> Index()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
+
+        var query = new ListAgentCommand();
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/Agents/_Index.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
+
+        var query = new GetAgentCommand {Id = id};
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/Agents/_Edit.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Create)}");
+
+        var ticketypeResult = await _mediatr.Send(new ListTicketTypeCommand());
+        if (ticketypeResult.IsFailed) return BadRequest(ticketypeResult.Reasons.FirstOrDefault()?.Message);
+
+        var departmentList = await _mediatr.Send(new ListDepartmentCommand());
+        if (departmentList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
+
+        var teamList = await _mediatr.Send(new ListTeamsCommand());
+        if (teamList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
+
+        CreateAgentCommand command = new()
+        {
+            DepartmentList =
+                departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            TeamList = teamList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            TypeList = ticketypeResult.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()})
+        };
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/Agents/_Create.cshtml", command)
+            : View(command);
+    }
+
+    #endregion GET
 }

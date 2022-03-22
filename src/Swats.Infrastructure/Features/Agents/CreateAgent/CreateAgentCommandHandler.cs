@@ -1,11 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
-using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Agents.CreateAgent;
 
@@ -32,7 +31,7 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
             Description = "added agent",
             ObjectName = "agent",
             ObjectData = JsonSerializer.Serialize(agent),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _agentRepository.CreateAgent(agent, auditLog, cancellationToken);

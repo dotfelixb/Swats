@@ -1,9 +1,10 @@
-﻿using Swats.Model.Commands;
+﻿using AutoMapper;
+using Swats.Model.Commands;
 using Swats.Model.Domain;
 
 namespace Swats.Infrastructure;
 
-public class ModelProfiles : AutoMapper.Profile
+public class ModelProfiles : Profile
 {
     public ModelProfiles()
     {
@@ -27,13 +28,13 @@ public class ModelProfiles : AutoMapper.Profile
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
         CreateMap<CreateTeamCommand, Team>()
-           .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
         CreateMap<CreateHelpTopicCommand, HelpTopic>()
-          .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
         CreateMap<CreateTagCommand, Tag>()
-         .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
         /**
          *.ForMember(d => d.ParentCustomer,

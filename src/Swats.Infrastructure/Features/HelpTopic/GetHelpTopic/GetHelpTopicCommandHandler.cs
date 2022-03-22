@@ -1,5 +1,4 @@
-﻿using System;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
 using Swats.Model;
@@ -8,8 +7,8 @@ using Swats.Model.Queries;
 
 namespace Swats.Infrastructure.Features.HelpTopic.GetHelpTopic;
 
-	public class GetHelpTopicCommandHandler : IRequestHandler<GetHelpTopicCommand, Result<FetchHelpTopic>>
-	{
+public class GetHelpTopicCommandHandler : IRequestHandler<GetHelpTopicCommand, Result<FetchHelpTopic>>
+{
     private readonly IManageRepository _manageRepository;
 
     public GetHelpTopicCommandHandler(IManageRepository manageRepository)
@@ -26,4 +25,3 @@ namespace Swats.Infrastructure.Features.HelpTopic.GetHelpTopic;
             : Result.Ok(result);
     }
 }
-

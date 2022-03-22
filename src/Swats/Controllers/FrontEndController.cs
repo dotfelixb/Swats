@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Swats.Controllers
+namespace Swats.Controllers;
+
+public class FrontEndController : Controller
 {
-    public class FrontEndController : Controller
-    {
-    }
 }

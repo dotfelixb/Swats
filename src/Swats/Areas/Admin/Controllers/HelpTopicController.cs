@@ -1,12 +1,11 @@
+using System.Security.Claims;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
-using Swats.Model;
 using Swats.Model.Commands;
-using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -25,64 +24,6 @@ public class HelpTopicController : FrontEndController
         _logger = logger;
         _mediatr = mediatr;
     }
-
-    #region GET
-
-    public async Task<IActionResult> Index()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Index)}");
-
-        var query = new ListHelpTopicsCommand { };
-        var result = await _mediatr.Send(query);
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/HelpTopic/_Index.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Edit(string id)
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Edit)}");
-
-        var query = new GetHelpTopicCommand { Id = id };
-        var result = await _mediatr.Send(query);
-
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/helptopic/edit/{id}".GenerateQrCode();
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/helptopic/_Edit.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Create()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Create)}");
-
-        var departmentList = await _mediatr.Send(new ListDepartmentCommand { });
-        if (departmentList.IsFailed)
-        {
-            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        CreateHelpTopicCommand command = new()
-        {
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
-        };
-
-        return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/HelpTopic/_Create.cshtml", command)
-             : View(command);
-    }
-
-    #endregion
 
     #region POST
 
@@ -117,7 +58,56 @@ public class HelpTopicController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
+    }
+
+    #endregion
+
+    #region GET
+
+    public async Task<IActionResult> Index()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Index)}");
+
+        var query = new ListHelpTopicsCommand();
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/HelpTopic/_Index.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Edit)}");
+
+        var query = new GetHelpTopicCommand {Id = id};
+        var result = await _mediatr.Send(query);
+
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/helptopic/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/helptopic/_Edit.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Create)}");
+
+        var departmentList = await _mediatr.Send(new ListDepartmentCommand());
+        if (departmentList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
+
+        CreateHelpTopicCommand command = new()
+        {
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id})
+        };
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/HelpTopic/_Create.cshtml", command)
+            : View(command);
     }
 
     #endregion

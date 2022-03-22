@@ -16,7 +16,8 @@ public class GetBusinessHourCommandHandler : IRequestHandler<GetBusinessHourComm
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<FetchBusinessHour>> Handle(GetBusinessHourCommand request, CancellationToken cancellationToken)
+    public async Task<Result<FetchBusinessHour>> Handle(GetBusinessHourCommand request,
+        CancellationToken cancellationToken)
     {
         var rst = await _manageRepository.GetBusinessHour(request.Id, cancellationToken);
 

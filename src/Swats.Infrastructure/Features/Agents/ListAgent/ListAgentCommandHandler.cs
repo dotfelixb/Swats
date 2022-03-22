@@ -15,9 +15,11 @@ public class ListAgentCommandHandler : IRequestHandler<ListAgentCommand, Result<
         _agentRepository = agentRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchAgent>>> Handle(ListAgentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchAgent>>> Handle(ListAgentCommand request,
+        CancellationToken cancellationToken)
     {
-        var result = await _agentRepository.ListAgent(request.Offset, request.Limit, request.Deleted, cancellationToken);
+        var result =
+            await _agentRepository.ListAgent(request.Offset, request.Limit, request.Deleted, cancellationToken);
         return Result.Ok(result);
     }
 }

@@ -25,4 +25,3 @@ public class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeCommand,
             : Result.Ok(rst);
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -31,11 +30,10 @@ public class CreateHelpTopicCommandHandler : IRequestHandler<CreateHelpTopicComm
             Description = "added help topic",
             ObjectName = "helptopic",
             ObjectData = JsonSerializer.Serialize(helpTopic),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _manageRepository.CreateHelpTopic(helpTopic, auditLog, cancellationToken);
         return rst > 0 ? Result.Ok(helpTopic.Id) : Result.Fail<string>("Not able to create now!");
     }
 }
-

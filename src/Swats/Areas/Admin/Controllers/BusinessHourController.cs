@@ -1,11 +1,10 @@
+using System.Security.Claims;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Controllers;
 using Swats.Extensions;
-using Swats.Model;
 using Swats.Model.Commands;
-using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -24,53 +23,6 @@ public class BusinessHourController : FrontEndController
         _logger = logger;
         _mediatr = mediatr;
     }
-
-    #region GET
-
-    public async Task<IActionResult> Index()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Index)}");
-
-        var query = new ListBusinessHourCommand { };
-        var result = await _mediatr.Send(query);
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/BusinessHour/_Index.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Edit(string id)
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Edit)}");
-
-        var query = new GetBusinessHourCommand { Id = id };
-        var result = await _mediatr.Send(query);
-
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/businesshour/edit/{id}".GenerateQrCode();
-
-        return Request.IsHtmx()
-                ? PartialView("~/Areas/Admin/Views/BusinessHour/_Edit.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public IActionResult Create()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Create)}");
-
-        return Request.IsHtmx()
-             ? PartialView("~/Areas/Admin/Views/BusinessHour/_Create.cshtml")
-             : View();
-    }
-
-    #endregion
 
     #region POST
 
@@ -105,7 +57,48 @@ public class BusinessHourController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
+    }
+
+    #endregion
+
+    #region GET
+
+    public async Task<IActionResult> Index()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Index)}");
+
+        var query = new ListBusinessHourCommand();
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/BusinessHour/_Index.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Edit)}");
+
+        var query = new GetBusinessHourCommand {Id = id};
+        var result = await _mediatr.Send(query);
+
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/businesshour/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/BusinessHour/_Edit.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public IActionResult Create()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Create)}");
+
+        return Request.IsHtmx()
+            ? PartialView("~/Areas/Admin/Views/BusinessHour/_Create.cshtml")
+            : View();
     }
 
     #endregion

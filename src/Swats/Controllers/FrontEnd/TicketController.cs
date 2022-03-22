@@ -1,10 +1,11 @@
+using System.Security.Claims;
+using System.Text.Json;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Extensions;
 using Swats.Model.Commands;
-using System.Security.Claims;
 
 namespace Swats.Controllers.FrontEnd;
 
@@ -23,93 +24,6 @@ public class TicketController : FrontEndController
         _mediatr = mediatr;
     }
 
-    #region GET
-
-    public async Task<IActionResult> Index()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
-
-        var query = new ListTicketCommand { };
-        var result = await _mediatr.Send(query);
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-
-        return Request.IsHtmx()
-            ? PartialView("~/Views/Ticket/_Index.cshtml", result.Value)
-            : View(result.Value);
-    }
-
-    public async Task<IActionResult> Edit(string id)
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Edit)}");
-
-        var query = new GetTicketCommand { Id = id };
-        var result = await _mediatr.Send(query);
-
-        if (result.IsFailed)
-        {
-            return NotFound(result.Reasons.FirstOrDefault()?.Message);
-        }
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/ticket/edit/{id}".GenerateQrCode();
-
-        return Request.IsHtmx()
-                ? PartialView("~/Views/Ticket/_Edit.cshtml", result.Value)
-                : View(result.Value);
-    }
-
-    public async Task<IActionResult> Create()
-    {
-        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}");
-
-        var requesterList = await _mediatr.Send(new ListAgentCommand { });
-        if (requesterList.IsFailed)
-        {
-            return BadRequest(requesterList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        var ticketTypeList = await _mediatr.Send(new ListTicketTypeCommand { });
-        if (ticketTypeList.IsFailed)
-        {
-            return BadRequest(ticketTypeList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        var departmentList = await _mediatr.Send(new ListDepartmentCommand { });
-        if (departmentList.IsFailed)
-        {
-            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        var teamList = await _mediatr.Send(new ListTeamsCommand { });
-        if (teamList.IsFailed)
-        {
-            return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        var helptopicList = await _mediatr.Send(new ListHelpTopicsCommand { });
-        if (helptopicList.IsFailed)
-        {
-            return BadRequest(helptopicList.Reasons.FirstOrDefault()?.Message);
-        }
-
-        CreateTicketCommand command = new()
-        {
-            AssigneeList = requesterList.Value.Select(s => new SelectListItem { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
-            RequesterList = requesterList.Value.Select(s => new SelectListItem { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TypeList = ticketTypeList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            HelpTopicList = helptopicList.Value.Select(s => new SelectListItem { Text = s.Topic, Value = s.Id.ToString() })
-        };
-
-        return Request.IsHtmx()
-            ? PartialView("~/Views/Ticket/_Create.cshtml", command)
-            : View(command);
-    }
-
-    #endregion
-
     #region POST
 
     [HttpPost]
@@ -123,10 +37,15 @@ public class TicketController : FrontEndController
         {
             _logger.LogError($"{msg} - Invalid model state");
             TempData["CreateError"] = "You have some errors on the form";
+            var dlistString = TempData["DepartmentList"].ToString();
+            var dlist = JsonSerializer.Deserialize<IEnumerable<SelectListItem>>(dlistString);
+            _logger.LogInformation(dlistString);
+
+            command.DepartmentList = dlist;
 
             return Request.IsHtmx()
-             ? PartialView("~/Views/Ticket/_Create.cshtml", command)
-             : View(command);
+                ? PartialView("~/Views/Ticket/_Create.cshtml", command)
+                : View(command);
         }
 
         // get login user id
@@ -145,7 +64,80 @@ public class TicketController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
+    }
+
+    #endregion
+
+    #region GET
+
+    public async Task<IActionResult> Index()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
+
+        var query = new ListTicketCommand();
+        var result = await _mediatr.Send(query);
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+
+        return Request.IsHtmx()
+            ? PartialView("~/Views/Ticket/_Index.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Edit)}");
+
+        var query = new GetTicketCommand {Id = id};
+        var result = await _mediatr.Send(query);
+
+        if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/ticket/edit/{id}".GenerateQrCode();
+
+        return Request.IsHtmx()
+            ? PartialView("~/Views/Ticket/_Edit.cshtml", result.Value)
+            : View(result.Value);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}");
+        _logger.LogInformation($"Guid Length - {Guid.Empty.ToString().Length}");
+
+        var requesterList = await _mediatr.Send(new ListAgentCommand());
+        if (requesterList.IsFailed) return BadRequest(requesterList.Reasons.FirstOrDefault()?.Message);
+
+        var ticketTypeList = await _mediatr.Send(new ListTicketTypeCommand());
+        if (ticketTypeList.IsFailed) return BadRequest(ticketTypeList.Reasons.FirstOrDefault()?.Message);
+
+        var departmentList = await _mediatr.Send(new ListDepartmentCommand());
+        if (departmentList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
+        var departmentListValue =
+            departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()});
+        TempData["DepartmentList"] = JsonSerializer.Serialize(departmentListValue);
+
+        var teamList = await _mediatr.Send(new ListTeamsCommand());
+        if (teamList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
+
+        var helptopicList = await _mediatr.Send(new ListHelpTopicsCommand());
+        if (helptopicList.IsFailed) return BadRequest(helptopicList.Reasons.FirstOrDefault()?.Message);
+
+        CreateTicketCommand command = new()
+        {
+            AssigneeList = requesterList.Value.Select(s => new SelectListItem
+                {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
+            RequesterList = requesterList.Value.Select(s => new SelectListItem
+                {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
+            DepartmentList = departmentListValue,
+            TeamList = teamList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            TypeList = ticketTypeList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            HelpTopicList =
+                helptopicList.Value.Select(s => new SelectListItem {Text = s.Topic, Value = s.Id.ToString()})
+        };
+
+        return Request.IsHtmx()
+            ? PartialView("~/Views/Ticket/_Create.cshtml", command)
+            : View(command);
     }
 
     #endregion

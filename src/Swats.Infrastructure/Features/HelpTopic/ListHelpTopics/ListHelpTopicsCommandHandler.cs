@@ -15,11 +15,12 @@ public class ListHelpTopicsCommandHandler : IRequestHandler<ListHelpTopicsComman
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchHelpTopic>>> Handle(ListHelpTopicsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchHelpTopic>>> Handle(ListHelpTopicsCommand request,
+        CancellationToken cancellationToken)
     {
-        var rst = await _manageRepository.ListHelpTopics(request.Offset, request.Limit, request.Deleted, cancellationToken);
+        var rst = await _manageRepository.ListHelpTopics(request.Offset, request.Limit, request.Deleted,
+            cancellationToken);
 
         return Result.Ok(rst);
     }
 }
-

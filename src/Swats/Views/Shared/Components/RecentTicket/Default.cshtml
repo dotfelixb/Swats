@@ -17,20 +17,20 @@
 
             </thead>
             <tbody>
-                @foreach (var recent in Model)
-                {
-                    <tr class="">
-                        <td class="py-3 text-sm">
-                            <span>@recent.Title</span>
-                            <span class="mr-2"></span>
-                            @foreach (var tag in recent.Tags)
-                            {
-                                <span style="font-size: 8px;" class="rounded bg-indigo-500 text-white px-2 py-1 m-1">@tag</span>
-                            }
-                        </td>
-                        <td class="py-3 text-sm text-right">@recent.CreatedAt.ToString("MMM dd, HH:mm")</td>
-                    </tr>
-                }
+            @foreach (var recent in Model)
+            {
+                <tr class="">
+                    <td class="py-3 text-sm">
+                        <span>@recent.Title</span>
+                        <span class="mr-2"></span>
+                        @foreach (var tag in recent.Tags)
+                        {
+                            <span style="font-size: 8px;" class="rounded bg-indigo-500 text-white px-2 py-1 m-1">@tag</span>
+                        }
+                    </td>
+                    <td class="py-3 text-sm text-right">@recent.CreatedAt.ToString("MMM dd, HH:mm")</td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>

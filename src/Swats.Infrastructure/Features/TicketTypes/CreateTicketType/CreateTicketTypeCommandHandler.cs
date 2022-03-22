@@ -1,18 +1,17 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
-using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.TicketTypes.CreateTicketType;
 
 public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCommand, Result<string>>
 {
-    private readonly ITicketRepository _ticketRepository;
     private readonly IMapper _mapper;
+    private readonly ITicketRepository _ticketRepository;
 
     public CreateTicketTypeCommandHandler(ITicketRepository ticketRepository, IMapper mapper)
     {
@@ -31,11 +30,10 @@ public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCo
             Description = "added ticket type",
             ObjectName = "tickettype",
             ObjectData = JsonSerializer.Serialize(ticketType),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _ticketRepository.CreateTicketType(ticketType, auditLog, cancellationToken);
         return rst > 0 ? Result.Ok(ticketType.Id) : Result.Fail<string>("Not able to create now!");
     }
 }
-
