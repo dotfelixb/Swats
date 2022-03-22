@@ -24,51 +24,6 @@ public class TicketController : FrontEndController
         _mediatr = mediatr;
     }
 
-    #region POST
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateTicketCommand command)
-    {
-        var msg = $"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}";
-        _logger.LogInformation(msg);
-
-        if (!ModelState.IsValid)
-        {
-            _logger.LogError($"{msg} - Invalid model state");
-            TempData["CreateError"] = "You have some errors on the form";
-            var dlistString = TempData["DepartmentList"].ToString();
-            var dlist = JsonSerializer.Deserialize<IEnumerable<SelectListItem>>(dlistString);
-            _logger.LogInformation(dlistString);
-
-            command.DepartmentList = dlist;
-
-            return Request.IsHtmx()
-                ? PartialView("~/Views/Ticket/_Create.cshtml", command)
-                : View(command);
-        }
-
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-        command.CreatedBy = userId;
-        var result = await _mediatr.Send(command);
-        if (result.IsFailed)
-        {
-            var reason = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
-            _logger.LogError($"{msg} - {reason}");
-            TempData["CreateError"] = reason;
-
-            return Request.IsHtmx()
-                ? PartialView("~/Views/Ticket/_Create.cshtml", command)
-                : View(command);
-        }
-
-        return RedirectToAction("Edit", new {Id = result.Value});
-    }
-
-    #endregion
-
     #region GET
 
     public async Task<IActionResult> Index()
@@ -138,6 +93,52 @@ public class TicketController : FrontEndController
         return Request.IsHtmx()
             ? PartialView("~/Views/Ticket/_Create.cshtml", command)
             : View(command);
+    }
+
+    #endregion
+
+
+    #region POST
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateTicketCommand command)
+    {
+        var msg = $"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}";
+        _logger.LogInformation(msg);
+
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError($"{msg} - Invalid model state");
+            TempData["CreateError"] = "You have some errors on the form";
+            var dlistString = TempData["DepartmentList"].ToString();
+            var dlist = JsonSerializer.Deserialize<IEnumerable<SelectListItem>>(dlistString);
+            _logger.LogInformation(dlistString);
+
+            command.DepartmentList = dlist;
+
+            return Request.IsHtmx()
+                ? PartialView("~/Views/Ticket/_Create.cshtml", command)
+                : View(command);
+        }
+
+        // get login user id
+        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        command.CreatedBy = userId;
+        var result = await _mediatr.Send(command);
+        if (result.IsFailed)
+        {
+            var reason = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
+            _logger.LogError($"{msg} - {reason}");
+            TempData["CreateError"] = reason;
+
+            return Request.IsHtmx()
+                ? PartialView("~/Views/Ticket/_Create.cshtml", command)
+                : View(command);
+        }
+
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion

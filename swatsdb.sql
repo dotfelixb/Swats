@@ -87,6 +87,20 @@ CREATE TABLE authuserrole
     FOREIGN KEY (authrole) REFERENCES authrole (id) ON DELETE CASCADE
 );
 
+CREATE TABLE authloginauditlog
+(
+    id         BPCHAR(36) PRIMARY KEY,
+    authuser   BPCHAR(36),
+    device     VARCHAR (50),
+    platform   VARCHAR (50),
+    browser    VARCHAR (50),
+    address    VARCHAR (50),
+    loginat    TIMESTAMPTZ DEFAULT (now()),
+    createdby  BPCHAR(36) DEFAULT ('00000000-0000-0000-0000-000000000001'),
+    createdat  TIMESTAMPTZ DEFAULT (now()),
+    FOREIGN KEY (authuser) REFERENCES authuser (id) ON DELETE CASCADE
+);
+
 
 -- create system users
 INSERT INTO public.authuser

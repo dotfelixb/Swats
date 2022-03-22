@@ -36,6 +36,8 @@ public class ModelProfiles : Profile
         CreateMap<CreateTagCommand, Tag>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
+        CreateMap<LoginLogCommand, LoginAudit>();
+
         /**
          *.ForMember(d => d.ParentCustomer,
          *          opt => opt.MapFrom(s => s.ParentCustomer.ToGuid()))

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SkiaSharp;
 using SkiaSharp.QrCode;
@@ -40,5 +41,12 @@ public static class MvcExtensions
         using var stream = new MemoryStream();
         data.SaveTo(stream);
         return Convert.ToBase64String(stream.ToArray());
+    }
+
+    public static string GetClientAddress(this HttpContext context)
+    {
+        return !string.IsNullOrWhiteSpace(context.Request.Headers["X-Forwarded-For"])
+            ? context.Request.Headers["X-Forwarded-For"]
+            : context.Request.HttpContext.Features.Get<IHttpConnectionFeature>().RemoteIpAddress.ToString();
     }
 }

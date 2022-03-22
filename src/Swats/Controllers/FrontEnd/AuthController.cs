@@ -1,12 +1,14 @@
-﻿using System.Security.Claims;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Swats.Extensions;
 using Swats.Infrastructure.Features.Users.Register;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
+using System.Security.Claims;
 
 namespace Swats.Controllers.FrontEnd;
 
@@ -14,12 +16,18 @@ public class AuthController : FrontEndController
 {
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly UserManager<AuthUser> _userManager;
+    private readonly ILogger<AuthController> _logger;
+    private readonly IMediator _mediatr;
 
     public AuthController(UserManager<AuthUser> userManager
-        , SignInManager<AuthUser> signInManager)
+        , SignInManager<AuthUser> signInManager
+        , ILogger<AuthController> logger
+        , IMediator mediatr)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _logger = logger;
+        _mediatr = mediatr;
     }
 
     public IActionResult Index()
@@ -48,10 +56,15 @@ public class AuthController : FrontEndController
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginCommand command, string returnUrl = null)
     {
+        var msg = $"{Request.Method}::{nameof(AuthController)}::{nameof(Login)}";
+        _logger.LogInformation(msg);
+
         ViewData["ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid)
         {
+            _logger.LogError($"{msg} - Invalid model state");
             TempData["LoginStatus"] = "Form Errors";
+
             return View(command);
         }
 
@@ -62,7 +75,11 @@ public class AuthController : FrontEndController
             var user = await _userManager.FindByNameAsync(command.UserName);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, $"Unknown User [{command.UserName}]");
+                var unknown = $"Unknown User [{command.UserName}]";
+
+                _logger.LogError($"{msg} - {unknown}");
+                ModelState.AddModelError(string.Empty, unknown);
+
                 return View(command);
             }
 
@@ -80,13 +97,26 @@ public class AuthController : FrontEndController
                 IsPersistent = command.RememberMe
             };
 
+            // log user login - we need to wait
+            var ipAddress = Request.HttpContext.GetClientAddress();
+            var loginLog = new LoginLogCommand
+            {
+                AuthUser = user.Id,
+                Address = ipAddress
+            };
+            _ = await _mediatr.Send(loginLog);
+
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal,
                 authProperties);
+
+            _logger.LogInformation($"{msg} - Login success for user [{command.UserName}]");
             return LocalRedirect(returnUrl);
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         TempData["LoginStatus"] = "Login Failed!";
+
+        _logger.LogError($"{msg} - Login failed for user [{command.UserName}]");
         return View(command);
     }
 

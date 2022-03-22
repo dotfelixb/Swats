@@ -6,6 +6,11 @@ using Swats.Model.Domain;
 
 namespace Swats.Data.Repository;
 
+public interface IAuthUserRepository
+{
+    Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken);
+}
+
 public class AuthUserRepository : BasePostgresRepository
     , IUserStore<AuthUser>
     , IUserPasswordStore<AuthUser>
@@ -13,7 +18,10 @@ public class AuthUserRepository : BasePostgresRepository
     , IUserPhoneNumberStore<AuthUser>
     , IUserTwoFactorStore<AuthUser>
     , IUserRoleStore<AuthUser>
+    , IAuthUserRepository
 {
+    #region Identity Base
+
     public AuthUserRepository(IOptions<ConnectionStringOptions> options) : base(options)
     {
     }
@@ -26,7 +34,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE normalizedemail = @NormalizedEmail";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new {NormalizedEmail = normalizedEmail});
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedEmail = normalizedEmail });
         });
     }
 
@@ -141,7 +149,7 @@ public class AuthUserRepository : BasePostgresRepository
                 WHERE ur.authuser = @Id
                 ";
 
-            var result = await conn.QueryAsync<string>(query, new {user.Id});
+            var result = await conn.QueryAsync<string>(query, new { user.Id });
             return result.ToList();
         });
     }
@@ -228,7 +236,7 @@ public class AuthUserRepository : BasePostgresRepository
 
             return result > 0
                 ? IdentityResult.Success
-                : IdentityResult.Failed(new IdentityError {Description = "User creation failed!"});
+                : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
         });
     }
 
@@ -240,11 +248,11 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"UPDATE public.authuser SET deleted = TRUE WHERE id = @Id";
 
-            var cmd = await conn.ExecuteAsync(query, new {user.Id});
+            var cmd = await conn.ExecuteAsync(query, new { user.Id });
 
             return cmd > 0
                 ? IdentityResult.Success
-                : IdentityResult.Failed(new IdentityError {Description = "User deletion failed!"});
+                : IdentityResult.Failed(new IdentityError { Description = "User deletion failed!" });
         });
     }
 
@@ -261,7 +269,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new {Id = userId});
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { Id = userId });
         });
     }
 
@@ -273,7 +281,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE normalizedusername = @NormalizedUserName";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new {NormalizedUserName = normalizedUserName});
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedUserName = normalizedUserName });
         });
     }
 
@@ -359,7 +367,7 @@ public class AuthUserRepository : BasePostgresRepository
 
             return result > 0
                 ? IdentityResult.Success
-                : IdentityResult.Failed(new IdentityError {Description = "User creation failed!"});
+                : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
         });
     }
 
@@ -376,4 +384,43 @@ public class AuthUserRepository : BasePostgresRepository
 
         return Task.Run(() => { user.TwoFactorEnabled = enabled; }, cancellationToken);
     }
+
+    #endregion Identity Base
+
+    #region AuthUser
+
+    public Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken)
+    {
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                INSERT INTO public.authloginauditlog
+                    (id
+                    , authuser
+                    , device
+                    , platform
+                    , browser
+                    , address)
+                VALUES(@Id
+                    , @AuthUser
+                    , @Device
+                    , @Platform
+                    , @Browser
+                    , @Address);
+                ";
+
+            var result = await conn.ExecuteAsync(cmd, new
+            {
+                audit.Id,
+                audit.AuthUser,
+                audit.Device,
+                audit.Platform,
+                audit.Browser,
+                audit.Address
+            });
+            return result;
+        });
+    }
+
+    #endregion AuthUser
 }
