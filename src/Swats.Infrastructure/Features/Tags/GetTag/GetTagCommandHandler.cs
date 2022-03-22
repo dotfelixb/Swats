@@ -20,7 +20,7 @@ public class GetTagCommandHandler : IRequestHandler<GetTagCommand, Result<FetchT
     {
         var rst = await _manageRepository.GetTag(request.Id, cancellationToken);
 
-        return rst.Id.ToGuid() == Guid.Empty
+        return rst is null
             ? Result.Fail<FetchTag>($"Tag with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }

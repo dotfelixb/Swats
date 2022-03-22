@@ -21,7 +21,7 @@ public class GetBusinessHourCommandHandler : IRequestHandler<GetBusinessHourComm
     {
         var rst = await _manageRepository.GetBusinessHour(request.Id, cancellationToken);
 
-        return rst.Id.ToGuid() == Guid.Empty
+        return rst is null
             ? Result.Fail<FetchBusinessHour>($"Business Hour with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }

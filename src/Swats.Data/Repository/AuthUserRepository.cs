@@ -9,9 +9,9 @@ namespace Swats.Data.Repository;
 
 public interface IAuthUserRepository
 {
-    Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken);
-
     Task<FetchUser> GetUser(string id, CancellationToken cancellationToken);
+
+    Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken);
 }
 
 public class AuthUserRepository : BasePostgresRepository
@@ -436,10 +436,9 @@ public class AuthUserRepository : BasePostgresRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = u.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = u.updatedby) AS UpdatedByName
                 FROM authuser u
-                WHERE u.id = @Id";
+                WHERE u.id =  @Id";
 
-            var rst = await conn.QueryFirstOrDefaultAsync<FetchUser>(query, new {Id = id});
-            return rst;
+            return await conn.QueryFirstOrDefaultAsync<FetchUser>(query, new { Id = id });
         });
     }
 

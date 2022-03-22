@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swats.Extensions;
 using Swats.Model.Commands;
 using Swats.Model.Queries;
 
@@ -27,8 +28,10 @@ public class UserController : FrontEndController
         // get login user id
         var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         
-        var result = await _mediatr.Send(new GetUserCommand { Id = userId });
+        var result = await _mediatr.Send(new GetUserCommand {Id = userId });
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
+
+        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/user/{userId}".GenerateQrCode();
 
         return Request.IsHtmx()
             ? PartialView("~/Views/User/_Index.cshtml", result.Value)

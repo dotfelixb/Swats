@@ -20,7 +20,7 @@ public class GetHelpTopicCommandHandler : IRequestHandler<GetHelpTopicCommand, R
     {
         var result = await _manageRepository.GetHelpTopic(request.Id, cancellationToken);
 
-        return result.Id.ToGuid() == Guid.Empty
+        return result is null
             ? Result.Fail<FetchHelpTopic>($"Help Topic with id [{request.Id}] does not exist!")
             : Result.Ok(result);
     }

@@ -20,7 +20,7 @@ public class GetUserCommandHandler : IRequestHandler<GetUserCommand, Result<Fetc
     {
         var result = await _authUserRepository.GetUser(request.Id, cancellationToken);
       
-        return result.Id.ToGuid() == Guid.Empty
+        return result is null
             ? Result.Fail<FetchUser>($"User with id [{request.Id}] does not exist!")
             : Result.Ok(result);
     }

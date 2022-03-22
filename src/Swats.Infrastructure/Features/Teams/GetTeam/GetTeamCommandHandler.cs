@@ -20,7 +20,7 @@ public class GetTeamCommandHandler : IRequestHandler<GetTeamCommand, Result<Fetc
     {
         var rst = await _manageRepository.GetTeam(request.Id, cancellationToken);
 
-        return rst.Id.ToGuid() == Guid.Empty
+        return rst is null
             ? Result.Fail<FetchTeam>($"Team with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }

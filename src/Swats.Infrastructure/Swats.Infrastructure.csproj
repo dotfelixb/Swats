@@ -37,5 +37,6 @@
         <Folder Include="Features\HelpTopic\GetHelpTopic\" />
         <Folder Include="Features\HelpTopic\CreateHelpTopic\" />
         <Folder Include="Features\HelpTopic\ListHelpTopics\" />
+        <Folder Include="Features\Users\GetUser\" />
     </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ public class GetTicketCommandHandler : IRequestHandler<GetTicketCommand, Result<
     {
         var rst = await _ticketRepository.GetTicket(request.Id, cancellationToken);
 
-        return rst.Id.ToGuid() == Guid.Empty
+        return rst is null
             ? Result.Fail<FetchTicket>($"Ticket with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }
