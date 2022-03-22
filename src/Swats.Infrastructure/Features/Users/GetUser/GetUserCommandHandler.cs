@@ -1,7 +1,6 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Queries;
 
@@ -19,7 +18,7 @@ public class GetUserCommandHandler : IRequestHandler<GetUserCommand, Result<Fetc
     public async Task<Result<FetchUser>> Handle(GetUserCommand request, CancellationToken cancellationToken)
     {
         var result = await _authUserRepository.GetUser(request.Id, cancellationToken);
-      
+
         return result is null
             ? Result.Fail<FetchUser>($"User with id [{request.Id}] does not exist!")
             : Result.Ok(result);

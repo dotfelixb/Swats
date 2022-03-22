@@ -1,10 +1,10 @@
-using System.Text.Json;
 using AutoMapper;
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
+using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Teams.CreateTeam;
 

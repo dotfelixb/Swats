@@ -1,10 +1,10 @@
-﻿using System.Security.Claims;
-using Htmx;
+﻿using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Controllers;
 using Swats.Extensions;
 using Swats.Model.Commands;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -53,10 +53,10 @@ public class TicketTypeController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new {Id = result.Value});
+        return RedirectToAction("Edit", new { Id = result.Value });
     }
 
-    #endregion
+    #endregion POST
 
     #region GET
 
@@ -74,7 +74,7 @@ public class TicketTypeController : FrontEndController
 
     public async Task<IActionResult> Edit(string id)
     {
-        var query = new GetTicketTypeCommand {Id = id};
+        var query = new GetTicketTypeCommand { Id = id };
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -94,5 +94,5 @@ public class TicketTypeController : FrontEndController
             : View();
     }
 
-    #endregion
+    #endregion GET
 }

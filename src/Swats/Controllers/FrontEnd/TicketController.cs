@@ -1,11 +1,11 @@
-using System.Security.Claims;
-using System.Text.Json;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Extensions;
 using Swats.Model.Commands;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Swats.Controllers.FrontEnd;
 
@@ -43,7 +43,7 @@ public class TicketController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Edit)}");
 
-        var query = new GetTicketCommand {Id = id};
+        var query = new GetTicketCommand { Id = id };
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -66,7 +66,7 @@ public class TicketController : FrontEndController
 
         var departmentList = await _mediatr.Send(new ListDepartmentCommand());
         if (departmentList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
-       
+
         var teamList = await _mediatr.Send(new ListTeamsCommand());
         if (teamList.IsFailed) return BadRequest(departmentList.Reasons.FirstOrDefault()?.Message);
 
@@ -76,14 +76,14 @@ public class TicketController : FrontEndController
         CreateTicketCommand command = new()
         {
             AssigneeList = requesterList.Value.Select(s => new SelectListItem
-                {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
+            { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
             RequesterList = requesterList.Value.Select(s => new SelectListItem
-                {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
-            TeamList = teamList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
-            TypeList = ticketTypeList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            TypeList = ticketTypeList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
             HelpTopicList =
-                helptopicList.Value.Select(s => new SelectListItem {Text = s.Topic, Value = s.Id.ToString()})
+                helptopicList.Value.Select(s => new SelectListItem { Text = s.Topic, Value = s.Id.ToString() })
         };
 
         return Request.IsHtmx()
@@ -91,7 +91,7 @@ public class TicketController : FrontEndController
             : View(command);
     }
 
-    #endregion
+    #endregion GET
 
     #region POST
 
@@ -133,8 +133,8 @@ public class TicketController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new {Id = result.Value});
+        return RedirectToAction("Edit", new { Id = result.Value });
     }
 
-    #endregion
+    #endregion POST
 }

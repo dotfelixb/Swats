@@ -35,7 +35,7 @@ public static class MvcExtensions
         var canvas = surface.Canvas;
         canvas.Render(qr, info.Width, info.Height);
 
-        // Output to Stream 
+        // Output to Stream
         using var image = surface.Snapshot();
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
         using var stream = new MemoryStream();

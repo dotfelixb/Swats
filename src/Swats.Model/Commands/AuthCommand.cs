@@ -13,7 +13,8 @@ public class LoginCommand
     public string Source { get; set; } = "SwatsApp";
 }
 
-public class LoginLogCommand : IRequest<Result> {
+public class LoginLogCommand : IRequest<Result>
+{
     public string Id { get; set; } = NewId.NextGuid().ToString();
     public string AuthUser { get; set; }
     public string Device { get; set; }

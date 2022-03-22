@@ -6,6 +6,6 @@ public class HomeController : BackEndController
 {
     public IActionResult Index()
     {
-        return Ok(new {version = 1, app = "Swats Api"});
+        return Ok(new { version = 1, app = "Swats Api" });
     }
 }

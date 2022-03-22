@@ -10,7 +10,7 @@ public class DbAudit
     public string CreatedByName { get; set; }
     public string UpdatedByName { get; set; }
 
-    #endregion
+    #endregion UI Props
 
     #region Db Props
 
@@ -22,7 +22,7 @@ public class DbAudit
     public string UpdatedBy { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
-    #endregion
+    #endregion Db Props
 }
 
 public class DbAuditLog

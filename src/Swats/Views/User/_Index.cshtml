@@ -15,14 +15,12 @@
         })
     </section>
     <section class="flex w-full font-bold text-2xl pb-5">
-        <div class="flex w-1/2">@Model.UserName</div>
+        <div class="flex w-1/2">@Model.NormalizedUserName</div>
         <div class="flex w-1/2 justify-end">
             <div class="">
-                <button class="btn-primary"
-                      hx-get="/auth/logout" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
-                      hx-push-url="true">
-                      Logout
-                    </button>
+                <a asp-action="Logout" asp-controller="Auth" class="btn-primary">
+                   <span class="pb-3">Logout</span>
+                </a>
             </div>
         </div>
     </section>
@@ -66,6 +64,20 @@
                         User name
                     </label>
                     <input asp-for="@Model.UserName" class="form-input"/>
+                </div>
+
+                 <div class="form-control">
+                    <label asp-for="@Model.Email" class="form-label">
+                        Email
+                    </label>
+                    <input asp-for="@Model.Email" class="form-input"/>
+                </div>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Phone" class="form-label">
+                        Phone
+                    </label>
+                    <input asp-for="@Model.Phone" class="form-input"/>
                 </div>
 
             </div>

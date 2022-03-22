@@ -1,7 +1,7 @@
-﻿using System.Data;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Npgsql;
 using Swats.Model;
+using System.Data;
 
 namespace Swats.Data;
 

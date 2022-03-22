@@ -160,7 +160,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businesshour b
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
         });
     }
 
@@ -182,7 +182,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchBusinessHour>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchBusinessHour>(query, new { offset, limit });
         });
     }
 
@@ -278,7 +278,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM tags t
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new { Id = id });
         });
     }
 
@@ -300,7 +300,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTag>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchTag>(query, new { offset, limit });
         });
     }
 
@@ -418,7 +418,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE d.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
         });
     }
 
@@ -444,7 +444,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchDepartment>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchDepartment>(query, new { offset, limit });
         });
     }
 
@@ -541,7 +541,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new { Id = id });
         });
     }
 
@@ -567,7 +567,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTeam>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchTeam>(query, new { offset, limit });
         });
     }
 
@@ -665,7 +665,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN department d ON d.id = h.department
                 WHERE h.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
         });
     }
 
@@ -689,7 +689,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchHelpTopic>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchHelpTopic>(query, new { offset, limit });
         });
     }
 

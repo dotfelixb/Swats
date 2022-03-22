@@ -19,6 +19,8 @@ public interface ITicketRepository
     Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
 
+    Task<int> CountByAgentId(string id, CancellationToken cancellationToken);
+
     #endregion Ticket
 
     #region Ticket Type
@@ -178,7 +180,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 LEFT JOIN agent r on r.id = t.requester
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new { Id = id });
         });
     }
 
@@ -212,7 +214,22 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicket>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchTicket>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> CountByAgentId(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT COUNT(t.Id)
+                FROM ticket t
+                WHERE t.assignedto = @Id";
+
+            return await conn.ExecuteScalarAsync<int>(query, new { Id = id });
         });
     }
 
@@ -307,7 +324,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 FROM tickettype t
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id });
         });
     }
 
@@ -329,7 +346,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicketType>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchTicketType>(query, new { offset, limit });
         });
     }
 

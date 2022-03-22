@@ -1,11 +1,11 @@
-﻿using System.Security.Claims;
-using Htmx;
+﻿using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
 using Swats.Model.Commands;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -58,10 +58,10 @@ public class DepartmentController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new {Id = result.Value});
+        return RedirectToAction("Edit", new { Id = result.Value });
     }
 
-    #endregion
+    #endregion POST
 
     #region GET
 
@@ -82,7 +82,7 @@ public class DepartmentController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Edit)}");
 
-        var query = new GetDepartmentCommand {Id = id};
+        var query = new GetDepartmentCommand { Id = id };
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -103,7 +103,7 @@ public class DepartmentController : FrontEndController
         CreateDepartmentCommand command = new()
         {
             BusinessHours =
-                businesshourResult.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()})
+                businesshourResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
         };
 
         return Request.IsHtmx()
@@ -111,5 +111,5 @@ public class DepartmentController : FrontEndController
             : View(command);
     }
 
-    #endregion
+    #endregion GET
 }

@@ -132,7 +132,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 LEFT JOIN tickettype tt ON tt.id = g.tickettype
                 WHERE g.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new { Id = id });
         });
     }
 
@@ -160,7 +160,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchAgent>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchAgent>(query, new { offset, limit });
         });
     }
 }

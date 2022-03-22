@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Htmx;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Controllers;
 using Swats.Extensions;
 using Swats.Model.Commands;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -58,10 +58,10 @@ public class HelpTopicController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new {Id = result.Value});
+        return RedirectToAction("Edit", new { Id = result.Value });
     }
 
-    #endregion
+    #endregion POST
 
     #region GET
 
@@ -82,7 +82,7 @@ public class HelpTopicController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Edit)}");
 
-        var query = new GetHelpTopicCommand {Id = id};
+        var query = new GetHelpTopicCommand { Id = id };
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -102,7 +102,7 @@ public class HelpTopicController : FrontEndController
 
         CreateHelpTopicCommand command = new()
         {
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id})
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
         };
 
         return Request.IsHtmx()
@@ -110,5 +110,5 @@ public class HelpTopicController : FrontEndController
             : View(command);
     }
 
-    #endregion
+    #endregion GET
 }

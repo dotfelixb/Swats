@@ -35,6 +35,14 @@ public class AuthController : FrontEndController
         return Content("Not sure why you are here 🤷🏾‍♀️");
     }
 
+    public async Task<IActionResult> Logout()
+    {
+        _logger.LogInformation($"{Request.Method}::{nameof(AuthController)}::{nameof(Logout)}");
+
+        await _signInManager.SignOutAsync();
+        return LocalRedirect("/auth/login");
+    }
+
     [AllowAnonymous]
     public async Task<IActionResult> Login(string returnUrl = null)
     {

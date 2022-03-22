@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,6 +7,7 @@ using Swats.Data.Repository;
 using Swats.Infrastructure;
 using Swats.Model;
 using Swats.Model.Domain;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 

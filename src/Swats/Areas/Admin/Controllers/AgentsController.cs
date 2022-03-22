@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Htmx;
 using MassTransit;
 using MediatR;
@@ -10,6 +9,7 @@ using Swats.Controllers;
 using Swats.Extensions;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
+using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -94,7 +94,7 @@ public class AgentsController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new {Id = result.Value});
+        return RedirectToAction("Edit", new { Id = result.Value });
     }
 
     #endregion POST
@@ -118,10 +118,10 @@ public class AgentsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
 
-        var query = new GetAgentCommand {Id = id};
+        var query = new GetAgentCommand { Id = id };
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
-       
+
         result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
 
         return Request.IsHtmx()
@@ -145,9 +145,9 @@ public class AgentsController : FrontEndController
         CreateAgentCommand command = new()
         {
             DepartmentList =
-                departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
-            TeamList = teamList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
-            TypeList = ticketypeResult.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()})
+                departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
+            TypeList = ticketypeResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
         };
 
         return Request.IsHtmx()
