@@ -250,10 +250,12 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 
         return WithConnection(async conn =>
         {
-            var query = @"
+            var _filter = !string.IsNullOrWhiteSpace(id) ? " AND t.assignedto = @Id " : "";
+            var query = $@"
                 SELECT COUNT(t.Id)
                 FROM ticket t
-                WHERE t.assignedto = @Id";
+                WHERE 1=1 
+                {_filter}";
 
             return await conn.ExecuteScalarAsync<int>(query, new { Id = id });
         });

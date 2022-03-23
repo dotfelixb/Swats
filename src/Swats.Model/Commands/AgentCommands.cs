@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Model.Domain;
@@ -8,7 +9,7 @@ namespace Swats.Model.Commands;
 
 public class CreateAgentCommand : IRequest<Result<string>>
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = NewId.NextGuid().ToString(); // need for agent and user creation
     public string UserName { get; set; }
     public string Email { get; set; }
     public string FirstName { get; set; }

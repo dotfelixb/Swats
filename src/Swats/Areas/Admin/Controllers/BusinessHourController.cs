@@ -11,15 +11,13 @@ namespace Swats.Areas.Admin.Controllers;
 [Area("admin")]
 public class BusinessHourController : FrontEndController
 {
-    private readonly IHttpContextAccessor _httpAccessor;
     private readonly ILogger<TicketTypeController> _logger;
     private readonly IMediator _mediatr;
 
-    public BusinessHourController(IHttpContextAccessor contextAccessor
+    public BusinessHourController(IHttpContextAccessor httpAccessor
         , ILogger<TicketTypeController> logger
-        , IMediator mediatr)
+        , IMediator mediatr) : base(httpAccessor)
     {
-        _httpAccessor = contextAccessor;
         _logger = logger;
         _mediatr = mediatr;
     }
@@ -32,9 +30,6 @@ public class BusinessHourController : FrontEndController
         var msg = $"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
 
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
         if (!ModelState.IsValid)
         {
             _logger.LogError($"{msg} - Invalid Model state");
@@ -44,7 +39,7 @@ public class BusinessHourController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId;
+        command.CreatedBy = UserId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {

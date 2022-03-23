@@ -7,6 +7,10 @@ namespace Swats.Areas.Admin.Controllers;
 [Area("admin")]
 public class UserController : FrontEndController
 {
+    public UserController(IHttpContextAccessor httpAccessor) : base(httpAccessor)
+    {
+    }
+    
     public IActionResult Index()
     {
         var partial = new IndexPartial

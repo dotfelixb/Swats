@@ -16,7 +16,6 @@ namespace Swats.Areas.Admin.Controllers;
 [Area("admin")]
 public class AgentsController : FrontEndController
 {
-    private readonly IHttpContextAccessor _httpAccessor;
     private readonly ILogger<AgentsController> _logger;
     private readonly IMapper _mapper;
     private readonly IMediator _mediatr;
@@ -26,10 +25,9 @@ public class AgentsController : FrontEndController
         , ILogger<AgentsController> logger
         , IMediator mediatr
         , IMapper mapper
-        , UserManager<AuthUser> userManager)
+        , UserManager<AuthUser> userManager) :  base(httpAccessor)
     {
         _logger = logger;
-        _httpAccessor = httpAccessor;
         _mediatr = mediatr;
         _mapper = mapper;
         _userManager = userManager;
@@ -43,10 +41,6 @@ public class AgentsController : FrontEndController
         var msg = $"{Request.Method}::{nameof(AgentsController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
 
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        var newUserId = NewId.NextGuid().ToString();
-
         if (!ModelState.IsValid)
         {
             _logger.LogError($"{msg} - Invalid Model state");
@@ -56,8 +50,7 @@ public class AgentsController : FrontEndController
                 : View(command);
         }
 
-        command.Id = newUserId; // without this agent creation fail
-        command.CreatedBy = userId;
+        command.CreatedBy = UserId;
 
         // get user name from email
         command.UserName = command.Email.Split('@').First(); // lisa.paige@swats.app => lisa.paige

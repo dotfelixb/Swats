@@ -19,10 +19,11 @@ public class AuthController : FrontEndController
     private readonly ILogger<AuthController> _logger;
     private readonly IMediator _mediatr;
 
-    public AuthController(UserManager<AuthUser> userManager
+    public AuthController(IHttpContextAccessor httpAccessor
+        , UserManager<AuthUser> userManager
         , SignInManager<AuthUser> signInManager
         , ILogger<AuthController> logger
-        , IMediator mediatr)
+        , IMediator mediatr): base(httpAccessor)
     {
         _userManager = userManager;
         _signInManager = signInManager;

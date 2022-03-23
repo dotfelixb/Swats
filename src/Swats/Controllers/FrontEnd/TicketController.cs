@@ -11,15 +11,13 @@ namespace Swats.Controllers.FrontEnd;
 
 public class TicketController : FrontEndController
 {
-    private readonly IHttpContextAccessor _httpAccessor;
     private readonly ILogger<TicketController> _logger;
     private readonly IMediator _mediatr;
 
     public TicketController(IHttpContextAccessor httpAccessor
         , ILogger<TicketController> logger
-        , IMediator mediatr)
+        , IMediator mediatr):base(httpAccessor)
     {
-        _httpAccessor = httpAccessor;
         _logger = logger;
         _mediatr = mediatr;
     }
@@ -30,10 +28,7 @@ public class TicketController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
 
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        
-        var query = new ListTicketCommand {Id = userId , IncludeDepartment = true };
+        var query = new ListTicketCommand {Id = UserId , IncludeDepartment = true };
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
@@ -115,10 +110,7 @@ public class TicketController : FrontEndController
                 : View(command);
         }
 
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-        command.CreatedBy = userId;
+        command.CreatedBy = UserId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {

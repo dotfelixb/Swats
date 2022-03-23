@@ -11,15 +11,13 @@ namespace Swats.Areas.Admin.Controllers;
 [Area("admin")]
 public class TicketTypeController : FrontEndController
 {
-    private readonly IHttpContextAccessor _httpAccessor;
     private readonly ILogger<TicketTypeController> _logger;
     private readonly IMediator _mediatr;
 
-    public TicketTypeController(IHttpContextAccessor contextAccessor
+    public TicketTypeController(IHttpContextAccessor httpAccessor
         , ILogger<TicketTypeController> logger
-        , IMediator mediatr)
+        , IMediator mediatr) : base(httpAccessor)
     {
-        _httpAccessor = contextAccessor;
         _logger = logger;
         _mediatr = mediatr;
     }
@@ -29,9 +27,6 @@ public class TicketTypeController : FrontEndController
     [HttpPost]
     public async Task<IActionResult> Create(CreateTicketTypeCommand command)
     {
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
         var msg = $"{Request.Method}::{nameof(TicketTypeController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
 
@@ -40,7 +35,7 @@ public class TicketTypeController : FrontEndController
                 ? PartialView("~/Areas/Admin/Views/TicketType/_Create.cshtml", command)
                 : View(command);
 
-        command.CreatedBy = userId;
+        command.CreatedBy = UserId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {

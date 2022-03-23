@@ -12,15 +12,13 @@ namespace Swats.Areas.Admin.Controllers;
 [Area("admin")]
 public class HelpTopicController : FrontEndController
 {
-    private readonly IHttpContextAccessor _httpAccessor;
     private readonly ILogger<TicketTypeController> _logger;
     private readonly IMediator _mediatr;
 
     public HelpTopicController(IHttpContextAccessor httpAccessor
         , ILogger<TicketTypeController> logger
-        , IMediator mediatr)
+        , IMediator mediatr) :base(httpAccessor)
     {
-        _httpAccessor = httpAccessor;
         _logger = logger;
         _mediatr = mediatr;
     }
@@ -33,9 +31,6 @@ public class HelpTopicController : FrontEndController
         var msg = $"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
 
-        // get login user id
-        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
         if (!ModelState.IsValid)
         {
             _logger.LogError($"{msg} - Invalid Model state");
@@ -45,7 +40,7 @@ public class HelpTopicController : FrontEndController
                 : View(command);
         }
 
-        command.CreatedBy = userId;
+        command.CreatedBy = UserId;
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
         {

@@ -9,7 +9,8 @@ public class SettingsController : FrontEndController
 {
     private readonly ILogger<SettingsController> _logger;
 
-    public SettingsController(ILogger<SettingsController> logger)
+    public SettingsController(IHttpContextAccessor httpAccessor
+        , ILogger<SettingsController> logger) : base(httpAccessor)
     {
         _logger = logger;
     }
