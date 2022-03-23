@@ -18,8 +18,16 @@ public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Resul
     public async Task<Result<IEnumerable<FetchTicket>>> Handle(ListTicketCommand request,
         CancellationToken cancellationToken)
     {
-        var rst = await _ticketRepository.ListTickets(request.Offset, request.Limit, request.Deleted,
-            cancellationToken);
+        var rst = await _ticketRepository.ListTickets(
+            request.Id
+            , request.IncludeDepartment
+            , request.IncludeTeam
+            , request.IncludeHelpTopic
+            , request.Offset
+            , request.Limit
+            , request.Deleted
+            , cancellationToken);
+        
         return Result.Ok(rst);
     }
 }

@@ -30,7 +30,10 @@ public class TicketController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
 
-        var query = new ListTicketCommand();
+        // get login user id
+        var userId = _httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        
+        var query = new ListTicketCommand {Id = userId , IncludeDepartment = true };
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
@@ -106,11 +109,6 @@ public class TicketController : FrontEndController
         {
             _logger.LogError($"{msg} - Invalid model state");
             TempData["CreateError"] = "You have some errors on the form";
-            var dlistString = TempData["DepartmentList"].ToString();
-            var dlist = JsonSerializer.Deserialize<IEnumerable<SelectListItem>>(dlistString);
-            _logger.LogInformation(dlistString);
-
-            command.DepartmentList = dlist;
 
             return Request.IsHtmx()
                 ? PartialView("~/Views/Ticket/_Create.cshtml", command)

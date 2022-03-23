@@ -37,6 +37,10 @@ public class GetTicketCommand : GetType, IRequest<Result<FetchTicket>>
 
 public class ListTicketCommand : ListType, IRequest<Result<IEnumerable<FetchTicket>>>
 {
+    public string Id { get; set; }
+    public bool IncludeDepartment { get; set; }
+    public bool IncludeTeam { get; set; }
+    public bool IncludeHelpTopic { get; set; }
 }
 
 #endregion

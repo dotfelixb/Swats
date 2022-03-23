@@ -16,8 +16,15 @@ public interface ITicketRepository
 
     Task<FetchTicket> GetTicket(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false,
-        CancellationToken cancellationToken = default);
+    Task<IEnumerable<FetchTicket>> ListTickets(
+        string id = null
+        , bool includeDeaprtment = false
+        , bool includeTeam = false
+        , bool includeHelpTopic = false
+        , int offset = 0
+        , int limit = 1000
+        , bool includeDeleted = false
+        , CancellationToken cancellationToken = default);
 
     Task<int> CountByAgentId(string id, CancellationToken cancellationToken);
 
@@ -184,15 +191,33 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public Task<IEnumerable<FetchTicket>> ListTickets(int offset = 0, int limit = 1000, bool includeDeleted = false,
-        CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FetchTicket>> ListTickets(
+        string id = null
+        , bool includeDeaprtment = false
+        , bool includeTeam = false
+        , bool includeHelpTopic = false
+        , int offset = 0
+        , int limit = 1000
+        , bool includeDeleted = false
+        , CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         return WithConnection(async conn =>
         {
             var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
+            var _includeFilters = includeDeaprtment
+                ? " AND (t.assignedto = @id OR t.department = (SELECT id FROM user_department)) "
+                : !string.IsNullOrWhiteSpace(id) 
+                    ? " AND t.assignedto = @Id" 
+                    : "";
+            
             var query = $@"
+                WITH user_department AS (
+                    SELECT id 
+                	FROM department
+                	WHERE id = (SELECT ag.department FROM agent ag WHERE ag.id = @Id)
+                )
                 SELECT t.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
@@ -210,11 +235,12 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 LEFT JOIN helptopic h on h.id = t.helptopic
                 LEFT JOIN agent r on r.id = t.requester
                 WHERE 1=1
+                {_includeFilters}
                 {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicket>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTicket>(query, new { id, offset, limit });
         });
     }
 
