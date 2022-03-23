@@ -4,7 +4,11 @@
     @foreach (var item in Model.Item1)
     {
         <div class="font-semibold">
-            <a href="@item.Value">
+            <a href="#"  hx-get="@item.Value"
+                hx-trigger="click"
+                hx-target="#main-swap"
+                hx-swap="outerHTML"
+                hx-push-url="true">
                 <span>@item.Text</span>
             </a>
         </div>
