@@ -70,15 +70,16 @@
                 <label asp-for="@Model.Requester" class="form-label">
                     Requester
                 </label>
-                <input asp-for="@Model.Requester" list="requesterlist" class="form-input"/>
-                <datalist id="requesterlist">
+                <select asp-for="@Model.Requester" class="dropdown search form-input">
+                    <option></option>
                     @foreach (var item in Model.RequesterList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
-                </datalist>
+                </select>
                 <span asp-validation-for="@Model.Requester" class="form-input-error"></span>
             </div>
+            <script>  $('#Requester').dropdown(); </script>
 
             @* subject *@
             <div class="form-control">
@@ -94,116 +95,107 @@
                 <label asp-for="@Model.AssignedTo" class="form-label">
                     Assigned To
                 </label>
-                <input asp-for="@Model.AssignedTo" list="assigneelist" class="form-input"/>
-                <datalist id="assigneelist">
+                <select asp-for="@Model.AssignedTo" class="dropdown search form-input">
+                    <option></option>
                     @foreach (var item in Model.RequesterList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
-                </datalist>
+                </select>
                 <span asp-validation-for="@Model.AssignedTo" class="form-input-error"></span>
             </div>
+            <script>  $('#AssignedTo').dropdown(); </script>
 
             @* source *@
             <div class="form-control">
                 <label asp-for="@Model.Source" class="form-label">
                     Source
                 </label>
-                <select asp-for="@Model.Source" class="form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
+                <select asp-for="@Model.Source" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
                 </select>
                 <span asp-validation-for="@Model.Source" class="form-input-error"></span>
             </div>
+            <script>  $('#Source').dropdown(); </script>
 
             <div class="form-control">
                 <label asp-for="@Model.Priority" class="form-label">
                     Priority
                 </label>
-                <select asp-for="@Model.Priority" class="form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
+                <select asp-for="@Model.Priority" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
                 </select>
                 <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
             </div>
+            <script>  $('#Priority').dropdown(); </script>
 
             <div class="form-control">
                 <label asp-for="@Model.Status" class="form-label">
                     Status
                 </label>
-                <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
+                <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
                 </select>
                 <span asp-validation-for="@Model.Status" class="form-input-error"></span>
             </div>
-
-            @* department *@
+            <script>  $('#Status').dropdown(); </script>
+            
             <div class="form-control">
                 <label asp-for="@Model.Department" class="form-label">
                     Department
                 </label>
-                <input asp-for="@Model.Department" list="departmentlist" class="form-input"/>
-                <datalist id="departmentlist">
+                <select asp-for="@Model.Department" class="dropdown search form-input">
+                    <option></option>
                     @foreach (var item in Model.DepartmentList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
-                </datalist>
+                </select>
                 <span asp-validation-for="@Model.Department" class="form-input-error"></span>
             </div>
+            <script>  $('#Department').dropdown(); </script>
 
-            @* department *@
-            @* <div class="form-control">
-                    <label asp-for="@Model.Department" class="form-label">
-                        Department
-                    </label>
-                    <select asp-for="@Model.Department" class="form-input">
-                        @foreach (var item in Model.DepartmentList)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
-                    <span asp-validation-for="@Model.Department" class="form-input-error"></span>
-                </div> *@
 
             <div class="form-control">
                 <label asp-for="@Model.Team" class="form-label">
                     Team
                 </label>
-                <input asp-for="@Model.Team" list="teamlist" class="form-input"/>
-                <datalist id="teamlist">
+                <select  asp-for="@Model.Team"  class="dropdown search form-input">
                     @foreach (var item in Model.TeamList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
-                </datalist>
+                </select>
                 <span asp-validation-for="@Model.Team" class="form-input-error"></span>
             </div>
+            <script>  $('#Team').dropdown(); </script>
 
             @* type *@
             <div class="form-control">
                 <label asp-for="@Model.TicketType" class="form-label">
                     Default Ticket Type
                 </label>
-                <input asp-for="@Model.TicketType" list="typelist" class="form-input"/>
-                <datalist id="typelist">
+                <select asp-for="@Model.TicketType" class="dropdown search form-input">
                     @foreach (var item in Model.TypeList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
-                </datalist>
+                </select>
                 <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
             </div>
+            <script>  $('#TicketType').dropdown(); </script>
 
             @* help topic *@
             <div class="form-control">
                 <label asp-for="@Model.HelpTopic" class="form-label">
                     Help Topic
                 </label>
-                <input asp-for="@Model.HelpTopic" list="helptopiclist" class="form-input"/>
-                <datalist id="helptopiclist">
+                <select asp-for="@Model.HelpTopic" class="dropdown search form-input">
                     @foreach (var item in Model.HelpTopicList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
-                </datalist>
+                </select>
                 <span asp-validation-for="@Model.HelpTopic" class="form-input-error"></span>
             </div>
+            <script>  $('#HelpTopic').dropdown(); </script>
 
         </div>
         <div class="grid grid-cols-1 gap-5 py-4">
