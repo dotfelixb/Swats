@@ -52,8 +52,11 @@ public class TicketCommentCommand
     public string  Body { get; set; }
 }
 
-public class CreateTicketCommentCommand :TicketCommentCommand, IRequest<Result<string>>
+public class CreateTicketCommentCommand : TicketCommentCommand, IRequest<Result<string>>
 {
+    public string FromEmail { get; set; }
+    public string FromName { get; set; }    
+    public string CreatedBy { get; set; }
 }
 
 public class CreateTicketReplyCommand :TicketCommentCommand, IRequest<Result<string>>

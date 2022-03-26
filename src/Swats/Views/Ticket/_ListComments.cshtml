@@ -1,0 +1,11 @@
+@model IEnumerable<FetchTicketComment>
+
+<div id="list-ticket" class="w-full bg-white drop-shadow-lg rounded px-10 py-5">
+
+    <div id="ticket-reply" class="grid grid-cols-1 gap-5"></div>
+    @foreach (var item in Model)
+    {
+        @await  Html.PartialAsync("~/Views/Ticket/_Comment.cshtml", item);
+    }
+        
+</div>

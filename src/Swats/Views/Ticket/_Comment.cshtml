@@ -1,7 +1,7 @@
 @model FetchTicketComment
 
 @{
-    var id = $"var_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+    var id = $"var_{Model.Id.ToString().Replace("-", "")}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 }
 
 <div class="grid grid-cols-1 gap-5">

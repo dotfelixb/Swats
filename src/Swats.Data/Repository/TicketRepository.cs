@@ -16,8 +16,6 @@ public interface ITicketRepository
         CancellationToken cancellationToken);
 
     Task<FetchTicket> GetTicket(string id, CancellationToken cancellationToken);
-    
-    Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicket>> ListTickets(
         string agent = null
@@ -43,6 +41,14 @@ public interface ITicketRepository
         CancellationToken cancellationToken = default);
 
     #endregion Ticket Type
+
+    #region Ticket Comment
+
+    Task<int> CreateTicketComment(TicketComment comment, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken);
+    
+    #endregion
 }
 
 public class TicketRepository : BasePostgresRepository, ITicketRepository
@@ -239,23 +245,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new {Id = id});
         });
     }
-
-    
-    public Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return WithConnection(async conn =>
-        {
-            var query = @"
-                SELECT tc.*
-                FROM ticketcomment tc
-                WHERE tc.ticket = @Id";
-
-            return await conn.QueryAsync<FetchTicketComment>(query, new {Id = id});
-        });
-    }
-
     
     public Task<IEnumerable<FetchTicket>> ListTickets(
         string agent = null
@@ -445,4 +434,82 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
     }
 
     #endregion Ticket Type
+
+    #region Ticket Comment
+
+    public Task<int> CreateTicketComment(TicketComment comment, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return WithConnection(async conn =>
+        {
+            var cmdCmt = @"
+                INSERT INTO public.ticketcomment
+                    (id
+                    , ticket
+                    , fromemail
+                    , fromname
+                    , toemail
+                    , toname
+                    , body
+                    , commenttype
+                    , status
+                    , ""source""
+                    , target
+                    , rowversion
+                    , createdby)
+                VALUES(@Id
+                    , @Ticket
+                    , @FromEmail
+                    , @FromName
+                    , @ToEmail
+                    , @ToName
+                    , @Body
+                    , @Type
+                    , @Status
+                    , @Source
+                    , @Target
+                    , @RowVersion
+                    , @CreatedBy);
+                ";
+
+            var crt = await conn.ExecuteAsync(cmdCmt, new
+            {
+                comment.Id,
+                comment.Ticket,
+                comment.FromEmail,
+                comment.FromName,
+                comment.ToEmail,
+                comment.ToName,
+                comment.Receiptients,
+                comment.Body,
+                comment.Type,
+                comment.Status,
+                comment.Source,
+                comment.Target,
+                comment.RowVersion,
+                comment.CreatedBy
+            });
+
+            return crt;
+        });
+    }
+
+    public Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT tc.*
+                FROM ticketcomment tc
+                WHERE tc.ticket = @Id
+                ORDER BY tc.createdat DESC";
+
+            return await conn.QueryAsync<FetchTicketComment>(query, new {Id = id});
+        });
+    }
+    
+    #endregion
 }

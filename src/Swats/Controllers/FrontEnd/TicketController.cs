@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Extensions;
 using Swats.Model.Commands;
+using Swats.Model.Queries;
 
 namespace Swats.Controllers.FrontEnd;
 
@@ -118,6 +119,22 @@ public class TicketController : FrontEndController
         return PartialView("~/Views/Ticket/_AddReply.cshtml", command);
     }
 
+    public async Task<IActionResult> ListComments(string id)
+    {
+        var msg = $"{Request.Method}::{nameof(TicketController)}::{nameof(ListComments)}";
+        _logger.LogInformation(msg);
+
+        var ticket = Enumerable.Empty<FetchTicketComment>();
+        
+        var commentResult = await _mediatr.Send(new ListTicketCommentCommand {TicketId = id});
+        if (commentResult.IsSuccess)
+        {
+            ticket = commentResult.Value;
+        }
+
+        return PartialView("~/Views/Ticket/_ListComments.cshtml", ticket);
+    }
+
     public IActionResult Cancel()
     {
         return PartialView("~/Views/Ticket/_Cancel.cshtml");
@@ -169,9 +186,38 @@ public class TicketController : FrontEndController
     }
 
     [HttpPost]
-    public IActionResult AddComment(CreateTicketCommentCommand command)
+    public async Task<IActionResult> AddComment(CreateTicketCommentCommand command)
     {
-        return RedirectToAction("Index");
+        var msg = $"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}";
+        _logger.LogInformation(msg);
+        
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError($"{msg} - Invalid Model State");
+            TempData["CreateError"] = "Please add your comment";
+            
+            return PartialView("~/Views/Ticket/_AddComment.cshtml", command);
+        }
+
+        var agentResult = await _mediatr.Send(new GetAgentCommand {Id = UserId});
+        if (agentResult.IsSuccess)
+        {
+            command.FromName = $"{agentResult.Value.FirstName} {agentResult.Value.LastName}";
+            command.FromEmail = agentResult.Value.Email;
+        }
+
+        command.CreatedBy = UserId;
+        var result = await _mediatr.Send(command);
+        if (result.IsFailed)
+        {
+            var reason = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
+            _logger.LogError($"{msg} - {reason}");
+            TempData["CreateError"] = reason;
+            
+            return PartialView("~/Views/Ticket/_AddComment.cshtml", command);
+        }
+        
+        return RedirectToAction("ListComments", new{ id = command.TicketId });
     }
 
     #endregion POST
