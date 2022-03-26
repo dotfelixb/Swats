@@ -26,7 +26,18 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         ticket.UpdatedBy = request.CreatedBy;
 
         var code = await _ticketRepository.GenerateTicketCode(cancellationToken);
-        ticket.Code = code.FormatCode("#PT-"); // Get Prefix from appsettings
+        ticket.Code = code.FormatCode("#PT-"); // TODO : Get Prefix from appsettings
+
+        var comment = new TicketComment
+        {
+            Ticket = ticket.Id,
+            FromEmail = request.RequesterEmail,
+            FromName = request.RequesterName,
+            Body = request.Body,
+            Type = CommentType.Comment,
+            Source = TicketSource.App,
+            CreatedBy = request.CreatedBy
+        };
 
         var auditLog = new DbAuditLog
         {
@@ -38,7 +49,9 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
             CreatedBy = request.CreatedBy
         };
 
-        var rst = await _ticketRepository.CreateTicket(ticket, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(ticket.Id) : Result.Fail<string>("Not able to create now!");
+        var rst = await _ticketRepository.CreateTicket(ticket, comment, auditLog, cancellationToken);
+        
+        // use db transaction
+        return rst > 2 ? Result.Ok(ticket.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

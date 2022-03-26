@@ -8,7 +8,6 @@ public class Ticket : DbAudit
     public string Code { get; set; }
     public string Subject { get; set; }
     public string Requester { get; set; }
-    public string Body { get; set; }
     public string ExternalAgent { get; set; }
     public string AssignedTo { get; set; }
     public TicketSource Source { get; set; }
@@ -30,6 +29,21 @@ public class TicketType : DbAudit
 
 public class TicketTypeAuditLog : DbAuditLog
 {
+}
+
+public class TicketComment : DbAudit
+{
+    public string Id { get; set; } = NewId.NextGuid().ToString();
+    public string Ticket { get; set; }
+    public string FromEmail { get; set; }
+    public string FromName { get; set; }
+    public string ToEmail { get; set; }
+    public string ToName { get; set; }
+    public string[][] Receiptients { get; set; }
+    public string Body { get; set; }
+    public CommentType Type { get; set; }
+    public TicketSource Source { get; set; }
+    public string Target { get; set; }
 }
 
 public class TicketFellow : DbAudit

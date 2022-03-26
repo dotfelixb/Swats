@@ -117,8 +117,7 @@
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
-                    </select>
+                    <input asp-for="@Model.Status" class="form-input"/>
                 </div>
 
                 @* color *@

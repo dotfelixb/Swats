@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Extensions;
 using Swats.Model.Commands;
-using System.Security.Claims;
-using System.Text.Json;
 
 namespace Swats.Controllers.FrontEnd;
 
@@ -16,7 +14,7 @@ public class TicketController : FrontEndController
 
     public TicketController(IHttpContextAccessor httpAccessor
         , ILogger<TicketController> logger
-        , IMediator mediatr):base(httpAccessor)
+        , IMediator mediatr) : base(httpAccessor)
     {
         _logger = logger;
         _mediatr = mediatr;
@@ -28,7 +26,7 @@ public class TicketController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Index)}");
 
-        var query = new ListTicketCommand {Id = UserId , IncludeDepartment = true };
+        var query = new ListTicketCommand {Id = UserId, IncludeDepartment = true};
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
@@ -41,12 +39,18 @@ public class TicketController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(Edit)}");
 
-        var query = new GetTicketCommand { Id = id };
+        var query = new GetTicketCommand {Id = id};
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
         result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/ticket/edit/{id}".GenerateQrCode();
 
+        var commentResult = await _mediatr.Send(new ListTicketCommentCommand {TicketId = id});
+        if (commentResult.IsSuccess)
+        {
+            result.Value.TicketComments = commentResult.Value;
+        }
+        
         return Request.IsHtmx()
             ? PartialView("~/Views/Ticket/_Edit.cshtml", result.Value)
             : View(result.Value);
@@ -74,19 +78,49 @@ public class TicketController : FrontEndController
         CreateTicketCommand command = new()
         {
             AssigneeList = requesterList.Value.Select(s => new SelectListItem
-            { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
+                {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
             RequesterList = requesterList.Value.Select(s => new SelectListItem
-            { Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString() }),
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TypeList = ticketTypeList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            HelpTopicList =
-                helptopicList.Value.Select(s => new SelectListItem { Text = s.Topic, Value = s.Id.ToString() })
+                {Text = $"{s.FirstName} {s.LastName}", Value = s.Id.ToString()}),
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem
+                {Text = s.Name, Value = s.Id.ToString()}),
+            TeamList = teamList.Value.Select(s => new SelectListItem
+                {Text = s.Name, Value = s.Id.ToString()}),
+            TypeList = ticketTypeList.Value.Select(s => new SelectListItem
+                {Text = s.Name, Value = s.Id.ToString()}),
+            HelpTopicList = helptopicList.Value.Select(s => new SelectListItem
+                {Text = s.Topic, Value = s.Id.ToString()})
         };
 
         return Request.IsHtmx()
             ? PartialView("~/Views/Ticket/_Create.cshtml", command)
             : View(command);
+    }
+
+    public IActionResult AddComment([FromQuery]string comment, [FromQuery]string ticket)
+    {
+        var command = new CreateTicketCommentCommand
+        {
+            CommentId = comment,
+            TicketId = ticket
+        };
+        
+        return PartialView("~/Views/Ticket/_AddComment.cshtml", command);
+    }
+
+    public IActionResult AddReply([FromQuery] string comment, [FromQuery]string ticket)
+    {
+        var command = new CreateTicketReplyCommand
+        {
+            CommentId = comment,
+            TicketId = ticket
+        };
+        
+        return PartialView("~/Views/Ticket/_AddReply.cshtml", command);
+    }
+
+    public IActionResult Cancel()
+    {
+        return PartialView("~/Views/Ticket/_Cancel.cshtml");
     }
 
     #endregion GET
@@ -109,6 +143,14 @@ public class TicketController : FrontEndController
                 ? PartialView("~/Views/Ticket/_Create.cshtml", command)
                 : View(command);
         }
+        
+        //get requester details
+        var agentResult =await  _mediatr.Send(new GetAgentCommand {Id = command.Requester});
+        if (agentResult.IsSuccess)
+        {
+            command.RequesterEmail = agentResult.Value.Email;
+            command.RequesterName = $"{agentResult.Value.FirstName} {agentResult.Value.LastName}";
+        }
 
         command.CreatedBy = UserId;
         var result = await _mediatr.Send(command);
@@ -123,7 +165,13 @@ public class TicketController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
+    }
+
+    [HttpPost]
+    public IActionResult AddComment(CreateTicketCommentCommand command)
+    {
+        return RedirectToAction("Index");
     }
 
     #endregion POST

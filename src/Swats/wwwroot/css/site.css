@@ -23,14 +23,25 @@ tbody tr {
 .edit-sidebar li {
     @apply text-xs py-1;
 }
+.edit-sidebar li > div{
+    @apply px-2;
+}
 
     .edit-sidebar li div:first-child {
         @apply text-xs font-semibold text-gray-600;
     }
 
     .edit-sidebar li div:last-child {
-        @apply text-xs text-gray-400;
+        @apply text-sm text-gray-500 ;
     }
+    
+.edit-plus {
+    @apply flex border-2 border-gray-300 border-dashed rounded cursor-pointer;
+}
+
+.edit-ticket-button {
+    @apply flex border-2 text-gray-500 border-gray-300 border-dashed rounded cursor-pointer px-2 py-1 hover:text-gray-800 hover:border-solid
+}
 
 .btn-primary {
     @apply text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-800;

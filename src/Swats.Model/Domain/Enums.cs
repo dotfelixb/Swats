@@ -28,6 +28,13 @@ public enum TicketSource
     Api
 }
 
+public enum CommentType
+{
+    Comment = 1,
+    Reply,
+    ReplyAll
+}
+
 public enum TicketStatus
 {
     New = 1,

@@ -12,12 +12,15 @@ public interface ITicketRepository
 
     Task<long> GenerateTicketCode(CancellationToken cancellationToken);
 
-    Task<int> CreateTicket(Ticket ticket, DbAuditLog auditLog, CancellationToken cancellationToken);
+    Task<int> CreateTicket(Ticket ticket, TicketComment comment, DbAuditLog auditLog,
+        CancellationToken cancellationToken);
 
     Task<FetchTicket> GetTicket(string id, CancellationToken cancellationToken);
+    
+    Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicket>> ListTickets(
-        string id = null
+        string agent = null
         , bool includeDeaprtment = false
         , bool includeTeam = false
         , bool includeHelpTopic = false
@@ -50,7 +53,8 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 
     #region Ticket
 
-    public Task<int> CreateTicket(Ticket ticket, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> CreateTicket(Ticket ticket, TicketComment comment, DbAuditLog auditLog,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -62,7 +66,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                         , code
                         , subject
                         , requester
-                        , body
                         , externalagent
                         , assignedto
                         , ""source""
@@ -80,7 +83,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                         , @Code
                         , @Subject
                         , @Requester
-                        , @Body
                         , @ExternalAgent
                         , @AssignedTo
                         , @Source
@@ -101,7 +103,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 ticket.Code,
                 ticket.Subject,
                 ticket.Requester,
-                ticket.Body,
                 ticket.ExternalAgent,
                 ticket.AssignedTo,
                 ticket.Source,
@@ -114,6 +115,54 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 ticket.RowVersion,
                 ticket.CreatedBy,
                 ticket.UpdatedBy
+            });
+
+            var cmdCmt = @"
+                INSERT INTO public.ticketcomment
+                    (id
+                    , ticket
+                    , fromemail
+                    , fromname
+                    , toemail
+                    , toname
+                    , body
+                    , commenttype
+                    , status
+                    , ""source""
+                    , target
+                    , rowversion
+                    , createdby)
+                VALUES(@Id
+                    , @Ticket
+                    , @FromEmail
+                    , @FromName
+                    , @ToEmail
+                    , @ToName
+                    , @Body
+                    , @Type
+                    , @Status
+                    , @Source
+                    , @Target
+                    , @RowVersion
+                    , @CreatedBy);
+                ";
+
+            var cmst = await conn.ExecuteAsync(cmdCmt, new
+            {
+                comment.Id,
+                comment.Ticket,
+                comment.FromEmail,
+                comment.FromName,
+                comment.ToEmail,
+                comment.ToName,
+                comment.Receiptients,
+                comment.Body,
+                comment.Type,
+                comment.Status,
+                comment.Source,
+                comment.Target,
+                comment.RowVersion,
+                comment.CreatedBy
             });
 
             var logCmd = @"
@@ -146,7 +195,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 auditLog.CreatedBy
             });
 
-            return ctt + cl;
+            return ctt + cmst + cl;
         });
     }
 
@@ -187,12 +236,29 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 LEFT JOIN agent r on r.id = t.requester
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new {Id = id});
         });
     }
 
+    
+    public Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT tc.*
+                FROM ticketcomment tc
+                WHERE tc.ticket = @Id";
+
+            return await conn.QueryAsync<FetchTicketComment>(query, new {Id = id});
+        });
+    }
+
+    
     public Task<IEnumerable<FetchTicket>> ListTickets(
-        string id = null
+        string agent = null
         , bool includeDeaprtment = false
         , bool includeTeam = false
         , bool includeHelpTopic = false
@@ -207,16 +273,16 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         {
             var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
             var _includeFilters = includeDeaprtment
-                ? " AND (t.assignedto = @id OR t.department = (SELECT id FROM user_department)) "
-                : !string.IsNullOrWhiteSpace(id) 
-                    ? " AND t.assignedto = @Id" 
+                ? " AND (t.assignedto = @Agent OR t.department = (SELECT id FROM user_department)) "
+                : !string.IsNullOrWhiteSpace(agent)
+                    ? " AND t.assignedto = @Agent"
                     : "";
-            
+
             var query = $@"
                 WITH user_department AS (
                     SELECT id 
                 	FROM department
-                	WHERE id = (SELECT ag.department FROM agent ag WHERE ag.id = @Id)
+                	WHERE id = (SELECT ag.department FROM agent ag WHERE ag.id = @Agent)
                 )
                 SELECT t.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
@@ -240,7 +306,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicket>(query, new { id, offset, limit });
+            return await conn.QueryAsync<FetchTicket>(query, new {agent, offset, limit});
         });
     }
 
@@ -257,7 +323,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 WHERE 1=1 
                 {_filter}";
 
-            return await conn.ExecuteScalarAsync<int>(query, new { Id = id });
+            return await conn.ExecuteScalarAsync<int>(query, new {Id = id});
         });
     }
 
@@ -352,7 +418,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 FROM tickettype t
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new {Id = id});
         });
     }
 
@@ -374,7 +440,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicketType>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTicketType>(query, new {offset, limit});
         });
     }
 

@@ -12,6 +12,8 @@ public class CreateTicketCommand : IRequest<Result<string>>
 {
     public string Subject { get; set; }
     public string Requester { get; set; }
+    public string RequesterEmail { get; set; }
+    public string RequesterName { get; set; }
     public IEnumerable<SelectListItem> RequesterList { get; set; } = Enumerable.Empty<SelectListItem>();
     public string Body { get; set; }
     public string AssignedTo { get; set; }
@@ -41,6 +43,30 @@ public class ListTicketCommand : ListType, IRequest<Result<IEnumerable<FetchTick
     public bool IncludeDepartment { get; set; }
     public bool IncludeTeam { get; set; }
     public bool IncludeHelpTopic { get; set; }
+}
+
+public class TicketCommentCommand
+{
+    public string CommentId { get; set; }
+    public string TicketId { get; set; }
+    public string  Body { get; set; }
+}
+
+public class CreateTicketCommentCommand :TicketCommentCommand, IRequest<Result<string>>
+{
+}
+
+public class CreateTicketReplyCommand :TicketCommentCommand, IRequest<Result<string>>
+{
+    public string Subject { get; set; }
+    public string ToEmail { get; set; }
+    public string[][] Recipients { get; set; }
+}
+
+
+public class ListTicketCommentCommand : ListType, IRequest<Result<IEnumerable<FetchTicketComment>>>
+{
+    public string TicketId { get; set; }
 }
 
 #endregion

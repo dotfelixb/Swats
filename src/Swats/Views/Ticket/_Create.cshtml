@@ -96,7 +96,7 @@
                     Assigned To
                 </label>
                 <select asp-for="@Model.AssignedTo" class="dropdown search form-input">
-                    <option></option>
+                    <option value=""></option>
                     @foreach (var item in Model.RequesterList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -112,6 +112,7 @@
                     Source
                 </label>
                 <select asp-for="@Model.Source" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
+                    <option value=""></option>
                 </select>
                 <span asp-validation-for="@Model.Source" class="form-input-error"></span>
             </div>
@@ -122,6 +123,7 @@
                     Priority
                 </label>
                 <select asp-for="@Model.Priority" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
+                    <option value=""></option>
                 </select>
                 <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
             </div>
@@ -132,6 +134,7 @@
                     Status
                 </label>
                 <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
+                    <option value=""></option>
                 </select>
                 <span asp-validation-for="@Model.Status" class="form-input-error"></span>
             </div>
@@ -142,7 +145,7 @@
                     Department
                 </label>
                 <select asp-for="@Model.Department" class="dropdown search form-input">
-                    <option></option>
+                    <option value=""></option>
                     @foreach (var item in Model.DepartmentList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -158,6 +161,7 @@
                     Team
                 </label>
                 <select  asp-for="@Model.Team"  class="dropdown search form-input">
+                    <option value=""></option>
                     @foreach (var item in Model.TeamList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -173,6 +177,7 @@
                     Default Ticket Type
                 </label>
                 <select asp-for="@Model.TicketType" class="dropdown search form-input">
+                    <option value=""></option>
                     @foreach (var item in Model.TypeList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -188,6 +193,7 @@
                     Help Topic
                 </label>
                 <select asp-for="@Model.HelpTopic" class="dropdown search form-input">
+                    <option value=""></option>
                     @foreach (var item in Model.HelpTopicList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -204,11 +210,23 @@
                 <label asp-for="@Model.Body" class="form-label">
                     Description
                 </label>
-                <textarea asp-for="@Model.Body" class="form-input" cols="30" rows="10"></textarea>
+                <input type="hidden" asp-for="@Model.Body" class="form-input"/>
+                <div id="editor" class="form-input" style="height: 220px;"></div>
                 <span asp-validation-for="@Model.Body" class="form-input-error"></span>
-
             </div>
         </div>
     </div>
 </form>
 </div>
+
+<script>
+    var quill = new Quill('#editor', { theme: 'snow'  });
+
+    var form = document.querySelector('form');
+    
+    quill.on('text-change', function() {
+      
+        var body = document.querySelector('input[name=Body]');
+        body.value = JSON.stringify(quill.getContents());
+    });
+</script>

@@ -339,7 +339,6 @@ CREATE TABLE ticket
     code          VARCHAR(20),
     subject       VARCHAR(50),
     requester     VARCHAR(50),
-    body          TEXT,
     externalagent VARCHAR(50),
     assignedto    BPCHAR(36),
     source        INT,
@@ -404,6 +403,29 @@ CREATE TABLE tagsauditlog
     createdat   TIMESTAMPTZ DEFAULT (now()),
     FOREIGN KEY (target) REFERENCES tags (id) ON DELETE CASCADE
 );
+
+CREATE TABLE ticketcomment
+(
+    id BPCHAR(36) PRIMARY KEY,
+    ticket 		BPCHAR(36),
+    fromemail  VARCHAR(50), -- agent 
+    fromname  VARCHAR(50), -- agent 
+    toemail	VARCHAR(50), -- requester
+    toname	VARCHAR(50), -- requester
+    recipients TEXT[][], -- {{'name':'email}, {'name':'email'}}
+    body          TEXT,
+    commenttype INT DEFAULT(1),
+    status     INT DEFAULT(1),
+    source     INT DEFAULT(1),
+    target  BPCHAR(36) ,
+	rowversion BPCHAR(36) NOT NULL,
+	deleted BOOLEAN DEFAULT(FALSE),
+  	createdby BPCHAR(36),
+	createdat TIMESTAMPTZ DEFAULT(now()),
+	FOREIGN KEY (ticket) REFERENCES ticket(id) ON DELETE CASCADE
+);
+
+
 
 
 --CREATE TABLE table
