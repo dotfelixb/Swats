@@ -80,7 +80,7 @@
                     <label asp-for="@Model.Type" class="form-label">
                         Type
                     </label>
-                    <select asp-for="@Model.Type" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
+                    <select asp-for="@Model.Type" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
                         <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Type" class="form-input-error"></span>
@@ -91,13 +91,12 @@
                     <label asp-for="@Model.Department" class="form-label">
                         Linked Department
                     </label>
-                    <input asp-for="@Model.Department" list="departmentlist" class="form-input"/>
-                    <datalist id="departmentlist">
+                    <select asp-for="@Model.Department" class="dropdown search form-input">
                         @foreach (var item in Model.DepartmentList)
                         {
                             <option value="@item.Value">@item.Text</option>
                         }
-                    </datalist>
+                    </select>
                     <span asp-validation-for="@Model.Department" class="form-input-error"></span>
                 </div>
 
@@ -115,7 +114,7 @@
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
+                    <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
                         <option value=""></option>
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
@@ -136,3 +135,9 @@
         </div>
     </form>
 </div>
+
+<script>  
+    $('#Type').dropdown(); 
+    $('#Department').dropdown(); 
+    $('#Status').dropdown(); 
+</script>

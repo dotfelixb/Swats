@@ -81,31 +81,24 @@
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
+                    <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
+                
 
                 @* timezone *@
                 <div class="form-control">
                     <label asp-for="@Model.Timezone" class="form-label">
                         Timezone
                     </label>
-                    @* TODO : Set to users locale *@
-                    @*<select asp-for="@Model.Timezone" class="form-input" >
-                        <option value="(UTC) Coordinated Universal Time" selected>(UTC) Coordinated Universal Time</option>
-                        @foreach (var item in System.TimeZoneInfo.GetSystemTimeZones())
-                        {
-                        <option value="@item.DisplayName">@item.DisplayName</option>
-                        }
-                    </select>*@
-                    <input asp-for="@Model.Timezone" list="timezonelist" class="form-input"/>
-                    <datalist id="timezonelist">
+                    <select  asp-for="@Model.Timezone" class="dropdown search form-input">
+                        <option></option>
                         @foreach (var item in TimeZoneInfo.GetSystemTimeZones())
                         {
                             <option value="@item.Id">@item.DisplayName</option>
                         }
-                    </datalist>
+                    </select>
                     <span asp-validation-for="@Model.Timezone" class="form-input-error"></span>
                 </div>
 
@@ -123,3 +116,8 @@
         </div>
     </form>
 </div>
+
+<script>  
+    $('#Status').dropdown(); 
+    $('#Timezone').dropdown(); 
+</script>

@@ -74,7 +74,7 @@
                     <label asp-for="@Model.Visibility" class="form-label">
                         Visibility
                     </label>
-                    <select asp-for="@Model.Visibility" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
+                    <select asp-for="@Model.Visibility" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<DefaultType>()">
                     </select>
                     <span asp-validation-for="@Model.Visibility" class="form-input-error"></span>
                 </div>
@@ -83,7 +83,7 @@
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
+                    <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
@@ -111,3 +111,8 @@
         </div>
     </form>
 </div>
+
+<script>  
+    $('#Visibility').dropdown(); 
+    $('#Status').dropdown(); 
+</script>

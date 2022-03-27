@@ -79,13 +79,12 @@
                     <label asp-for="@Model.Department" class="form-label">
                         Department
                     </label>
-                    <input asp-for="@Model.Department" list="departmentlist" class="form-input"/>
-                    <datalist id="departmentlist">
+                    <select asp-for="@Model.Department" class="dropdown search form-input" >
                         @foreach (var item in Model.DepartmentList)
                         {
                             <option value="@item.Value">@item.Text</option>
                         }
-                    </datalist>
+                    </select>
                     <span asp-validation-for="@Model.Department" class="form-input-error"></span>
                 </div>
 
@@ -93,13 +92,12 @@
                     <label asp-for="@Model.Lead" class="form-label">
                         Team Lead
                     </label>
-                    <input asp-for="@Model.Lead" list="leadlist" class="form-input"/>
-                    <datalist id="leadlist">
+                    <select asp-for="@Model.Lead" class="dropdown search form-input">
                         @foreach (var item in Model.LeadList)
                         {
                             <option value="@item.Value">@item.Text</option>
                         }
-                    </datalist>
+                    </select>
                     <span asp-validation-for="@Model.Lead" class="form-input-error"></span>
                 </div>
 
@@ -107,7 +105,7 @@
                     <label asp-for="@Model.Status" class="form-label">
                         Status
                     </label>
-                    <select asp-for="@Model.Status" class="form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
+                    <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<DefaultStatus>()">
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
@@ -126,3 +124,9 @@
         </div>
     </form>
 </div>
+
+<script>  
+    $('#Department').dropdown(); 
+    $('#Lead').dropdown(); 
+    $('#Status').dropdown(); 
+</script>
