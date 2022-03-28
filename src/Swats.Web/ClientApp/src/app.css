@@ -25,3 +25,7 @@
 .statcard-container .statcard-title span {
   @apply text-xs text-center
 }
+
+button {
+  @apply rounded-sm;
+}

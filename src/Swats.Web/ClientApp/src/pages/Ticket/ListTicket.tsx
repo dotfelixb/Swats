@@ -7,7 +7,25 @@ interface IListTicket { }
 
 const ListTicket: FC<IListTicket> = () => {
 
-  return (<PageView title="Tickets">
+  const Buttons: FC = () => (
+    <div className="space-x-2">
+      <Link to="/ticket/new">
+        <Button type="primary" size="small">New Ticket</Button>
+      </Link>
+    </div>
+  );
+
+  const Breadcrumbs: FC = () => (
+    <Breadcrumb separator="/">
+      <Breadcrumb.Item href="">
+        <Link to="/">Home</Link>
+      </Breadcrumb.Item>
+      <Breadcrumb.Item>Tickets</Breadcrumb.Item>
+    </Breadcrumb>
+  )
+
+  return (<PageView title="Tickets" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
+
 
     <Outlet />
   </PageView>)

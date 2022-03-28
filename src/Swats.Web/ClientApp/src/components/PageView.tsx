@@ -1,21 +1,30 @@
 import React, { FC } from "react";
 
 interface IPageView {
-  title:string
+  title: string;
+  buttons?: React.ReactNode;
+  breadcrumbs?: React.ReactNode;
 }
 
-const PageView : FC<IPageView> = ({title, children}) => {
+const PageView: FC<IPageView> = ({ title, children, buttons, breadcrumbs }) => {
 
-  return ( <div>
-     <section className="flex w-full font-bold text-2xl pb-5">
-        <div className="flex w-1/2">{title}</div>
-        <div className="flex w-1/2 justify-end"></div>
+  return (<div>
+    <section>
+      <div className="flex flex-row text-xs text-indigo-400 py-3 items-center">
+        {breadcrumbs && breadcrumbs}
+      </div>
+    </section>
+    <section className="flex w-full items-center pb-5">
+      <div className="flex w-1/2 font-bold text-2xl ">{title}</div>
+      <div className="flex w-1/2 items-center justify-end">
+        {buttons && buttons}
+      </div>
     </section>
 
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+    <div >
       {children}
     </div>
-  </div> )
+  </div>)
 }
 
 export default PageView;
