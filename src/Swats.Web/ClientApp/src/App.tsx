@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Route, Routes } from "react-router-dom";
+import "./site.css";
 import "./custom.less";
-import "./app.css";
 import { Agent, Dashboard, NoMatch, Settings } from "./pages";
 import { MainLayout } from "./components";
 import { ListTicket, NewTicket, ViewTicket } from "./pages/Ticket";

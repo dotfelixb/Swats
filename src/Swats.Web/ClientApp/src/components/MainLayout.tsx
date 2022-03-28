@@ -12,7 +12,7 @@ const { Header, Sider, Content } = Layout;
 
 const navStyle = { display: "flex", justifyContent: "center" };
 
-interface IMainLayout {}
+interface IMainLayout { }
 
 const MainLayout: FC<IMainLayout> = ({ children }) => {
   return (
@@ -59,7 +59,11 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
           </Menu>
         </Sider>
 
-        <Content style={{ backgroundColor: "white" }}>{children}</Content>
+        <Content style={{ backgroundColor: "white" }}>
+          <div className="relative w-full flex-auto px-3 md:px-16 lg:px-36 py-8  overflow-y-auto">
+            {children}
+          </div>
+        </Content>
       </Layout>
     </Layout>
   );
