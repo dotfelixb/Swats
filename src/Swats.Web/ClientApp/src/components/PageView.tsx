@@ -21,7 +21,7 @@ const PageView: FC<IPageView> = ({ title, children, buttons, breadcrumbs }) => {
       </div>
     </section>
 
-    <div >
+    <div>
       {children}
     </div>
   </div>)

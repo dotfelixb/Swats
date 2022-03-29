@@ -29,7 +29,7 @@ const NewTicket: FC<INewTicket> = () => {
       <Button type="primary">
         <div className="flex flex-row items-center space-x-2">
           <SaveOutlined />
-          <div>Save</div>
+          <div>Submit</div>
         </div>
       </Button>
     </div>
@@ -90,7 +90,7 @@ const NewTicket: FC<INewTicket> = () => {
                 </Form.Item>
                 <Form.Item label="Description">
                   {/* <TextArea rows={4} /> */}
-                  <ReactQuill theme="snow" value={value} onChange={setValue}/>
+                  <ReactQuill theme="snow" value={value} onChange={setValue} style={{height: '240px'}}/>
                 </Form.Item>
               </Timeline.Item>
             </Timeline>

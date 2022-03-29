@@ -458,9 +458,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
-.overflow-y-auto {
-  overflow-y: auto;
-}
 .px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;

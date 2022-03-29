@@ -59,8 +59,8 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
           </Menu>
         </Sider>
 
-        <Content style={{ backgroundColor: "white" }}>
-          <div className="relative w-full flex-auto px-3 md:px-16 lg:px-36 py-8  overflow-y-auto">
+        <Content style={{ backgroundColor: "white", overflowY: "scroll" }}>
+          <div className="relative w-full flex-auto px-3 md:px-16 lg:px-36 py-8">
             {children}
           </div>
         </Content>
