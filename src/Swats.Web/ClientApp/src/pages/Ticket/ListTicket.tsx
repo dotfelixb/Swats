@@ -10,14 +10,14 @@ const ListTicket: FC<IListTicket> = () => {
   const Buttons: FC = () => (
     <div className="space-x-2">
       <Link to="/ticket/new">
-        <Button type="primary" size="small">New Ticket</Button>
+        <Button type="primary" >New Ticket</Button>
       </Link>
     </div>
   );
 
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
-      <Breadcrumb.Item href="">
+      <Breadcrumb.Item>
         <Link to="/">Home</Link>
       </Breadcrumb.Item>
       <Breadcrumb.Item>Tickets</Breadcrumb.Item>
