@@ -37,7 +37,28 @@ public class GetTicketCommand : GetType, IRequest<Result<FetchTicket>>
 {
 }
 
-public class ListTicketCommand : ListType, IRequest<Result<IEnumerable<FetchTicket>>>
+public class AssignTicketCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string AssignedTo { get; set; }
+    public string CreatedBy { get; set; }
+}
+
+public class AssignTicketDepartmentCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string Department { get; set; }
+    public string CreatedBy { get; set; }
+}
+
+public class AssignTicketTeamCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string Team { get; set; }
+    public string CreatedBy { get; set; }
+}
+
+public class ListTicketCommand : ListType, IRequest<Result<ListResult<FetchTicket>>>
 {
     public string Id { get; set; }
     public bool IncludeDepartment { get; set; }

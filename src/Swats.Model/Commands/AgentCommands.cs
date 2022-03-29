@@ -28,10 +28,24 @@ public class CreateAgentCommand : IRequest<Result<string>>
     public string Note { get; set; }
 }
 
-public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
+public class GetAgentCommand : GetType, IRequest<Result<SingleResult<FetchAgent>>>
 {
 }
 
 public class ListAgentCommand : ListType, IRequest<Result<IEnumerable<FetchAgent>>>
 {
+}
+
+public class AssignAgentDepartmentCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string Department { get; set; }
+    public string CreatedBy { get; set; }
+}
+
+public class AssignAgentTeamCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string Team { get; set; }
+    public string CreatedBy { get; set; }
 }

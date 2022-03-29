@@ -115,7 +115,7 @@ public class AgentsController : FrontEndController
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
-        result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
+        result.Value.Data.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
 
         return Request.IsHtmx()
             ? PartialView("~/Areas/Admin/Views/Agents/_Edit.cshtml", result.Value)

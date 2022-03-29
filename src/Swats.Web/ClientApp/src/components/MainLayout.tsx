@@ -52,7 +52,7 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
             </Menu.Item>
 
             <Menu.Item key={"Settings"} style={navStyle}>
-              <Link to="/settings">
+              <Link to="/admin">
                 <SettingOutlined />
               </Link>
             </Menu.Item>
