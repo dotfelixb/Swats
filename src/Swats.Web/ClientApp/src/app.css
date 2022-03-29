@@ -11,11 +11,11 @@
 }
 
 .statcard-container .statcard-ring span {
-  @apply text-lg font-bold text-center text-indigo-500
+  @apply text-lg font-bold text-center text-indigo-500;
 }
 
 .statcard-container .statcard-ring div {
-  @apply absolute top-0 right-0 w-4 h-4 rounded-full border-solid border-indigo-400 border-4 bg-indigo-700
+  @apply absolute top-0 right-0 w-4 h-4 rounded-full border-solid border-indigo-400 border-4 bg-indigo-700;
 }
 
 .statcard-container .statcard-title {
@@ -23,9 +23,24 @@
 }
 
 .statcard-container .statcard-title span {
-  @apply text-xs text-center
+  @apply text-xs text-center;
 }
 
 button {
   @apply rounded-sm;
+}
+
+.quill {
+  /* border: 1px solid #d9d9d9; */
+  border-radius: 2px;
+}
+
+.ql-editor:focus {
+  border-color: #9197ff; 
+}
+
+.ql-editor:focus{
+  border-color: #9197ff;
+  box-shadow: 0 0 0 2px rgb(99 102 241 / 20%);
+  outline: 0;
 }
