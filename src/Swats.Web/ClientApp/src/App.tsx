@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import "./site.css";
 import "./custom.less";
 import { Agent, Dashboard, NoMatch, Settings } from "./pages";
-import { MainLayout, RequireAuth } from "./components";
+import { MainLayout } from "./components";
 import { ListTicket, NewTicket, ViewTicket } from "./pages/Ticket";
 import { AuthProvider } from "./context";
 import Login from "./pages/Auth/Login";
@@ -20,8 +20,8 @@ const App: FC = () => (
         </Route>
         <Route path="/agent" element={<Agent />} />
         <Route path="/admin" element={<Settings />} />
-        <Route path="/login" element={<Login />} />
       </Route>
+      <Route path="/login" element={<Login />} />
       <Route path="*" element={<NoMatch />} />
     </Routes>
   </AuthProvider>

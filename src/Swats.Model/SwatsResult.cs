@@ -28,4 +28,11 @@ public class ListResult<T> : SwatsResult
     public IEnumerable<T> Data { get; set; }
 }
 
+public class AuthResult : SwatsResult
+{
+    public string Fullname { get; set; }
+    public string Token { get; set; }
+    public string[] Permissions { get; set; }
+}
+
 public class ErrorResult : SwatsResult { }

@@ -6,13 +6,14 @@ import {
   SettingOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
+import { RequireAuth } from ".";
 
 const { Header, Sider, Content } = Layout;
 
 const navStyle = { display: "flex", justifyContent: "center" };
 
-interface IMainLayout { }
+interface IMainLayout {}
 
 const MainLayout: FC<IMainLayout> = ({ children }) => {
   return (
@@ -61,7 +62,12 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
 
         <Content style={{ backgroundColor: "white", overflowY: "scroll" }}>
           <div className="relative w-full flex-auto px-3 md:px-16 lg:px-36 py-8">
-            {children}
+            <RequireAuth>
+              <>
+                {children}
+                <Outlet />
+              </>
+            </RequireAuth>
           </div>
         </Content>
       </Layout>

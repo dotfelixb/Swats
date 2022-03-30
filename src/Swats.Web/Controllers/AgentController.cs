@@ -16,10 +16,10 @@ public class AgentController : MethodController
         this.mediatr = mediatr;
     }
 
-    [HttpGet("agents.list", Name = nameof(ListTickets))]
-    public async Task<IActionResult> ListTickets([FromQuery] ListTicketCommand command)
+    [HttpGet("agents.list", Name = nameof(ListAgents))]
+    public async Task<IActionResult> ListAgents([FromQuery] ListTicketCommand command)
     {
-        logger.LogInformation($"{Request.Method}::{nameof(AgentController)}::{nameof(ListTickets)}");
+        logger.LogInformation($"{Request.Method}::{nameof(AgentController)}::{nameof(ListAgents)}");
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
