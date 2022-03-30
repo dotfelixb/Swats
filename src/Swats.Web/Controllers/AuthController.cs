@@ -42,17 +42,16 @@ public class AuthController : MethodController
         var msg = $"{Request.Method}::{nameof(AuthController)}::{nameof(Login)}";
         logger.LogInformation(msg);
 
-        var result =
-            await signInManager.PasswordSignInAsync(command.UserName, command.Password, command.RememberMe, false);
-        if (!result.Succeeded)
-        {
-            return BadRequest(new ErrorResult {Ok = false, Errors = new []{$"Login failed for user [{command.UserName}]"}});
-        }
-        
         var user = await userManager.FindByNameAsync(command.UserName);
         if (user is null)
         {
-            return NotFound(new ErrorResult {Ok = false, Errors = new []{$"No user found for [{command.UserName}]"}});
+            return NotFound(new ErrorResult { Ok = false, Errors = new[] { $"User '{command.UserName}' not found" } });
+        }
+
+        var hasValidPassword = await userManager.CheckPasswordAsync(user, command.Password);
+        if (!hasValidPassword)
+        {
+            return BadRequest(new ErrorResult { Ok = false, Errors = new[] { $"Login failed for user '{command.UserName}'" } });
         }
 
         var claims = new List<Claim>
