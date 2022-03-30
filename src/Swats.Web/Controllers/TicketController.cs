@@ -38,8 +38,8 @@ public class TicketController : MethodController
         var result = await mediatr.Send(command);
         if (result.IsFailed)
         {
-            var error = 
-            return NotFound(new ErrorResult { Ok = false });
+            var error = result.Reasons.FirstOrDefault()?.Message;
+            return NotFound(new ErrorResult { Ok = false, Errors = new []{error }});
         }
 
         return Ok(result.Value);
@@ -60,7 +60,7 @@ public class TicketController : MethodController
         var baseUri = $"{Request.Scheme}://{Request.Host}";
         var uri = $"{baseUri}/methods/tickets.get?id={result.Value}";
 
-        return Created(uri, );
+        return Created(uri, result.Value);
     }
 
     [HttpPatch("tickets.assign", Name = nameof(AssignTicket))]

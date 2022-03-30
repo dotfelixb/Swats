@@ -32,8 +32,8 @@ public class TicketController : FrontEndController
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
         return Request.IsHtmx()
-            ? PartialView("~/Views/Ticket/_Index.cshtml", result.Value)
-            : View(result.Value);
+            ? PartialView("~/Views/Ticket/_Index.cshtml", result.Value.Data)
+            : View(result.Value.Data);
     }
 
     public async Task<IActionResult> Edit(string id)

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Htmx;
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,6 @@ using Swats.Controllers;
 using Swats.Extensions;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
-using System.Security.Claims;
 
 namespace Swats.Areas.Admin.Controllers;
 
@@ -38,7 +36,7 @@ public class AgentsController : FrontEndController
     [HttpPost]
     public async Task<IActionResult> Create(CreateAgentCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(AgentsController)}::{nameof(Create)}";
+        const string msg = $"POST::{nameof(AgentsController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
 
         if (!ModelState.IsValid)
@@ -56,7 +54,7 @@ public class AgentsController : FrontEndController
         command.UserName = command.Email.Split('@').First(); // lisa.paige@swats.app => lisa.paige
 
         // create a user
-        _logger.LogInformation($"{msg} - Createing user for agent");
+        _logger.LogInformation($"{msg} - Creating user for agent");
 
         // email before at '@' symbol and @1
         var password = $"{command.UserName}@1";
@@ -66,7 +64,7 @@ public class AgentsController : FrontEndController
         if (!userResult.Succeeded)
         {
             var reason = userResult.Errors.FirstOrDefault()?.Description;
-            _logger.LogError($"{msg} - Createing user for agent failed with {reason}");
+            _logger.LogError($"{msg} - Creating user for agent failed with {reason}");
             TempData["CreateError"] = reason;
 
             return Request.IsHtmx()
@@ -118,8 +116,8 @@ public class AgentsController : FrontEndController
         result.Value.Data.ImageCode = $"{Request.Scheme}://{Request.Host}/admin/agents/edit/{id}".GenerateQrCode();
 
         return Request.IsHtmx()
-            ? PartialView("~/Areas/Admin/Views/Agents/_Edit.cshtml", result.Value)
-            : View(result.Value);
+            ? PartialView("~/Areas/Admin/Views/Agents/_Edit.cshtml", result.Value.Data)
+            : View(result.Value.Data);
     }
 
     public async Task<IActionResult> Create()
