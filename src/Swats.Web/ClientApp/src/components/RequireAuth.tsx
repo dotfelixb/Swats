@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context";
 import { IViewProps } from "../interfaces";
 
-const RequiredAuth: FC<IViewProps> = ({ children }) => {
+const RequireAuth: FC<IViewProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
@@ -13,4 +13,4 @@ const RequiredAuth: FC<IViewProps> = ({ children }) => {
   return <>{children}</>
 }
 
-export default RequiredAuth;
+export default RequireAuth;

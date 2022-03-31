@@ -18,9 +18,5 @@ export const login = async ({username, password, remember}:ILogin) : Promise<ILo
 
   const result = await f.json();
 
-  if(f.status === 200 && f.ok){
-    return result
-  }
-  
-  return null;
+  return result;
 }

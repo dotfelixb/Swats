@@ -1,6 +1,6 @@
 import { createContext, FC, useContext, useState } from "react";
 import { login } from "../functions";
-import { IAuthContext, ILogin, IUser, IViewProps } from "../interfaces";
+import { IAuthContext, ILogin, ILoginResult, IUser, IViewProps } from "../interfaces";
 
 export const AuthContext = createContext<IAuthContext>(null!);
 
@@ -10,18 +10,16 @@ export const AuthProvider : FC<IViewProps> = ({ children }) => {
   const [isAuthenticated, setAuthentication] = useState(false);
   const [user, setUser] = useState<IUser>(null!);
 
-  const signIn = async ({username, password, remember}: ILogin) : Promise<boolean> => {
+  const signIn = async ({username, password, remember}: ILogin) : Promise<ILoginResult | null> => {
     const result = await login({username, password, remember});
     if(result !== null && result.ok){
       setAuthentication(true)
       setUser({fullname: result.fullname, token: result.token, permissions: result.permissions})
 
-      return true;
+      return result;
     }
-
-    console.log(result);
     
-    return false;
+    return result;
   }
 
   const signOut = () =>{

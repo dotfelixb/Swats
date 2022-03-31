@@ -17,6 +17,7 @@ export interface ILoginResult {
   fullname:string;
   token:string;
   permissions: string[];
+  errors: string[]
   ok: boolean;
   ts:Number;
 }
@@ -24,7 +25,7 @@ export interface ILoginResult {
 export interface IAuthContext {
   isAuthenticated: boolean;
   user: IUser | null;
-  signIn: ({ username, password, remember }: ILogin) => Promise<boolean>;
+  signIn: ({ username, password, remember }: ILogin) => Promise<ILoginResult | null>;
   signOut: () => boolean;
 }
 
