@@ -20,7 +20,7 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
     <Layout style={{ height: "100vh" }}>
       <Header
         style={{
-          backgroundColor: "white",
+          backgroundColor: "white", height: "48px", lineHeight: "48px",
           borderBottom: "1px solid rgba(128, 128, 128, 0.3)",
         }}
       >
