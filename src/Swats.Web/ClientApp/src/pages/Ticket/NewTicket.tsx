@@ -5,7 +5,7 @@ import {
   SkinOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { PageView } from "../../components";
 import ReactQuill from 'react-quill';
@@ -18,11 +18,6 @@ interface INewTicket {}
 const NewTicket: FC<INewTicket> = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState('');
-
-  useEffect(()=> {
-    console.log(value);
-    
-  }, [value])
 
   const Buttons: FC = () => (
     <div className="space-x-2">

@@ -3,14 +3,13 @@ import React, { FC } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { PageView } from "../../components";
 
-interface IListTicket { }
+interface IListHours {}
 
-const ListTicket: FC<IListTicket> = () => {
-
+const ListHours: FC<IListHours> = () => {
   const Buttons: FC = () => (
     <div className="space-x-2">
-      <Link to="/ticket/new">
-        <Button type="primary" >New Ticket</Button>
+      <Link to="new">
+        <Button type="primary" >New Hour</Button>
       </Link>
     </div>
   );
@@ -20,15 +19,18 @@ const ListTicket: FC<IListTicket> = () => {
       <Breadcrumb.Item>
         <Link to="/">Home</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>Tickets</Breadcrumb.Item>
+      <Breadcrumb.Item>
+        <Link to="/admin">Admin</Link>
+      </Breadcrumb.Item>
+      <Breadcrumb.Item>Business Hours</Breadcrumb.Item>
     </Breadcrumb>
-  )
+  );
 
-  return (<PageView title="Tickets" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
+  return (<PageView title="Business Hours" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
 
 
     <Outlet />
   </PageView>)
-}
+};
 
-export default ListTicket;
+export default ListHours;

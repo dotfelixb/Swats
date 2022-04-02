@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context";
 import { IViewProps } from "../interfaces";
@@ -8,9 +8,9 @@ const RequireAuth: FC<IViewProps> = ({ children }) => {
   const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  return <>{children}</>
-}
+  return <>{children}</>;
+};
 
 export default RequireAuth;

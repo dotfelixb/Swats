@@ -1,30 +1,99 @@
-import React, { FC } from "react";
+import { FC, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./site.css";
 import "./custom.less";
-import { Agent, Dashboard, NoMatch, Settings } from "./pages";
+import {
+  ListAgents,
+  Dashboard,
+  NoMatch,
+  Settings,
+  Login,
+  ListTickets,
+  NewTicket,
+  ViewTicket,
+  NewAgent,
+  ListDepartments,
+  NewDepartment,
+  ListTeams,
+  NewTeam,
+  ListTopics,
+  NewTopic,
+  ListHours,
+  NewHour,
+  ListTags,
+  NewTag,
+  ListTypes,
+  NewType,
+  ViewHour,
+} from "./pages";
 import { MainLayout } from "./components";
-import { ListTicket, NewTicket, ViewTicket } from "./pages/Ticket";
-import { AuthProvider } from "./context";
-import Login from "./pages/Auth/Login";
+import { AuthContext, AuthProvider } from "./context";
+import { LoadingOutlined } from "@ant-design/icons";
 
-const App: FC = () => (
-  <AuthProvider>
+const Ready: FC = () => {
+  const {browserLoaded} = useContext(AuthContext)
+
+
+  if(!browserLoaded){
+    return <div>
+      <LoadingOutlined />
+    </div>
+  }
+
+  return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
-        <Route path="ticket" >
-          <Route index element={<ListTicket />} />
+        <Route path="ticket">
+          <Route index element={<ListTickets />} />
           <Route path="new" element={<NewTicket />} />
-          <Route path=":ticketId" element={<ViewTicket />} />
+          <Route path=":id" element={<ViewTicket />} />
         </Route>
-        <Route path="/agent" element={<Agent />} />
-        <Route path="/admin" element={<Settings />} />
+        <Route path="agent">
+          <Route index element={<ListAgents />} />
+          <Route path="new" element={<NewAgent />} />
+        </Route>
+        <Route path="admin">
+          <Route index element={<Settings />} />
+          <Route path="agent">
+            <Route index element={<ListAgents />} />
+            <Route path="new" element={<NewAgent />} />
+          </Route>
+          <Route path="department">
+            <Route index element={<ListDepartments />} />
+            <Route path="new" element={<NewDepartment />} />
+          </Route>
+          <Route path="team">
+            <Route index element={<ListTeams />} />
+            <Route path="new" element={<NewTeam />} />
+          </Route>
+          <Route path="helptopic">
+            <Route index element={<ListTopics />} />
+            <Route path="new" element={<NewTopic />} />
+          </Route>
+          <Route path="tickettype">
+            <Route index element={<ListTypes />} />
+            <Route path="new" element={<NewType />} />
+          </Route>
+          <Route path="businesshour">
+            <Route index element={<ListHours />} />
+            <Route path="new" element={<NewHour />} />
+            <Route path=":id" element={<ViewHour />} />
+          </Route>
+          <Route path="tag">
+            <Route index element={<ListTags />} />
+            <Route path="new" element={<NewTag />} />
+          </Route>
+        </Route>
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="*" element={<NoMatch />} />
     </Routes>
-  </AuthProvider>
-);
+  );
+};
+
+const App: FC = () => <AuthProvider>
+  <Ready />
+</AuthProvider>;
 
 export default App;

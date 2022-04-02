@@ -1,5 +1,15 @@
-export { default as Agent } from "./Agent";
 export { default as Dashboard } from "./Dashboard";
-export { default as Ticket } from "./Ticket/ListTicket";
-export { default as Settings } from "./Settings";
 export { default as NoMatch } from "./NoMatch";
+export { default as Settings } from "./Settings";
+
+export { Login } from "./Auth";
+export { NewAgent, ListAgents } from "./Agent";
+export { ListTickets, NewTicket, ViewTicket } from "./Ticket";
+
+export { ListDepartments, NewDepartment } from './Department';
+export { ListTeams, NewTeam } from './Team';
+export { ListTopics, NewTopic } from './HelpTopic';
+
+export { ListHours, NewHour, ViewHour } from "./BusinessHour";
+export { NewType, ListTypes } from './TicketType';
+export { ListTags, NewTag } from './Tag';

@@ -24,6 +24,7 @@ export interface ILoginResult {
 
 export interface IAuthContext {
   isAuthenticated: boolean;
+  browserLoaded: boolean;
   user: IUser | null;
   signIn: ({ username, password, remember }: ILogin) => Promise<ILoginResult | null>;
   signOut: () => boolean;

@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { Layout, Menu } from "antd";
 import {
-  DashboardOutlined,
-  PhoneOutlined,
+  CustomerServiceOutlined,
+  DashboardOutlined, 
   SettingOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
@@ -48,7 +48,7 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
 
             <Menu.Item key={"Agent"} style={navStyle}>
               <Link to="/agent">
-                <PhoneOutlined />
+                <CustomerServiceOutlined />
               </Link>
             </Menu.Item>
 
