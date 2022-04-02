@@ -22,7 +22,7 @@ const ViewHour : FC<IViewHour> = () => {
     </Breadcrumb>
   );
 
-  return (<PageView title="Business Hours" breadcrumbs={<Breadcrumbs />}>
+  return (<PageView title="Viewing Hour" breadcrumbs={<Breadcrumbs />}>
 
 
   </PageView>)

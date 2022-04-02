@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { FC } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./site.css";
 import "./custom.less";
@@ -27,11 +27,11 @@ import {
   ViewHour,
 } from "./pages";
 import { MainLayout } from "./components";
-import { AuthContext, AuthProvider } from "./context";
+import { AuthProvider, useAuth } from "./context";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const Ready: FC = () => {
-  const {browserLoaded} = useContext(AuthContext)
+  const {browserLoaded} = useAuth();
 
 
   if(!browserLoaded){

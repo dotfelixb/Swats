@@ -1,4 +1,18 @@
 /// interface use by swats.web
+ interface IResult {
+  ok: boolean;
+  type:string;
+  ts:number;
+  errors: string[]
+}
+
+export interface ISingleResult<T> extends IResult {
+  data: T
+}
+
+export interface IListResult<T> extends IResult {
+  data: T
+}
 
 export interface IUser {
   token: string;
@@ -11,7 +25,6 @@ export interface ILogin {
   password: string;
   remember: boolean;
 }
-
 
 export interface ILoginResult {
   fullname:string;
