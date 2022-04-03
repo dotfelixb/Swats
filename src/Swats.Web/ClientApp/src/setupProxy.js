@@ -7,6 +7,8 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 const context =  [
   "/methods/auth.login",
   "/methods/businesshour.create",
+  "/methods/businesshour.get",
+  "/methods/businesshour.list",
 ];
 
 module.exports = function(app) {

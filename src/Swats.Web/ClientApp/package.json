@@ -8,6 +8,7 @@
     "antd": "^4.19.4",
     "autoprefixer": "^10.4.4",
     "craco-less": "^2.0.0",
+    "dayjs": "^1.11.0",
     "http-proxy-middleware": "^0.19.1",
     "oidc-client": "^1.11.5",
     "postcss": "^8.4.12",
@@ -48,7 +49,7 @@
     "watch": "^1.0.2"
   },
   "scripts": {
-    "css": "postcss src/App.css -o src/site.css",
+    "css": "postcss src/app.css -o src/site.css",
     "prestart": "node aspnetcore-https && node aspnetcore-react && npm run css",
     "start": "rimraf ./build && craco start",
     "build": "craco build",

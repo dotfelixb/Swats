@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Text.Json.Serialization;
+using MassTransit;
 
 namespace Swats.Model.Domain;
 
@@ -14,6 +15,7 @@ public class DbAudit
 
     #region Db Props
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultStatus Status { get; set; }
     public string RowVersion { get; set; } = Guid.NewGuid().ToString();
     public bool Deleted { get; set; }

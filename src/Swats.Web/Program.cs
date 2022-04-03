@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Text;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -19,7 +20,7 @@ builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSec
 builder.Services.Configure<SecurityKeyOptions>(builder.Configuration.GetSection("SecurityKey"));
 builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o =>
 {
-    o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    //o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 }).AddFluentValidation(f =>
     f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
@@ -75,6 +76,14 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePages(async statusCodeContext =>
+{
+    // using static System.Net.Mime.MediaTypeNames;
+    statusCodeContext.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
+
+    await statusCodeContext.HttpContext.Response.WriteAsync(
+        $"{statusCodeContext.HttpContext.Response.StatusCode}");
+});
 app.UseStaticFiles();
 app.UseRouting();
 // auth

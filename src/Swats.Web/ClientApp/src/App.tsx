@@ -27,17 +27,18 @@ import {
   ViewHour,
 } from "./pages";
 import { MainLayout } from "./components";
-import { AuthProvider, useAuth } from "./context";
+import { AppProvider, AuthProvider, useAuth } from "./context";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const Ready: FC = () => {
-  const {browserLoaded} = useAuth();
+  const { browserLoaded } = useAuth();
 
-
-  if(!browserLoaded){
-    return <div>
-      <LoadingOutlined />
-    </div>
+  if (!browserLoaded) {
+    return (
+      <div>
+        <LoadingOutlined />
+      </div>
+    );
   }
 
   return (
@@ -92,8 +93,12 @@ const Ready: FC = () => {
   );
 };
 
-const App: FC = () => <AuthProvider>
-  <Ready />
-</AuthProvider>;
+const App: FC = () => (
+  <AuthProvider>
+    <AppProvider>
+      <Ready />
+    </AppProvider>
+  </AuthProvider>
+);
 
 export default App;

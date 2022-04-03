@@ -1,17 +1,17 @@
 /// interface use by swats.web
- interface IResult {
+interface IResult {
   ok: boolean;
-  type:string;
-  ts:number;
-  errors: string[]
+  type: string;
+  ts: number;
+  errors: string[];
 }
 
 export interface ISingleResult<T> extends IResult {
-  data: T
+  data: T;
 }
 
 export interface IListResult<T> extends IResult {
-  data: T
+  data: T;
 }
 
 export interface IUser {
@@ -27,24 +27,47 @@ export interface ILogin {
 }
 
 export interface ILoginResult {
-  fullname:string;
-  token:string;
+  fullname: string;
+  token: string;
   permissions: string[];
-  errors: string[]
+  errors: string[];
   ok: boolean;
-  ts:Number;
+  ts: Number;
 }
 
 export interface IAuthContext {
   isAuthenticated: boolean;
   browserLoaded: boolean;
   user: IUser | null;
-  signIn: ({ username, password, remember }: ILogin) => Promise<ILoginResult | null>;
+  signIn: ({
+    username,
+    password,
+    remember,
+  }: ILogin) => Promise<ILoginResult | null>;
   signOut: () => boolean;
 }
 
-export interface IAppContext {}
+export interface IAppContext {
+  post: (endPoint: string, body: FormData) => Promise<any>;
+  get: (endPoint: string) => Promise<any>;
+  dateFormats: { longDateFormat: string; shortDateFormat: string };
+}
 
 export interface IViewProps {
   children?: JSX.Element;
+}
+
+export interface IFetchBusinessHour {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  timezone: string;
+  createdBy: string;
+  createdByName: string;
+  createdAt: Date;
+
+  updatedBy: string;
+  updatedByName: string;
+  updatedAt: Date;
 }
