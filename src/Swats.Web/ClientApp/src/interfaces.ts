@@ -57,12 +57,9 @@ export interface IViewProps {
   children?: JSX.Element;
 }
 
-export interface IFetchBusinessHour {
-  id: string;
-  name: string;
-  description: string;
+interface IDataAudit {
   status: string;
-  timezone: string;
+
   createdBy: string;
   createdByName: string;
   createdAt: Date;
@@ -70,4 +67,33 @@ export interface IFetchBusinessHour {
   updatedBy: string;
   updatedByName: string;
   updatedAt: Date;
+}
+
+export interface IFetchBusinessHour extends IDataAudit {
+  id: string;
+  name: string;
+  description: string;
+  timezone: string;
+}
+
+export interface IFetchTag extends IDataAudit {
+  id: string;
+  name: string;
+  note: string;
+  visibility: string;
+  color: string;
+}
+
+export interface IFetchTopic extends IDataAudit {
+  id: string;
+  topic: string;
+  department: string;
+  departmentName: string;
+  type: string;
+  note: string;
+}
+
+export interface IFetchDepartment extends IDataAudit {
+  id: string;
+  name: string;
 }

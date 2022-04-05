@@ -2,7 +2,7 @@ import { Breadcrumb, Button } from "antd";
 import dayjs from "dayjs";
 import React, { FC, useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { PageView } from "../../components";
+import { DataTable, PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import { IFetchBusinessHour, IListResult } from "../../interfaces";
 
@@ -13,7 +13,7 @@ interface IHourListItem {
 }
 
 const HourListItem = ({ data }: IHourListItem) => {
-  const {dateFormats} = useApp()
+  const { dateFormats } = useApp();
 
   return (
     <tr className="px-10" key={data.id}>
@@ -45,6 +45,16 @@ const HourListItem = ({ data }: IHourListItem) => {
   );
 };
 
+const columns = [
+  { key: "name", column: [{ title: "Name" }, { title: "Description" }] },
+  { key: "status", column: [{ title: "Status" }, { title: "Timezone" }] },
+  {
+    key: "created",
+    column: [{ title: "Created By" }, { title: "Created At" }],
+  },
+  { key: "extra", column: [{ title: "" }] },
+];
+
 const ListHours: FC<IListHours> = () => {
   const { user } = useAuth();
   const { get } = useApp();
@@ -53,12 +63,15 @@ const ListHours: FC<IListHours> = () => {
   useEffect(() => {
     const load = async () => {
       const g: Response = await get("methods/businesshour.list");
-      const d: IListResult<IFetchBusinessHour[]> = await g.json();
 
-      if (g.status === 200 && d.ok) {
-        setHourList(d.data);
-      } else {
-        // TODO: display error to user
+      if (g != null) {
+        const d: IListResult<IFetchBusinessHour[]> = await g.json();
+
+        if (g.status === 200 && d.ok) {
+          setHourList(d.data);
+        } else {
+          // TODO: display error to user
+        }
       }
     };
 
@@ -94,65 +107,11 @@ const ListHours: FC<IListHours> = () => {
       buttons={<Buttons />}
       breadcrumbs={<Breadcrumbs />}
     >
-      <div className="bg-white border border-gray-200 rounded-sm">
-        {/* filter fields */}
-        <div className="grid grid-cols-5 gap-4 px-5 py-5">
-          <div>
-            <div className="w-full">
-              <input className="form-input-search" placeholder="Name" />
-            </div>
-          </div>
-          <div>
-            <div className="w-full">
-              <input className="form-input-search" placeholder="Name" />
-            </div>
-          </div>
-        </div>
-
-        {/* filter tags */}
-        <div className="w-full px-5 pb-3">
-          <span className="text-xs rounded bg-indigo-500 text-white px-2 py-1">
-            Filter
-          </span>
-          <span className="text-xs rounded bg-indigo-500 text-white px-2 py-1">
-            Name
-          </span>
-        </div>
-
-        {/* table */}
-        <div className="w-full border-t-2 border-gray-50">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="text-left px-3 bg-indigo-50">
-                <th className="px-3 py-3 font-semibold">
-                  <div>Name</div>
-                  <div className="text-xs" style={{ color: "#6b6b6b" }}>
-                    Description
-                  </div>
-                </th>
-                <th className="px-3 py-3 font-semibold ">
-                  <div>Status</div>
-                  <div className="text-xs" style={{ color: "#6b6b6b" }}>
-                    Timezone
-                  </div>
-                </th>
-                <th className="px-3 py-3 font-semibold">
-                  <div>Created By</div>
-                  <div className="text-xs" style={{ color: "#6b6b6b" }}>
-                    Created At
-                  </div>
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {hourList?.map((h) => (
-                <HourListItem key={h.id} data={h} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <DataTable columns={columns}>
+        {hourList?.map((h) => (
+          <HourListItem key={h.id} data={h} />
+        ))}
+      </DataTable>
 
       <Outlet />
     </PageView>

@@ -6,9 +6,37 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 
 const context =  [
   "/methods/auth.login",
-  "/methods/businesshour.create",
-  "/methods/businesshour.get",
+  "/methods/ticket.list",
+  "/methods/ticket.get",
+  "/methods/ticket.create",
+
+  "/methods/agent.list",
+  "/methods/agent.get",
+  "/methods/agent.create",
+
   "/methods/businesshour.list",
+  "/methods/businesshour.get",
+  "/methods/businesshour.create",
+
+  "/methods/department.list",
+  "/methods/department.get",
+  "/methods/department.create",
+
+  "/methods/team.list",
+  "/methods/team.get",
+  "/methods/team.create",
+
+  "/methods/tag.list",
+  "/methods/tag.get",
+  "/methods/tag.create",
+  
+  "/methods/tickettype.list",
+  "/methods/tickettype.get",
+  "/methods/tickettype.create",
+
+  "/methods/helptopic.list",
+  "/methods/helptopic.get",
+  "/methods/helptopic.create"
 ];
 
 module.exports = function(app) {

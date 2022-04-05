@@ -1,26 +1,26 @@
 import { Breadcrumb } from "antd";
 import dayjs from "dayjs";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchBusinessHour, ISingleResult } from "../../interfaces";
+import { IFetchTag, ISingleResult } from "../../interfaces";
 
-interface IViewHour {}
+interface IViewTag {}
 
-const ViewHour: FC<IViewHour> = () => {
+const ViewTag: FC<IViewTag> = () => {
   const { user } = useAuth();
   const { get, dateFormats } = useApp();
   const { id } = useParams();
-  const [hour, setHour] = useState<IFetchBusinessHour>();
+  const [tag, setTag] = useState<IFetchTag>();
 
   useEffect(() => {
     const load = async () => {
-      const g: Response = await get(`methods/businesshour.get?id=${id}`);
-      const d: ISingleResult<IFetchBusinessHour> = await g.json();
+      const g: Response = await get(`methods/tag.get?id=${id}`);
+      const d: ISingleResult<IFetchTag> = await g.json();
 
       if (g.status === 200 && d.ok) {
-        setHour(d.data);
+        setTag(d.data);
       } else {
         // TODO: display error to user
       }
@@ -40,15 +40,15 @@ const ViewHour: FC<IViewHour> = () => {
         <Link to="/admin">Admin</Link>
       </Breadcrumb.Item>
       <Breadcrumb.Item>
-        <Link to="/admin/businesshour">Business Hours</Link>
+        <Link to="/admin/tag">Tags</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>{hour?.name ?? ""}</Breadcrumb.Item>
+      <Breadcrumb.Item>{tag?.name ?? ""}</Breadcrumb.Item>
     </Breadcrumb>
   );
 
   return (
-    <PageView title={hour?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
-      <div className="w-full flex flex-row ">
+    <PageView title={tag?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+      <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">
             <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
@@ -56,46 +56,51 @@ const ViewHour: FC<IViewHour> = () => {
           <ul className="edit-sidebar py-5">
             <li>
               <div>Created By</div>
-              <div>{hour?.createdByName ?? ""}</div>
+              <div>{tag?.createdByName ?? ""}</div>
             </li>
             <li>
               <div>Created At</div>
               <div>
-                {dayjs(hour?.createdAt ?? new Date()).format(
+                {dayjs(tag?.createdAt ?? new Date()).format(
                   dateFormats.shortDateFormat
                 )}
               </div>
             </li>
             <li>
               <div>Updated By</div>
-              <div>{hour?.updatedByName ?? ""}</div>
+              <div>{tag?.updatedByName ?? ""}</div>
             </li>
             <li>
               <div>Updated At</div>
               <div>
-                {dayjs(hour?.updatedAt ?? new Date()).format(
+                {dayjs(tag?.updatedAt ?? new Date()).format(
                   dateFormats.shortDateFormat
                 )}
               </div>
             </li>
           </ul>
         </div>
+
         <div className="w-full bg-white border border-gray-200 rounded-sm px-10 py-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="form-label">Status</label>
-              <div className="form-data">{hour?.status}</div>
+              <div className="form-data">{tag?.status}</div>
             </div>
             <div>
-              <label className="form-label">Timezone</label>
-              <div className="form-data">{hour?.timezone ?? "N/A"}</div>
+              <label className="form-label">Visibility</label>
+              <div className="form-data">{tag?.visibility ?? "N/A"}</div>
+            </div>
+            <div>
+              <label className="form-label">Color</label>
+              <div className="form-data">{tag?.color ?? "N/A"}</div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-5 py-4">
             <div>
               <label className="form-label">Description</label>
-              <div className="form-data">{hour?.description ?? "N/A"}</div>
+              <div className="form-data">{tag?.note ?? "N/A"}</div>
             </div>
           </div>
         </div>
@@ -104,4 +109,4 @@ const ViewHour: FC<IViewHour> = () => {
   );
 };
 
-export default ViewHour;
+export default ViewTag;

@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swats.Model;
 using Swats.Model.Commands;
@@ -22,7 +21,7 @@ public class BusinessHourController : MethodController
     [HttpGet("businesshour.list", Name = nameof(ListHours))]
     public async Task<IActionResult> ListHours([FromQuery] ListBusinessHourCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(BusinessHourController)}::{nameof(ListHours)}";
+        const string msg = $"GET::{nameof(BusinessHourController)}::{nameof(ListHours)}";
         logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);
@@ -45,7 +44,7 @@ public class BusinessHourController : MethodController
     [HttpGet("businesshour.get", Name = nameof(GetHour))]
     public async Task<IActionResult> GetHour([FromQuery] GetBusinessHourCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(BusinessHourController)}::{nameof(GetHour)}";
+        const string msg = $"GET::{nameof(BusinessHourController)}::{nameof(GetHour)}";
         logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);
@@ -68,7 +67,7 @@ public class BusinessHourController : MethodController
     [HttpPost("businesshour.create", Name = nameof(CreateHour))]
     public async Task<IActionResult> CreateHour(CreateBusinessHourCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(BusinessHourController)}::{nameof(CreateHour)}";
+        const string msg = $"POST::{nameof(BusinessHourController)}::{nameof(CreateHour)}";
         logger.LogInformation(msg);
 
         command.CreatedBy = Request.HttpContext.UserId();
@@ -82,8 +81,9 @@ public class BusinessHourController : MethodController
                 Errors = result.Reasons.Select(s => s.Message)
             });
         }
-
-        return Created("", new SingleResult<string>
+        
+        var uri = $"/methods/businesshour.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
         {
             Ok = true,
             Data = result.Value

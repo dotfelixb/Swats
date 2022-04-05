@@ -25,6 +25,8 @@ import {
   ListTypes,
   NewType,
   ViewHour,
+  ViewTopic,
+  ViewTag,
 } from "./pages";
 import { MainLayout } from "./components";
 import { AppProvider, AuthProvider, useAuth } from "./context";
@@ -71,6 +73,7 @@ const Ready: FC = () => {
           <Route path="helptopic">
             <Route index element={<ListTopics />} />
             <Route path="new" element={<NewTopic />} />
+            <Route path=":id" element={<ViewTopic />} />
           </Route>
           <Route path="tickettype">
             <Route index element={<ListTypes />} />
@@ -84,6 +87,7 @@ const Ready: FC = () => {
           <Route path="tag">
             <Route index element={<ListTags />} />
             <Route path="new" element={<NewTag />} />
+            <Route path=":id" element={<ViewTag />} />
           </Route>
         </Route>
       </Route>

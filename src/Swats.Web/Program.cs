@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Swats.Data.Repository;
@@ -20,7 +21,7 @@ builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSec
 builder.Services.Configure<SecurityKeyOptions>(builder.Configuration.GetSection("SecurityKey"));
 builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o =>
 {
-    //o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 }).AddFluentValidation(f =>
     f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
@@ -81,8 +82,19 @@ app.UseStatusCodePages(async statusCodeContext =>
     // using static System.Net.Mime.MediaTypeNames;
     statusCodeContext.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
-    await statusCodeContext.HttpContext.Response.WriteAsync(
-        $"{statusCodeContext.HttpContext.Response.StatusCode}");
+    var codeMsg = statusCodeContext.HttpContext.Response.StatusCode switch
+    {
+        401 => "Unauthorized request",
+        _ => ""
+    };
+    
+    var unAuth = JsonSerializer.Serialize(new ErrorResult
+    {
+        Ok = false,
+        Errors = new[] {codeMsg}
+    });
+
+    await statusCodeContext.HttpContext.Response.WriteAsync(unAuth);
 });
 app.UseStaticFiles();
 app.UseRouting();

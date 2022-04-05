@@ -8,8 +8,8 @@ export { ListTickets, NewTicket, ViewTicket } from "./Ticket";
 
 export { ListDepartments, NewDepartment } from './Department';
 export { ListTeams, NewTeam } from './Team';
-export { ListTopics, NewTopic } from './HelpTopic';
+export { ListTopics, NewTopic, ViewTopic } from './HelpTopic';
 
 export { ListHours, NewHour, ViewHour } from "./BusinessHour";
 export { NewType, ListTypes } from './TicketType';
-export { ListTags, NewTag } from './Tag';
+export { ListTags, NewTag, ViewTag } from './Tag';

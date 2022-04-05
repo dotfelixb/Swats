@@ -2,31 +2,91 @@ import {
   CommentOutlined,
   EyeOutlined,
   FormOutlined,
-  SaveOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import React, { FC } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
+import React, { FC, useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
+import { useApp, useAuth } from "../../context";
+import { IFetchDepartment, IListResult, ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
 
 interface INewTopic {}
 
-const NewTopic: FC<INewTopic> = () => {
-  const [form] = Form.useForm();
+interface IFormData {
+  topic: string;
+  department: string;
+  type: string;
+  status: string;
+  visibility: string;
+  note: string;
+}
 
-  const Buttons: FC = () => (
-    <div className="space-x-2">
-      <Button type="primary">
-        <div className="flex flex-row items-center space-x-2">
-          <SaveOutlined />
-          <div>Submit</div>
-        </div>
-      </Button>
-    </div>
-  );
+const NewTopic: FC<INewTopic> = () => {
+  const { user } = useAuth();
+  const { get } = useApp();
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
+  const [hasFormErrors, setHasFormErrors] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>();
+
+  useEffect(() => {
+    const load = async () => {
+      const g: Response = await get(`methods/department.list`);
+
+      if (g != null) {
+        const d: IListResult<IFetchDepartment[]> = await g.json();
+
+        if (g.status === 200 && d.ok) {
+          setDepartmentList(d.data);
+        } else {
+          // TODO: display error to user
+        }
+      }
+    };
+
+    if (user != null) {
+      load();
+    }
+  }, [user, get]);
+
+  const onFinish = async ({
+    topic,
+    department,
+    type,
+    status,
+    visibility,
+    note,
+  }: IFormData) => {
+    const body = new FormData();
+    body.append("topic", topic ?? "");
+    body.append("department", department ?? "");
+    body.append("type", type ?? 1);
+    body.append("status", status ?? 1);
+    body.append("visibility", visibility ?? 1);
+    body.append("note", note ?? "");
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/helptopic.create", {
+      method: "POST",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<string> = await f.json();
+
+    if (f.status === 201 && result.ok) {
+      navigate(`/admin/helptopic/${result.data}`, { replace: true });
+    }
+
+    setHasFormErrors(true);
+    setFormErrors(result?.errors);
+  };
 
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
@@ -44,34 +104,36 @@ const NewTopic: FC<INewTopic> = () => {
   );
 
   return (
-    <PageView
-      title="New Topic"
-      buttons={<Buttons />}
-      breadcrumbs={<Breadcrumbs />}
-    >
-      <Form form={form} layout="vertical">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          <div>
+    <PageView title="New Topic" breadcrumbs={<Breadcrumbs />}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div>
+          <Form form={form} layout="vertical" onFinish={onFinish}>
+            {hasFormErrors &&
+              formErrors?.map((e) => (
+                <div key={e} className="py-2">
+                  <Alert message={e} type="error" className="py-2" />
+                </div>
+              ))}
             <Timeline>
               <Timeline.Item
                 dot={<FormOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Help topic name</div>
-                <Form.Item label="Name" htmlFor="name">
-                  <Input name="name" />
+                <Form.Item name="topic" label="Topic" htmlFor="topic">
+                  <Input />
                 </Form.Item>
               </Timeline.Item>
               <Timeline.Item dot={<EyeOutlined style={{ fontSize: "16px" }} />}>
                 <div className="font-bold mb-2">
                   External visibility and status
                 </div>
-                <Form.Item label="Visibility">
+                <Form.Item name="type" label="Visibility">
                   <Select>
                     <Select.Option value="1">Public</Select.Option>
                     <Select.Option value="2">Private</Select.Option>
                   </Select>
                 </Form.Item>
-                <Form.Item label="Status">
+                <Form.Item name="status" label="Status">
                   <Select>
                     <Select.Option value="1">Active</Select.Option>
                     <Select.Option value="2">Inactive</Select.Option>
@@ -84,10 +146,9 @@ const NewTopic: FC<INewTopic> = () => {
                 <div className="font-bold mb-2">
                   Which department is this topic linked to
                 </div>
-                <Form.Item label="Department" htmlFor="department">
+                <Form.Item name="department" label="Department" htmlFor="department">
                   <Select showSearch>
-                    <Select.Option value="1">Customer Service</Select.Option>
-                    <Select.Option value="2">Client Service</Select.Option>
+                    {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                   </Select>
                 </Form.Item>
               </Timeline.Item>
@@ -95,18 +156,25 @@ const NewTopic: FC<INewTopic> = () => {
                 dot={<CommentOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">
-                  The description of this topic (optional)
+                  Additional note for this topic (optional)
                 </div>
-                <Form.Item label="Description" htmlFor="description">
-                  <TextArea name="description" rows={4} />
+                <Form.Item name="note" label="Note" htmlFor="note">
+                  <TextArea rows={4} />
+                </Form.Item>
+              </Timeline.Item>
+              <Timeline.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
                 </Form.Item>
               </Timeline.Item>
             </Timeline>
-          </div>
-
-          <div></div>
+          </Form>
         </div>
-      </Form>
+
+        <div></div>
+      </div>
       <Outlet />
     </PageView>
   );

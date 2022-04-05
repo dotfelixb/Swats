@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Text.Json.Serialization;
+using MassTransit;
 
 namespace Swats.Model.Domain;
 
@@ -10,11 +11,13 @@ public class Ticket : DbAudit
     public string Requester { get; set; }
     public string ExternalAgent { get; set; }
     public string AssignedTo { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketSource Source { get; set; }
     public string TicketType { get; set; }
     public string Department { get; set; }
     public string Team { get; set; }
     public string HelpTopic { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketPriority Priority { get; set; }
 }
 
@@ -24,6 +27,7 @@ public class TicketType : DbAudit
     public string Name { get; set; }
     public string Description { get; set; }
     public string Color { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultType Visibility { get; set; }
 }
 
@@ -41,7 +45,9 @@ public class TicketComment : DbAudit
     public string ToName { get; set; }
     public string[][] Receiptients { get; set; }
     public string Body { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public CommentType Type { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketSource Source { get; set; }
     public string Target { get; set; }
 }

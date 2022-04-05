@@ -9,7 +9,8 @@ import { ISingleResult } from "../../interfaces";
 const { TextArea } = Input;
 
 interface INewHour { }
-interface INewHourForm {
+
+interface IFormData {
   name: string;
   timezone: string;
   status: string;
@@ -23,7 +24,7 @@ const NewHour: FC<INewHour> = () => {
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
-  const onFinish = async ({ name, timezone, status, description }: INewHourForm) => {
+  const onFinish = async ({ name, timezone, status, description }: IFormData) => {
     const body = new FormData();
     body.append('name', name ?? "");
     body.append('timezone', timezone ?? "");
@@ -69,7 +70,6 @@ const NewHour: FC<INewHour> = () => {
       title="New Topic"
       breadcrumbs={<Breadcrumbs />}
     >
-      <div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           <div>
             <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -127,7 +127,6 @@ const NewHour: FC<INewHour> = () => {
 
           <div></div>
         </div>
-      </div>
       <Outlet />
     </PageView>
   );
