@@ -19,13 +19,13 @@ const LinkCard: FC<ILinkCard> = ({ title, location, icon }) => {
         </div>
       </Link>
       <div className="flex justify-center items-center pt-5">
-        <span className="text-xs text-center">{title}</span>
+        <span className="text-sm text-center">{title}</span>
       </div>
     </div>
   );
 };
 
-interface ISettings {}
+interface ISettings { }
 
 const Settings: FC<ISettings> = () => {
   return (
@@ -72,7 +72,7 @@ const Settings: FC<ISettings> = () => {
             location="/admin/breaklines"
             icon={<ClusterOutlined />}
           />
-        </div> 
+        </div>
       </div>
 
       <section className="title font-semibold text-sm py-5">Manage</section>
@@ -125,7 +125,7 @@ const Settings: FC<ISettings> = () => {
       <section className="title font-semibold text-sm py-5">Tickets</section>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-      <div>
+        <div>
           <LinkCard
             title="Ticket Types"
             location="/admin/tickettype"
