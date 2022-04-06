@@ -7,12 +7,3 @@ namespace Swats.Web.Controllers;
 public class MethodController : ControllerBase
 {
 }
-
-public class HomeController : Controller
-{
-    [AllowAnonymous]
-    public IActionResult Index()
-    {
-        return Content("Take a look around, this will be your first!");
-    }
-}

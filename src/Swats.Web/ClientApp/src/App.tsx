@@ -27,6 +27,10 @@ import {
   ViewHour,
   ViewTopic,
   ViewTag,
+  ViewType,
+  ViewTeam,
+  ViewDepartment,
+  ViewAgent,
 } from "./pages";
 import { MainLayout } from "./components";
 import { AppProvider, AuthProvider, useAuth } from "./context";
@@ -54,21 +58,23 @@ const Ready: FC = () => {
         </Route>
         <Route path="agent">
           <Route index element={<ListAgents />} />
-          <Route path="new" element={<NewAgent />} />
         </Route>
         <Route path="admin">
           <Route index element={<Settings />} />
           <Route path="agent">
             <Route index element={<ListAgents />} />
             <Route path="new" element={<NewAgent />} />
+            <Route path=":id" element={<ViewAgent />} />
           </Route>
           <Route path="department">
             <Route index element={<ListDepartments />} />
             <Route path="new" element={<NewDepartment />} />
+            <Route path=":id" element={<ViewDepartment />} />
           </Route>
           <Route path="team">
             <Route index element={<ListTeams />} />
             <Route path="new" element={<NewTeam />} />
+            <Route path=":id" element={<ViewTeam />} />
           </Route>
           <Route path="helptopic">
             <Route index element={<ListTopics />} />
@@ -78,6 +84,7 @@ const Ready: FC = () => {
           <Route path="tickettype">
             <Route index element={<ListTypes />} />
             <Route path="new" element={<NewType />} />
+            <Route path=":id" element={<ViewType />} />
           </Route>
           <Route path="businesshour">
             <Route index element={<ListHours />} />

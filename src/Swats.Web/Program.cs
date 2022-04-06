@@ -104,7 +104,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); 
 

@@ -8,6 +8,16 @@ import { IFetchTag, IListResult } from "../../interfaces";
 
 interface IListTags {}
 
+const columns = [
+  { key: "name", column: [{ title: "Name" }, { title: "" }] },
+  { key: "status", column: [{ title: "Visibility" },{ title: "Status" }] },
+  {
+    key: "created",
+    column: [{ title: "Created By" }, { title: "Created At" }],
+  },
+  { key: "extra", column: [{ title: "" }] },
+];
+
 const ListTags: FC<IListTags> = () => {
   const { user } = useAuth();
   const { get, dateFormats } = useApp();
@@ -53,16 +63,6 @@ const ListTags: FC<IListTags> = () => {
     </Breadcrumb>
   );
 
-  const columns = [
-    { key: "name", column: [{ title: "Name" }, { title: "" }] },
-    { key: "status", column: [{ title: "Visibility" },{ title: "Status" }] },
-    {
-      key: "created",
-      column: [{ title: "Created By" }, { title: "Created At" }],
-    },
-    { key: "extra", column: [{ title: "" }] },
-  ];
-
   return (
     <PageView title="Tags" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
       <DataTable columns={columns}>
@@ -73,7 +73,6 @@ const ListTags: FC<IListTags> = () => {
                 <div className="">{t.name}</div>
               </Link>
               <div className="text-xs" style={{ color: "#9b9b9b" }}>
-                {t.note}
               </div>
             </td>
 

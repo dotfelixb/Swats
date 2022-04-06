@@ -13,7 +13,7 @@ import { IFetchDepartment, IListResult, ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
 
-interface INewTopic {}
+interface INewTopic { }
 
 interface IFormData {
   topic: string;

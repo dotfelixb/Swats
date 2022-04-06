@@ -95,5 +95,31 @@ export interface IFetchTopic extends IDataAudit {
 
 export interface IFetchDepartment extends IDataAudit {
   id: string;
+  code: string;
   name: string;
+  manager: string;
+  managerName: string;
+  businessHour: string;
+  businessHourName: string;
+  outgoingEmail: string;
+  type:string;
+  response:string;
+}
+
+export interface IFetchTeam extends IDataAudit {
+  id: string;
+  name: string;
+  department: string;
+  departmentName:string;
+  lead: string;
+  leadName:string;
+  note:string;
+}
+
+export interface IFetchType extends IDataAudit {
+  id: string;
+  name: string;
+  description: string;
+  visibility: string;
+  color: string;
 }
