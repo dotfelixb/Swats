@@ -1,6 +1,6 @@
-import { CommentOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
+import { CommentOutlined, FormOutlined, TeamOutlined } from '@ant-design/icons';
 import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { PageView } from '../../components';
 import { useApp, useAuth } from '../../context';
@@ -109,14 +109,14 @@ const NewTeam: FC<INewTeam> = () => {
               </Form.Item>
             </Timeline.Item>
             <Timeline.Item
-              dot={<EyeOutlined style={{ fontSize: "16px" }} />}
+              dot={<TeamOutlined style={{ fontSize: "16px" }} />}
             >
               <div className="font-bold mb-2">Team lead, department and status</div>
-              <Form.Item name="team" label="Team">
+              <Form.Item name="team" label="Team Lead">
                 <Select >
                 </Select>
               </Form.Item>
-              <Form.Item name="department" label="Department">
+              <Form.Item name="department" label="Team Department">
                 <Select >
                   {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                 </Select>

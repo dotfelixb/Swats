@@ -102,18 +102,18 @@ export interface IFetchDepartment extends IDataAudit {
   businessHour: string;
   businessHourName: string;
   outgoingEmail: string;
-  type:string;
-  response:string;
+  type: string;
+  response: string;
 }
 
 export interface IFetchTeam extends IDataAudit {
   id: string;
   name: string;
   department: string;
-  departmentName:string;
+  departmentName: string;
   lead: string;
-  leadName:string;
-  note:string;
+  leadName: string;
+  note: string;
 }
 
 export interface IFetchType extends IDataAudit {
@@ -122,4 +122,22 @@ export interface IFetchType extends IDataAudit {
   description: string;
   visibility: string;
   color: string;
+}
+
+export interface IFetchAgent extends IDataAudit {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobile: string;
+  telephone: string;
+  timezone: string;
+  department: string;
+  departmentName: string;
+  team: string;
+  teamName: string;
+  type: string;
+  typeName: string;
+  mode: string;
+  note: string;
 }

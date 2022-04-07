@@ -72,7 +72,7 @@ const NewTag: FC<INewTag> = () => {
   );
 
   return (
-    <PageView title="New Topic" breadcrumbs={<Breadcrumbs />}>
+    <PageView title="New Tag" breadcrumbs={<Breadcrumbs />}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div>
           <Form form={form} layout="vertical" onFinish={onFinish}>

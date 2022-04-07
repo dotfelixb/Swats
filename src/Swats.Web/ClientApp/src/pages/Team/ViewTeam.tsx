@@ -6,7 +6,7 @@ import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import { IFetchTeam, ISingleResult } from "../../interfaces";
 
-interface IViewTeam { }
+interface IViewTeam {}
 
 const ViewTeam: FC<IViewTeam> = () => {
   const { user } = useAuth();
@@ -48,9 +48,9 @@ const ViewTeam: FC<IViewTeam> = () => {
     </Breadcrumb>
   );
 
-
-  return (<PageView title={team?.name ?? ""} breadcrumbs={<Breadcrumbs />} >
-    <div className="w-full flex flex-row">
+  return (
+    <PageView title={team?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+      <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">
             <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
@@ -107,7 +107,8 @@ const ViewTeam: FC<IViewTeam> = () => {
           </div>
         </div>
       </div>
-  </PageView>)
-}
+    </PageView>
+  );
+};
 
 export default ViewTeam;

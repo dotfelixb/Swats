@@ -47,7 +47,7 @@ const ListTeams : FC<IListTeams> = () => {
   const Buttons: FC = () => (
     <div className="space-x-2">
       <Link to="new">
-        <Button type="primary" >New Topic</Button>
+        <Button type="primary" >New Team</Button>
       </Link>
     </div>
   );
@@ -60,7 +60,7 @@ const ListTeams : FC<IListTeams> = () => {
       <Breadcrumb.Item>
         <Link to="/admin">Admin</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>Help Topics</Breadcrumb.Item>
+      <Breadcrumb.Item>Teams</Breadcrumb.Item>
     </Breadcrumb>
   );
   

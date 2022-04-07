@@ -165,8 +165,8 @@ public class TicketController : FrontEndController
         var agentResult =await  _mediatr.Send(new GetAgentCommand {Id = command.Requester});
         if (agentResult.IsSuccess)
         {
-            command.RequesterEmail = agentResult.Value.Data.Email;
-            command.RequesterName = $"{agentResult.Value.Data.FirstName} {agentResult.Value.Data.LastName}";
+            command.RequesterEmail = agentResult.Value.Email;
+            command.RequesterName = $"{agentResult.Value.FirstName} {agentResult.Value.LastName}";
         }
 
         command.CreatedBy = UserId;
@@ -202,8 +202,8 @@ public class TicketController : FrontEndController
         var agentResult = await _mediatr.Send(new GetAgentCommand {Id = UserId});
         if (agentResult.IsSuccess)
         {
-            command.FromName = $"{agentResult.Value.Data.FirstName} {agentResult.Value.Data.LastName}";
-            command.FromEmail = agentResult.Value.Data.Email;
+            command.FromName = $"{agentResult.Value.FirstName} {agentResult.Value.LastName}";
+            command.FromEmail = agentResult.Value.Email;
         }
 
         command.CreatedBy = UserId;

@@ -99,8 +99,7 @@ const NewHour: FC<INewHour> = () => {
                   </Form.Item>
                   <Form.Item name="status" label="Status">
                     <Select>
-                      <Select.Option value="1">Active</Select.Option>
-                      <Select.Option value="2">Inactive</Select.Option>
+                    <Select.Option value="">Not Available</Select.Option>
                     </Select>
                   </Form.Item>
                 </Timeline.Item>

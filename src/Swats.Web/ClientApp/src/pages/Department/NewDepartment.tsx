@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { PageView } from '../../components';
 import { useApp, useAuth } from '../../context';
-import { IFetchDepartment, IListResult, ISingleResult } from '../../interfaces';
+import { IFetchBusinessHour, IFetchDepartment, IListResult, ISingleResult } from '../../interfaces';
 
 const { TextArea } = Input;
 
@@ -26,11 +26,12 @@ const NewDepartment: FC<INewDepartment> = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
+  const [hourList, setHourList] = useState<IFetchBusinessHour[]>();
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
   useEffect(() => {
-    const load = async () => {
+    const loadDepartment = async () => {
       const g: Response = await get(`methods/department.list`);
 
       if (g != null) {
@@ -44,8 +45,23 @@ const NewDepartment: FC<INewDepartment> = () => {
       }
     };
 
+    const loadHour = async () => {
+      const g: Response = await get(`methods/businesshour.list`);
+
+      if (g != null) {
+        const d: IListResult<IFetchBusinessHour[]> = await g.json();
+
+        if (g.status === 200 && d.ok) {
+          setHourList(d.data);
+        } else {
+          // TODO: display error to user
+        }
+      }
+    };
+
     if (user != null) {
-      load();
+      loadDepartment();
+      loadHour()
     }
   }, [user, get]);
 
@@ -129,7 +145,7 @@ const NewDepartment: FC<INewDepartment> = () => {
               </Form.Item>
               <Form.Item name="businessHour" label="Business Hour">
                 <Select >
-                  {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                  {hourList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                 </Select>
               </Form.Item>
               <Form.Item name='outgoingEmail' label="Outgoing Email" htmlFor="outgoingEmail">

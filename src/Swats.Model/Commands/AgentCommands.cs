@@ -28,7 +28,7 @@ public class CreateAgentCommand : IRequest<Result<string>>
     public string Note { get; set; }
 }
 
-public class GetAgentCommand : GetType, IRequest<Result<SingleResult<FetchAgent>>>
+public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
 {
 }
 
