@@ -31,6 +31,9 @@ import {
   ViewTeam,
   ViewDepartment,
   ViewAgent,
+  ListSla,
+  NewSla,
+  ViewSla,
 } from "./pages";
 import { MainLayout } from "./components";
 import { AppProvider, AuthProvider, useAuth } from "./context";
@@ -95,6 +98,11 @@ const Ready: FC = () => {
             <Route index element={<ListTags />} />
             <Route path="new" element={<NewTag />} />
             <Route path=":id" element={<ViewTag />} />
+          </Route>
+          <Route path="sla">
+            <Route index element={<ListSla />} />
+            <Route path="new" element={<NewSla />} />
+            <Route path=":id" element={<ViewSla />} />
           </Route>
         </Route>
       </Route>

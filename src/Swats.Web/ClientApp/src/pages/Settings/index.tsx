@@ -1,4 +1,24 @@
-import { AimOutlined, ApartmentOutlined, CalendarOutlined, CheckCircleOutlined, ClusterOutlined, FormatPainterOutlined, ImportOutlined, InfoCircleOutlined, InteractionOutlined, MailOutlined, NotificationOutlined, PhoneOutlined, PrinterOutlined, ScheduleOutlined, StarOutlined, TagsOutlined, TeamOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import {
+  AimOutlined,
+  ApartmentOutlined,
+  CalendarOutlined,
+  CheckCircleOutlined,
+  ClusterOutlined,
+  FormatPainterOutlined,
+  HourglassOutlined,
+  ImportOutlined,
+  InfoCircleOutlined,
+  InteractionOutlined,
+  MailOutlined,
+  NotificationOutlined,
+  PhoneOutlined,
+  PrinterOutlined,
+  StarOutlined,
+  TagsOutlined,
+  TeamOutlined,
+  UserOutlined,
+  UserSwitchOutlined,
+} from "@ant-design/icons";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -25,7 +45,7 @@ const LinkCard: FC<ILinkCard> = ({ title, location, icon }) => {
   );
 };
 
-interface ISettings { }
+interface ISettings {}
 
 const Settings: FC<ISettings> = () => {
   return (
@@ -89,7 +109,7 @@ const Settings: FC<ISettings> = () => {
           <LinkCard
             title="Sla Plan"
             location="/admin/sla"
-            icon={<ScheduleOutlined />}
+            icon={<HourglassOutlined />}
           />
         </div>
         <div>
@@ -174,7 +194,9 @@ const Settings: FC<ISettings> = () => {
         </div>
       </div>
 
-      <section className="title font-semibold text-sm py-5">Notifications</section>
+      <section className="title font-semibold text-sm py-5">
+        Notifications
+      </section>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
         <div>

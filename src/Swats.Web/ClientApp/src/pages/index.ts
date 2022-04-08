@@ -13,3 +13,5 @@ export { ListTopics, NewTopic, ViewTopic } from './HelpTopic';
 export { ListHours, NewHour, ViewHour } from "./BusinessHour";
 export { NewType, ListTypes, ViewType } from './TicketType';
 export { ListTags, NewTag, ViewTag } from './Tag';
+
+export { ListSla, NewSla, ViewSla } from './Sla';

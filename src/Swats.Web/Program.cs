@@ -21,7 +21,7 @@ builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSec
 builder.Services.Configure<SecurityKeyOptions>(builder.Configuration.GetSection("SecurityKey"));
 builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o =>
 {
-    o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    //o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 }).AddFluentValidation(f =>
     f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
