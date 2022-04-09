@@ -6,7 +6,7 @@ import { DataTable, PageView } from "../../components";
 interface IListSla {}
 
 const columns = [
-  { key: "name", column: [{ title: "Title" }, { title: "" }] },
+  { key: "name", column: [{ title: "Name" }, { title: "" }] },
   { key: "hour", column: [{ title: "Business Hour" }, { title: "Status" }] },
   {
     key: "created",

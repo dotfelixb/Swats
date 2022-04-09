@@ -57,6 +57,18 @@ export interface IViewProps {
   children?: JSX.Element;
 }
 
+export enum ControlType {
+  Input,
+  Select,
+  Multiselect,
+}
+
+export interface IPickerType {
+  value: string;
+  text: string;
+  control: ControlType;
+}
+
 interface IDataAudit {
   status: string;
 

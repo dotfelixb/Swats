@@ -5,9 +5,12 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y curl
-RUN curl --silent --location https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install --yes nodejs
+FROM node AS node-builder
+WORKDIR /node
+copy ./src/Swats.Web/ClientApp/package.json /node/package.json
+RUN npm install 
+COPY ./src/Swats.Web/ClientApp /node
+RUN npm run build    
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
@@ -25,5 +28,7 @@ RUN dotnet publish "Swats.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+RUN mkdir /app/wwwroot
 COPY --from=publish /app/publish .
+COPY --from=node-builder /node/build ./wwwroot
 ENTRYPOINT ["dotnet", "Swats.Web.dll"]

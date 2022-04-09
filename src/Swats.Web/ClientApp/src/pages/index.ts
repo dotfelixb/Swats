@@ -15,3 +15,4 @@ export { NewType, ListTypes, ViewType } from './TicketType';
 export { ListTags, NewTag, ViewTag } from './Tag';
 
 export { ListSla, NewSla, ViewSla } from './Sla';
+export { ListWorkflow, NewWorkflow, ViewWorkflow } from './Workflow';

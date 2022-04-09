@@ -107,13 +107,6 @@ const Settings: FC<ISettings> = () => {
         </div>
         <div>
           <LinkCard
-            title="Sla Plan"
-            location="/admin/sla"
-            icon={<HourglassOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
             title="Business Hour"
             location="/admin/businesshour"
             icon={<CalendarOutlined />}
@@ -121,9 +114,9 @@ const Settings: FC<ISettings> = () => {
         </div>
         <div>
           <LinkCard
-            title="Tags"
-            location="/admin/tag"
-            icon={<TagsOutlined />}
+            title="Sla Plan"
+            location="/admin/sla"
+            icon={<HourglassOutlined />}
           />
         </div>
         <div>
@@ -138,6 +131,13 @@ const Settings: FC<ISettings> = () => {
             title="Approval Workflow"
             location="/admin/approval"
             icon={<CheckCircleOutlined />}
+          />
+        </div>
+        <div>
+          <LinkCard
+            title="Tags"
+            location="/admin/tag"
+            icon={<TagsOutlined />}
           />
         </div>
       </div>

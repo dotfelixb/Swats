@@ -115,8 +115,8 @@ const NewSla: FC<INewSla> = () => {
               <Timeline.Item
                 dot={<FormOutlined style={{ fontSize: "16px" }} />}
               >
-                <div className="font-bold mb-2">Sla title</div>
-                <Form.Item name="title" label="Title" htmlFor="title">
+                <div className="font-bold mb-2">Sla info</div>
+                <Form.Item name="name" label="Name" htmlFor="name">
                   <Input />
                 </Form.Item>
               </Timeline.Item>
@@ -142,7 +142,7 @@ const NewSla: FC<INewSla> = () => {
                 <div className="font-bold mb-2">
                   Sla actions and resolution period
                 </div>
-                <div className="grid grid-cols-4 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
                   <Form.Item name="responseperiod" label="Response Period">
                     <Input type="number" />
                   </Form.Item>
@@ -166,7 +166,7 @@ const NewSla: FC<INewSla> = () => {
                     </Select>
                   </Form.Item>
                 </div>
-                <div className="grid grid-cols-4 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
                   <Form.Item name="resolveperiod" label="Resolution Period">
                     <Input type="number" />
                   </Form.Item>

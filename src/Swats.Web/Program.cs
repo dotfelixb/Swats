@@ -24,6 +24,7 @@ builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>())
     //o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 }).AddFluentValidation(f =>
     f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
 builder.Services.AddAutoMapper(typeof(ModelProfiles));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

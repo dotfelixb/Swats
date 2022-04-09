@@ -34,6 +34,9 @@ import {
   ListSla,
   NewSla,
   ViewSla,
+  ListWorkflow,
+  NewWorkflow,
+  ViewWorkflow,
 } from "./pages";
 import { MainLayout } from "./components";
 import { AppProvider, AuthProvider, useAuth } from "./context";
@@ -103,6 +106,11 @@ const Ready: FC = () => {
             <Route index element={<ListSla />} />
             <Route path="new" element={<NewSla />} />
             <Route path=":id" element={<ViewSla />} />
+          </Route>
+          <Route path="workflow">
+            <Route index element={<ListWorkflow />} />
+            <Route path="new" element={<NewWorkflow />} />
+            <Route path=":id" element={<ViewWorkflow />} />
           </Route>
         </Route>
       </Route>
