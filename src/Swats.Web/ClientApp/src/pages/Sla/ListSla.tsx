@@ -39,10 +39,11 @@ const ListSla: FC<IListSla> = () => {
 
   return <PageView title="SLA" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
     <DataTable columns={columns}>
-      <div></div>
+      <tr></tr>
     </DataTable>
     <Outlet />
   </PageView>;
 };
 
 export default ListSla;
+ 

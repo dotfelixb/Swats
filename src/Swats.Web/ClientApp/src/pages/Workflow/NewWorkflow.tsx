@@ -139,7 +139,7 @@ const NewWorkflow: FC<INewWorkflow> = () => {
                 <div className="font-bold mb-2">
                   Action to perform base on the events above
                 </div>
-                
+
                 {actionList?.map((c) => (
                   <WorkflowAction
                     key={c.key}

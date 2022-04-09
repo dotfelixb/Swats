@@ -426,6 +426,43 @@ CREATE TABLE ticketcomment
 );
 
 
+CREATE TABLE sla
+(
+    id BPCHAR(36) PRIMARY KEY
+    , name VARCHAR(50)
+    , businesshour BPCHAR(36)
+    , responseperiod INT
+    , responseformat INT
+    , responseNotify BOOLEAN
+    , responseemail BOOLEAN
+    , resolveperiod INT  
+    , resolveformat INT
+    , resolvenotify BOOLEAN
+    , resolveemail BOOLEAN
+    , description  TEXT
+    , status INT
+	, rowversion BPCHAR(36) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+  	, createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(36)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (businesshour) REFERENCES businesshour (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE slaauditlog
+(
+    id BPCHAR(36) PRIMARY KEY
+	, target BPCHAR(36)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES slaauditlog(id) ON DELETE CASCADE
+);
 
 
 --CREATE TABLE table

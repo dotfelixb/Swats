@@ -67,3 +67,10 @@ public enum AgentMode
     Agent = 1,
     User
 }
+
+public enum DefaultTimeFormat
+{
+    Minute = 1,
+    Hour,
+    Day
+}

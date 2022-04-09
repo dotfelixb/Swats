@@ -19,8 +19,10 @@ import {
   UserOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
+import { Breadcrumb } from "antd";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { PageView } from "../../components";
 
 interface ILinkCard {
   title: string;
@@ -48,173 +50,184 @@ const LinkCard: FC<ILinkCard> = ({ title, location, icon }) => {
 interface ISettings {}
 
 const Settings: FC<ISettings> = () => {
+  const Breadcrumbs: FC = () => (
+    <Breadcrumb separator="/">
+      <Breadcrumb.Item>
+        <Link to="/">Home</Link>
+      </Breadcrumb.Item>
+      <Breadcrumb.Item>Settings</Breadcrumb.Item>
+    </Breadcrumb>
+  );
+  
   return (
-    <div className="">
-      <section className="title font-semibold text-sm py-5">Staff</section>
+    <PageView title="Admin Panel" breadcrumbs={<Breadcrumbs />}>
+      <div className="">
+        <section className="title font-semibold text-sm py-5">Staff</section>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-        <div>
-          <LinkCard
-            title="Agents"
-            location="/admin/agent"
-            icon={<PhoneOutlined />}
-          />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+          <div>
+            <LinkCard
+              title="Agents"
+              location="/admin/agent"
+              icon={<PhoneOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Departments"
+              location="/admin/department"
+              icon={<UserSwitchOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Teams"
+              location="/admin/team"
+              icon={<TeamOutlined />}
+            />
+          </div>
         </div>
-        <div>
-          <LinkCard
-            title="Departments"
-            location="/admin/department"
-            icon={<UserSwitchOutlined />}
-          />
+
+        <section className="title font-semibold text-sm py-5">Email</section>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+          <div>
+            <LinkCard
+              title="Email Settings"
+              location="/admin/email"
+              icon={<MailOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Breaklines"
+              location="/admin/breaklines"
+              icon={<ClusterOutlined />}
+            />
+          </div>
         </div>
-        <div>
-          <LinkCard
-            title="Teams"
-            location="/admin/team"
-            icon={<TeamOutlined />}
-          />
+
+        <section className="title font-semibold text-sm py-5">Manage</section>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+          <div>
+            <LinkCard
+              title="Help Topic"
+              location="/admin/helptopic"
+              icon={<InfoCircleOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Business Hour"
+              location="/admin/businesshour"
+              icon={<CalendarOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Sla Plan"
+              location="/admin/sla"
+              icon={<HourglassOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Workflow"
+              location="/admin/workflow"
+              icon={<ApartmentOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Approval Workflow"
+              location="/admin/approval"
+              icon={<CheckCircleOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Tags"
+              location="/admin/tag"
+              icon={<TagsOutlined />}
+            />
+          </div>
+        </div>
+
+        <section className="title font-semibold text-sm py-5">Tickets</section>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+          <div>
+            <LinkCard
+              title="Ticket Types"
+              location="/admin/tickettype"
+              icon={<AimOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Ratings"
+              location="/admin/ratings"
+              icon={<StarOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Recurring"
+              location="/admin/recurring"
+              icon={<InteractionOutlined />}
+            />
+          </div>
+        </div>
+
+        <section className="title font-semibold text-sm py-5">Settings</section>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+          <div>
+            <LinkCard
+              title="User Imports"
+              location="/admin/userimport"
+              icon={<ImportOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="User Options"
+              location="/admin/useroptions"
+              icon={<UserOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Logs"
+              location="/admin/logs"
+              icon={<PrinterOutlined />}
+            />
+          </div>
+        </div>
+
+        <section className="title font-semibold text-sm py-5">
+          Notifications
+        </section>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+          <div>
+            <LinkCard
+              title="Notifications"
+              location="/admin/notification"
+              icon={<NotificationOutlined />}
+            />
+          </div>
+          <div>
+            <LinkCard
+              title="Templates"
+              location="/admin/template"
+              icon={<FormatPainterOutlined />}
+            />
+          </div>
         </div>
       </div>
-
-      <section className="title font-semibold text-sm py-5">Email</section>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-        <div>
-          <LinkCard
-            title="Email Settings"
-            location="/admin/email"
-            icon={<MailOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Breaklines"
-            location="/admin/breaklines"
-            icon={<ClusterOutlined />}
-          />
-        </div>
-      </div>
-
-      <section className="title font-semibold text-sm py-5">Manage</section>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-        <div>
-          <LinkCard
-            title="Help Topic"
-            location="/admin/helptopic"
-            icon={<InfoCircleOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Business Hour"
-            location="/admin/businesshour"
-            icon={<CalendarOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Sla Plan"
-            location="/admin/sla"
-            icon={<HourglassOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Workflow"
-            location="/admin/workflow"
-            icon={<ApartmentOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Approval Workflow"
-            location="/admin/approval"
-            icon={<CheckCircleOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Tags"
-            location="/admin/tag"
-            icon={<TagsOutlined />}
-          />
-        </div>
-      </div>
-
-      <section className="title font-semibold text-sm py-5">Tickets</section>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-        <div>
-          <LinkCard
-            title="Ticket Types"
-            location="/admin/tickettype"
-            icon={<AimOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Ratings"
-            location="/admin/ratings"
-            icon={<StarOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Recurring"
-            location="/admin/recurring"
-            icon={<InteractionOutlined />}
-          />
-        </div>
-      </div>
-
-      <section className="title font-semibold text-sm py-5">Settings</section>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-        <div>
-          <LinkCard
-            title="User Imports"
-            location="/admin/userimport"
-            icon={<ImportOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="User Options"
-            location="/admin/useroptions"
-            icon={<UserOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Logs"
-            location="/admin/logs"
-            icon={<PrinterOutlined />}
-          />
-        </div>
-      </div>
-
-      <section className="title font-semibold text-sm py-5">
-        Notifications
-      </section>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-        <div>
-          <LinkCard
-            title="Notifications"
-            location="/admin/notification"
-            icon={<NotificationOutlined />}
-          />
-        </div>
-        <div>
-          <LinkCard
-            title="Templates"
-            location="/admin/template"
-            icon={<FormatPainterOutlined />}
-          />
-        </div>
-      </div>
-    </div>
+    </PageView>
   );
 };
 

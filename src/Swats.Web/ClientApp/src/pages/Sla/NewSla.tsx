@@ -20,7 +20,7 @@ interface IFormData {
   color: string;
   status: string;
   visibility: string;
-  note: string;
+  description: string;
 }
 
 const NewSla: FC<INewSla> = () => {
@@ -57,14 +57,14 @@ const NewSla: FC<INewSla> = () => {
     color,
     status,
     visibility,
-    note,
+    description,
   }: IFormData) => {
     const body = new FormData();
     body.append("name", name ?? "");
     body.append("color", color ?? "");
     body.append("status", status ?? "");
     body.append("visibility", visibility ?? "");
-    body.append("note", note ?? "");
+    body.append("description", description ?? "");
 
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
@@ -148,9 +148,9 @@ const NewSla: FC<INewSla> = () => {
                   </Form.Item>
                   <Form.Item name="responseformat" label="Period Format">
                     <Select>
-                      <Select.Option value="1">Min(s)</Select.Option>
+                      <Select.Option value="1">Minute(s)</Select.Option>
                       <Select.Option value="2">Hour(s)</Select.Option>
-                      <Select.Option value="3">Days(s)</Select.Option>
+                      <Select.Option value="3">Day(s)</Select.Option>
                     </Select>
                   </Form.Item>
                   <Form.Item name="responsenotify" label="Inapp Notification">
@@ -172,9 +172,9 @@ const NewSla: FC<INewSla> = () => {
                   </Form.Item>
                   <Form.Item name="resolveformat" label="Period Format">
                     <Select>
-                      <Select.Option value="1">Min(s)</Select.Option>
+                      <Select.Option value="1">Minute(s)</Select.Option>
                       <Select.Option value="2">Hour(s)</Select.Option>
-                      <Select.Option value="3">Days(s)</Select.Option>
+                      <Select.Option value="3">Day(s)</Select.Option>
                     </Select>
                   </Form.Item>
                   <Form.Item name="resolvenotify" label="Inapp Notification">
@@ -195,9 +195,9 @@ const NewSla: FC<INewSla> = () => {
                 dot={<CommentOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">
-                  Addition note for this SLA (optional)
+                  Addition description for this SLA (optional)
                 </div>
-                <Form.Item name="note" label="Note" htmlFor="note">
+                <Form.Item name="description" label="Description" htmlFor="description">
                   <TextArea rows={4} />
                 </Form.Item>
               </Timeline.Item>

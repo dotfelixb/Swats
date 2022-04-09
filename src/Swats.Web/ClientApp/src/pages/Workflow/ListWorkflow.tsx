@@ -42,7 +42,7 @@ const ListWorkflow : FC<IListWorkflow> = () => {
   
   return (<PageView title="Workflows" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
     <DataTable columns={columns}>
-      <div></div>
+     <tr></tr>
     </DataTable>
   </PageView>)
 }

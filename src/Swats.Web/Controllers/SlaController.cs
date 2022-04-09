@@ -65,7 +65,7 @@ public class SlaController : MethodController
     }
     
     [HttpPost("sla.create", Name = nameof(CreateSla))]
-    public async Task<IActionResult> CreateSla(CreateTagCommand command)
+    public async Task<IActionResult> CreateSla(CreateSlaCommand command)
     {
         const string msg = $"POST::{nameof(SlaController)}::{nameof(CreateSla)}";
         logger.LogInformation(msg);

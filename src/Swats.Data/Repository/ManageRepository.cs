@@ -64,6 +64,12 @@ public interface IManageRepository
         CancellationToken cancellationToken = default);
 
     #endregion HelpTopic
+
+    #region Sla
+
+    Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    #endregion
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -694,4 +700,85 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
     }
 
     #endregion HelpTopic
+
+    #region Sla
+
+    public Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                    INSERT INTO public.sla
+                        (id
+                        , ""name""
+                        , businesshour
+                        , responseperiod
+                        , responseformat
+                        , responsenotify
+                        , responseemail
+                        , resolveperiod
+                        , resolveformat
+                        , resolvenotify
+                        , resolveemail
+                        , description
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(@Id
+                        , @Name
+                        , @BusinessHour
+                        , @ResponsePeriod
+                        , @ResponseFormat
+                        , @ResponseNotify
+                        , @ResponseEmail
+                        , @ResolvePeriod
+                        , @ResolveFormat
+                        , @ResolveNotify
+                        , @ResolveEmail
+                        , @Description
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy)";
+
+            var ctt = await conn.ExecuteAsync(cmd, new { });
+            
+            var logCmd = @"
+                INSERT INTO public.slaauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var cl = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+            
+            return ctt + cl;
+        });
+    }
+
+    #endregion
 }
