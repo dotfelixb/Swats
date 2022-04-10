@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="FluentValidation" Version="10.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Keis.Model\Keis.Model.csproj" />
+        <ProjectReference Include="..\Keis.Data\Keis.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Features\BusinessHour\" />
+        <None Remove="Features\BusinessHour\CreateBusinessHour\" />
+        <None Remove="Features\BusinessHour\ListBusinessHour\" />
+        <None Remove="Features\BusinessHour\GetBusinessHour\" />
+        <None Remove="Features\HelpTopic\" />
+        <None Remove="Features\HelpTopic\GetHelpTopic\" />
+        <None Remove="Features\HelpTopic\CreateHelpTopic\" />
+        <None Remove="Features\HelpTopic\ListHelpTopics\" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Features\BusinessHour\" />
+        <Folder Include="Features\BusinessHour\CreateBusinessHour\" />
+        <Folder Include="Features\BusinessHour\ListBusinessHour\" />
+        <Folder Include="Features\BusinessHour\GetBusinessHour\" />
+        <Folder Include="Features\HelpTopic\" />
+        <Folder Include="Features\HelpTopic\GetHelpTopic\" />
+        <Folder Include="Features\HelpTopic\CreateHelpTopic\" />
+        <Folder Include="Features\HelpTopic\ListHelpTopics\" />
+        <Folder Include="Features\Users\GetUser\" />
+    </ItemGroup>
+</Project>
