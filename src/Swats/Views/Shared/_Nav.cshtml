@@ -15,6 +15,8 @@
         </a>
     </li>
 
+<DashboardOutlined />
+
     <li>
         <a href="/ticket">
             <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("Ticket")">
@@ -41,7 +43,7 @@
         </a>
     </li>
 
-    <li>
+    @*    <li>
         <a asp-area="admin" asp-controller="user">
             <div class="w-full flex flex-col p-2 hover:bg-indigo-50 @Html.ActiveClass("User")">
                 <div class="flex  justify-center">
@@ -52,7 +54,7 @@
                 </div>
             </div>
         </a>
-    </li>
+    </li>*@
 
     <li>
         <a asp-area="admin" asp-controller="settings" asp-action="index">

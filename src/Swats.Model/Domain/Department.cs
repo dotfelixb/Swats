@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using System.Text.Json.Serialization;
 
 namespace Swats.Model.Domain;
 
@@ -10,6 +11,7 @@ public class Department : DbAudit
     public string Manager { get; set; }
     public string BusinessHour { get; set; }
     public string OutgoingEmail { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultType Type { get; set; }
     public string Response { get; set; }
 }

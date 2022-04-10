@@ -1,5 +1,7 @@
+@model IEnumerable<FetchTicket>
+
 @{
     ViewData["Title"] = "Ticket";
 }
 
-@await Html.PartialAsync("~/Views/Ticket/_Index.cshtml")
+@await Html.PartialAsync("~/Views/Ticket/_Index.cshtml", Model)

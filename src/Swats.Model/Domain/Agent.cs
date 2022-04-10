@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Text.Json.Serialization;
+using MassTransit;
 
 namespace Swats.Model.Domain;
 
@@ -10,7 +11,11 @@ public class Agent : DbAudit
     public string Email { get; set; }
     public string Mobile { get; set; }
     public string Telephone { get; set; }
-    public Guid Timezone { get; set; }
-    public Guid Department { get; set; }
-    public Guid Team { get; set; }
+    public string Timezone { get; set; }
+    public string Department { get; set; }
+    public string Team { get; set; }
+    public string Type { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public AgentMode Mode { get; set; }
+    public string Note { get; set; }
 }

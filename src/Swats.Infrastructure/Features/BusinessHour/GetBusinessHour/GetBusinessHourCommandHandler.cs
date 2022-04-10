@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Queries;
 
@@ -16,11 +15,12 @@ public class GetBusinessHourCommandHandler : IRequestHandler<GetBusinessHourComm
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<FetchBusinessHour>> Handle(GetBusinessHourCommand request, CancellationToken cancellationToken)
+    public async Task<Result<FetchBusinessHour>> Handle(GetBusinessHourCommand request,
+        CancellationToken cancellationToken)
     {
         var rst = await _manageRepository.GetBusinessHour(request.Id, cancellationToken);
 
-        return rst.Id.ToGuid() == Guid.Empty
+        return rst is null
             ? Result.Fail<FetchBusinessHour>($"Business Hour with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }

@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using System.Text.Json;
@@ -20,7 +19,6 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
         _mapper = mapper;
     }
 
-
     public async Task<Result<string>> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
     {
         var agent = _mapper.Map<CreateAgentCommand, Agent>(request);
@@ -32,7 +30,7 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
             Description = "added agent",
             ObjectName = "agent",
             ObjectData = JsonSerializer.Serialize(agent),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _agentRepository.CreateAgent(agent, auditLog, cancellationToken);

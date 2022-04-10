@@ -7,8 +7,8 @@ namespace Swats.Infrastructure;
 public class SwatsSeedMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
+    private readonly UserManager<AuthUser> _userManager;
 
     public SwatsSeedMiddleware(RequestDelegate next
         , UserManager<AuthUser> userManager
@@ -21,7 +21,6 @@ public class SwatsSeedMiddleware
 
     public Task Invoke(HttpContext context)
     {
-
         return _next(context);
     }
 }

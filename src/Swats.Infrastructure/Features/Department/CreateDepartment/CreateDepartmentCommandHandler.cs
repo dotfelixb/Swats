@@ -2,8 +2,6 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Infrastructure.Extensions;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using System.Text.Json;
@@ -32,7 +30,7 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
             Description = "added department",
             ObjectName = "department",
             ObjectData = JsonSerializer.Serialize(department),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _manageRepository.CreateDepartment(department, auditLog, cancellationToken);

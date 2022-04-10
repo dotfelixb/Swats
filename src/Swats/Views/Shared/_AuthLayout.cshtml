@@ -2,40 +2,40 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Swats</title>
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
 </head>
 
 <body style="background-color: #f9f8f8;" class="box-border font-sans w-full flex text-sm h-screen">
 
 
-    @*main*@
-    <div class="flex-auto w-full">
-        @*header*@
-        <header style="height: 48px;" class="bg-white px-3 py-3">
-        </header>
+@*main*@
+<div class="flex-auto w-full">
+    @*header*@
+    <header style="height: 48px;" class="bg-white px-3 py-3">
+    </header>
 
-        <main class="w-full flex flex-row sm:px-3 py-12">
-            <div class="flex-1"></div>
-            @RenderBody()
-            <div class="flex-1"></div>
-        </main>
-    </div>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <main class="w-full flex flex-row sm:px-3 py-12">
+        <div class="flex-1"></div>
+        @RenderBody()
+        <div class="flex-1"></div>
+    </main>
+</div>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", false)
 
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <style>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<style>
         ion-icon {
             font-size: 20px;
         }
     </style>
-    <script src="https://unpkg.com/htmx.org@1.7.0"
-            integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
-            crossorigin="anonymous"></script>
+<script src="https://unpkg.com/htmx.org@1.7.0"
+        integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

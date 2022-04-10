@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Swats.Controllers
+namespace Swats.Controllers;
+
+public class BackEndController : Controller
 {
-    public class BackEndController : Controller
-    {
-    }
 }

@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
 using System.Text.Json;
@@ -31,11 +30,10 @@ public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHo
             Description = "added business hour",
             ObjectName = "tickettype",
             ObjectData = JsonSerializer.Serialize(businessHour),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _manageRepository.CreateBusinessHour(businessHour, auditLog, cancellationToken);
         return rst > 0 ? Result.Ok(businessHour.Id) : Result.Fail<string>("Not able to create now!");
     }
 }
-

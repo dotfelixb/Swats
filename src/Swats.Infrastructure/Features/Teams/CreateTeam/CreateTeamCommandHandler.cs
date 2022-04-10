@@ -30,11 +30,10 @@ public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Resul
             Description = "added team",
             ObjectName = "team",
             ObjectData = JsonSerializer.Serialize(team),
-            CreatedBy = request.CreatedBy,
+            CreatedBy = request.CreatedBy
         };
 
         var rst = await _manageRepository.CreateTeam(team, auditLog, cancellationToken);
         return rst > 0 ? Result.Ok(team.Id) : Result.Fail<string>("Not able to create now!");
-
     }
 }

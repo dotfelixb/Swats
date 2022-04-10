@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SkiaSharp;
 using SkiaSharp.QrCode;
@@ -34,11 +35,18 @@ public static class MvcExtensions
         var canvas = surface.Canvas;
         canvas.Render(qr, info.Width, info.Height);
 
-        // Output to Stream 
+        // Output to Stream
         using var image = surface.Snapshot();
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
         using var stream = new MemoryStream();
         data.SaveTo(stream);
         return Convert.ToBase64String(stream.ToArray());
+    }
+
+    public static string GetClientAddress(this HttpContext context)
+    {
+        return !string.IsNullOrWhiteSpace(context.Request.Headers["X-Forwarded-For"])
+            ? context.Request.Headers["X-Forwarded-For"]
+            : context.Request.HttpContext.Features.Get<IHttpConnectionFeature>().RemoteIpAddress.ToString();
     }
 }

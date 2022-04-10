@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.statcard-container {
+  @apply w-full flex flex-col justify-center items-center min-w-fit bg-white rounded-sm px-5 py-10 border border-gray-200 cursor-default hover:drop-shadow-lg hover:border-0;
+}
+
+.statcard-container .statcard-ring {
+  @apply relative flex justify-center items-center border-solid border-4 border-indigo-200 rounded-full w-16 h-16;
+}
+
+.statcard-container .statcard-ring span {
+  @apply text-lg font-bold text-center text-indigo-500;
+}
+
+.statcard-container .statcard-ring div {
+  @apply absolute top-0 right-0 w-4 h-4 rounded-full border-solid border-indigo-400 border-4 bg-indigo-700;
+}
+
+.statcard-container .statcard-title {
+  @apply flex justify-center items-center pt-5;
+}
+
+.statcard-container .statcard-title span {
+  @apply text-xs text-center;
+}
+
+button {
+  @apply rounded-sm;
+}
+
+.quill {
+  /* border: 1px solid #d9d9d9; */
+  border-radius: 2px;
+}
+
+.ql-editor:focus {
+  border-color: #9197ff;
+}
+
+.ql-editor:focus {
+  border-color: #9197ff;
+  box-shadow: 0 0 0 2px rgb(99 102 241 / 20%);
+  outline: 0;
+}
+
+tbody tr {
+  border-top: 1px solid rgb(229 231 235);
+}
+
+tbody tr:nth-of-type(2n) td {
+  background-color: #f7f7f7;
+}
+
+.edit-sidebar li {
+  @apply text-xs py-1;
+}
+.edit-sidebar li > div {
+  @apply px-2;
+}
+
+.edit-sidebar li div:first-child {
+  @apply text-xs font-semibold text-gray-600;
+}
+
+.edit-sidebar li div:last-child {
+  @apply text-xs text-gray-500;
+}
+
+.edit-plus {
+  @apply flex border-2 border-gray-300 border-dashed rounded cursor-pointer;
+}
+
+.edit-ticket-button {
+  @apply flex border-2 text-gray-500 border-gray-300 border-dashed rounded cursor-pointer px-2 py-1 hover:text-gray-800 hover:border-solid;
+}
+
+.form-label {
+  @apply block text-gray-600 text-xs py-1;
+}
+
+.datatable tr th div:last-child {
+  @apply text-xs;
+  color: #6b6b6b;
+}

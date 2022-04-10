@@ -13,4 +13,3 @@ public class FetchTeam : Team
     public string DepartmentName { get; set; }
     public string LeadName { get; set; }
 }
-

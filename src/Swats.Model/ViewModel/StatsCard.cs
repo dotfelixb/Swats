@@ -3,8 +3,9 @@
 public class StatsCard
 {
     public string Title { get; init; }
-    public int Count { get; init; }
+    public int Count { get; set; }
     public string ExtraClass { get; init; }
+    public string Location { get; init; }
 }
 
 public class PanelLink

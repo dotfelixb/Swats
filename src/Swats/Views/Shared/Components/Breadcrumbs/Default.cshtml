@@ -1,0 +1,20 @@
+﻿@model Tuple<SelectListItem[], string>
+
+<div class="flex flex-row text-xs text-indigo-400 py-3 items-center">
+    @foreach (var item in Model.Item1)
+    {
+        <div class="font-semibold">
+            <a href="#"  hx-get="@item.Value"
+                hx-trigger="click"
+                hx-target="#main-swap"
+                hx-swap="outerHTML"
+                hx-push-url="true">
+                <span>@item.Text</span>
+            </a>
+        </div>
+        <ion-icon style="font-size: 12px;" class="mx-1" name="chevron-forward"></ion-icon>
+    }
+    <div>
+        <span class="cursor-default">@Model.Item2</span>
+    </div>
+</div>

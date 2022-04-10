@@ -4,16 +4,16 @@ namespace Swats.Model.Domain;
 
 public class Sla : DbAudit
 {
-    public Guid Id { get; set; } = NewId.NextGuid();
-    public string Code { get; set; }
+    public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Name { get; set; }
     public string Description { get; set; }
-    public int Hours { get; set; }
-}
-
-public class TicketSla : DbAudit
-{
-    public Guid Id { get; set; } = NewId.NextGuid();
-    public Guid Ticket { get; set; }
-    public Guid Sla { get; set; }
+    public string BusinessHour { get; set; }
+    public int ResponsePeriod { get; set; }
+    public DefaultTimeFormat ResponseFormat { get; set; }
+    public bool ResponseNotify { get; set; }
+    public bool ResponseEmail { get; set; }
+    public int ResolvePeriod { get; set; }
+    public DefaultTimeFormat ResolveFormat { get; set; }
+    public bool ResolveNotify { get; set; }
+    public bool ResolveEmail { get; set; }
 }

@@ -10,4 +10,3 @@ public class CreateBusinessHourCommandValidator : AbstractValidator<CreateBusine
         RuleFor(r => r.Name).NotEmpty();
     }
 }
-

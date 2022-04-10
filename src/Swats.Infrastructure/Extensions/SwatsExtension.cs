@@ -10,5 +10,7 @@ public static class SwatsExtension
     }
 
     public static string FormatCode(this long value, string prefix = "", int width = 6, char padChar = '0')
-            => $"{prefix}{value.ToString().PadLeft(width, padChar)}";
+    {
+        return $"{prefix}{value.ToString().PadLeft(width, padChar)}";
+    }
 }

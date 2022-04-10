@@ -25,7 +25,14 @@ public enum TicketSource
     App = 1,
     Web,
     Call,
-    Api,
+    Api
+}
+
+public enum CommentType
+{
+    Comment = 1,
+    Reply,
+    ReplyAll
 }
 
 public enum TicketStatus
@@ -40,7 +47,7 @@ public enum TicketStatus
     Review, // Same as Pending but can be comment on
 
     Close, // Only Approval User
-    Deleted,
+    Deleted
 }
 
 public enum CommentSource
@@ -59,4 +66,11 @@ public enum AgentMode
 {
     Agent = 1,
     User
+}
+
+public enum DefaultTimeFormat
+{
+    Minute = 1,
+    Hour,
+    Day
 }

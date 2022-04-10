@@ -1,0 +1,55 @@
+@model FetchTicketComment
+
+@{
+    var id = $"var_{Model.Id.ToString().Replace("-", "")}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+}
+
+<div class="grid grid-cols-1 gap-5">
+    @* description *@
+    <div class="form-control">
+        <div class="w-full flex py-2">
+            <div class="flex w-1/2 items-center">
+                <div>
+                    <span class="font-semibold">@Model.FromName</span>
+                </div>
+                <div class="flex items-center text-gray-600">
+                    <ion-icon style="font-size: 12px; margin-left: 5px; margin-right: 2px;" name="time-outline"></ion-icon>
+                    <span class="text-xs font-light">@Model.CreatedAt.ToString("MMMM dd, yyyy h:mm:ss tt")</span>
+                </div>
+            </div>
+            <div class="flex w-1/2 space-x-2 justify-end">
+                <div class="edit-ticket-button text-xs items-center" 
+                     hx-get="/ticket/addcomment?comment=@Model.Id&ticket=@Model.Ticket"
+                     hx-trigger="click"
+                     hx-target="#ticket-reply"
+                     hx-swap="outerHTML">
+                    <ion-icon style="font-size: 14px;" name="chatbox"></ion-icon>
+                    <span class="">Comment</span>
+                </div>
+                <div class="edit-ticket-button text-xs items-center"
+                     hx-get="/ticket/addreply?comment=@Model.Id&ticket=@Model.Ticket"
+                     hx-trigger="click"
+                     hx-target="#ticket-reply"
+                     hx-swap="outerHTML">
+                    <ion-icon style="font-size: 14px;" name="arrow-undo"></ion-icon>
+                    <span class="">Reply</span>
+                </div>
+                <div class="edit-ticket-button text-xs items-center">
+                    <ion-icon style="font-size: 14px;" name="repeat"></ion-icon>
+                    <span class="">Reply All</span>
+                </div>
+            </div>
+        </div>
+        <div id="@id" class="form-input" style="height: 120px;">
+        </div>
+    </div> 
+</div>
+
+<script >
+    var @id = new Quill('#@id', { })
+    @id .enable(false);  
+
+    var body = JSON.stringify(@Html.Raw(Model.Body));
+    var {ops} = JSON.parse(body);
+    @id .setContents(ops);
+</script>

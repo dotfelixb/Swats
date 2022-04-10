@@ -1,3 +1,5 @@
 ﻿namespace Swats.Infrastructure;
 
-public interface ISwatsInfrastructure { }
+public interface ISwatsInfrastructure
+{
+}

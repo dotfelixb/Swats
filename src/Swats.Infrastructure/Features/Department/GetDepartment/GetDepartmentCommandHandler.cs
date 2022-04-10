@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Swats.Data.Repository;
-using Swats.Model;
 using Swats.Model.Commands;
 using Swats.Model.Queries;
 
@@ -20,7 +19,7 @@ public class GetDepartmentCommandHandler : IRequestHandler<GetDepartmentCommand,
     {
         var rst = await _manageRepository.GetDepartment(request.Id, cancellationToken);
 
-        return rst.Id.ToGuid() == Guid.Empty
+        return rst is null
             ? Result.Fail<FetchDepartment>($"Department with id [{request.Id}] does not exist!")
             : Result.Ok(rst);
     }

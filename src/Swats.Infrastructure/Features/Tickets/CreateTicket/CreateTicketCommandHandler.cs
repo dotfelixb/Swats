@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
 using FluentResults;
-using MassTransit;
 using MediatR;
 using Swats.Data.Repository;
 using Swats.Infrastructure.Extensions;
 using Swats.Model.Commands;
 using Swats.Model.Domain;
+using System.Text.Json;
 
 namespace Swats.Infrastructure.Features.Tickets.CreateTicket;
 
-public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, Result>
+public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, Result<string>>
 {
-    private readonly ITicketRepository _ticketRepository;
     private readonly IMapper _mapper;
+    private readonly ITicketRepository _ticketRepository;
 
     public CreateTicketCommandHandler(ITicketRepository ticketRepository, IMapper mapper)
     {
@@ -20,23 +20,38 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         _mapper = mapper;
     }
 
-    public async Task<Result> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
         var ticket = _mapper.Map<CreateTicketCommand, Ticket>(request);
         ticket.UpdatedBy = request.CreatedBy;
 
         var code = await _ticketRepository.GenerateTicketCode(cancellationToken);
-        ticket.Code = code.FormatCode();
+        ticket.Code = code.FormatCode("#PT-"); // TODO : Get Prefix from appsettings
 
-        var result = await _ticketRepository.CreateTicket(ticket, cancellationToken);
-
-        if (result < 1)
+        var comment = new TicketComment
         {
-            return Result.Fail("Not able to create ticket");
-        }
+            Ticket = ticket.Id,
+            FromEmail = request.RequesterEmail,
+            FromName = request.RequesterName,
+            Body = request.Body,
+            Type = CommentType.Comment,
+            Source = TicketSource.App,
+            CreatedBy = request.CreatedBy
+        };
 
-        return Result.Ok().WithSuccess("Created Ticket");
+        var auditLog = new DbAuditLog
+        {
+            Target = ticket.Id,
+            ActionName = "ticket.create",
+            Description = "added ticket",
+            ObjectName = "ticket",
+            ObjectData = JsonSerializer.Serialize(ticket),
+            CreatedBy = request.CreatedBy
+        };
+
+        var rst = await _ticketRepository.CreateTicket(ticket, comment, auditLog, cancellationToken);
+        
+        // use db transaction
+        return rst > 2 ? Result.Ok(ticket.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

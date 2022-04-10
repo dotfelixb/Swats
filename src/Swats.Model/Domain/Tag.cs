@@ -1,12 +1,16 @@
-﻿using MassTransit;
+﻿using System.Text.Json.Serialization;
+using MassTransit;
 
 namespace Swats.Model.Domain;
 
 public class Tag : DbAudit
 {
     public string Id { get; set; } = NewId.NextGuid().ToString();
-    public string Code { get; set; }
     public string Name { get; set; }
+    public string Color { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public DefaultType Visibility { get; set; }
+    public string Note { get; set; }
 }
 
 public class TicketTag : DbAudit

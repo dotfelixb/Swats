@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Text.Json.Serialization;
+using MassTransit;
 
 namespace Swats.Model.Domain;
 
@@ -8,15 +9,16 @@ public class Ticket : DbAudit
     public string Code { get; set; }
     public string Subject { get; set; }
     public string Requester { get; set; }
-    public string Body { get; set; }
-    public Guid Assignee { get; set; }
-    public Guid Source { get; set; }
-    public Guid Type { get; set; }
-    public Guid Department { get; set; }
-    public Guid HelpTopic { get; set; }
+    public string ExternalAgent { get; set; }
+    public string AssignedTo { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public TicketSource Source { get; set; }
+    public string TicketType { get; set; }
+    public string Department { get; set; }
+    public string Team { get; set; }
+    public string HelpTopic { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketPriority Priority { get; set; }
-    public TicketStatus TicketStatus { get; set; }
-
 }
 
 public class TicketType : DbAudit
@@ -25,10 +27,30 @@ public class TicketType : DbAudit
     public string Name { get; set; }
     public string Description { get; set; }
     public string Color { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultType Visibility { get; set; }
 }
 
-public class TicketTypeAuditLog : DbAuditLog { }
+public class TicketTypeAuditLog : DbAuditLog
+{
+}
+
+public class TicketComment : DbAudit
+{
+    public string Id { get; set; } = NewId.NextGuid().ToString();
+    public string Ticket { get; set; }
+    public string FromEmail { get; set; }
+    public string FromName { get; set; }
+    public string ToEmail { get; set; }
+    public string ToName { get; set; }
+    public string[][] Receiptients { get; set; }
+    public string Body { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CommentType Type { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public TicketSource Source { get; set; }
+    public string Target { get; set; }
+}
 
 public class TicketFellow : DbAudit
 {

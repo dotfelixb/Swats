@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Swats.Model.Domain;
@@ -8,6 +9,7 @@ namespace Swats.Model.Commands;
 
 public class CreateAgentCommand : IRequest<Result<string>>
 {
+    public string Id { get; set; } = NewId.NextGuid().ToString(); // need for agent and user creation
     public string UserName { get; set; }
     public string Email { get; set; }
     public string FirstName { get; set; }
@@ -23,15 +25,27 @@ public class CreateAgentCommand : IRequest<Result<string>>
     public IEnumerable<SelectListItem> TypeList { get; set; } = Enumerable.Empty<SelectListItem>();
     public AgentMode Mode { get; set; }
     public string CreatedBy { get; set; }
+    public string Note { get; set; }
 }
 
-public class GetAgentCommand : GetType, IRequest<Result<FetchedAgent>>
+public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
 {
 }
 
-public class ListAgentCommand : IRequest<Result<IEnumerable<FetchedAgent>>>
+public class ListAgentCommand : ListType, IRequest<Result<IEnumerable<FetchAgent>>>
 {
-    public int Offset { get; set; }
-    public int Limit { get; set; }
-    public bool Deleted { get; set; }
+}
+
+public class AssignAgentDepartmentCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string Department { get; set; }
+    public string CreatedBy { get; set; }
+}
+
+public class AssignAgentTeamCommand : IRequest<Result<SingleResult<string>>>
+{
+    public string Id { get; set; }
+    public string Team { get; set; }
+    public string CreatedBy { get; set; }
 }

@@ -1,0 +1,7 @@
+﻿@model FetchTicket
+
+@{
+    ViewData["Title"] = Model.Subject;
+}
+
+@await Html.PartialAsync("~/Views/Ticket/_Edit.cshtml", Model)

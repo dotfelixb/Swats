@@ -15,7 +15,8 @@ public class ListTagCommandHandler : IRequestHandler<ListTagsCommand, Result<IEn
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchTag>>> Handle(ListTagsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchTag>>> Handle(ListTagsCommand request,
+        CancellationToken cancellationToken)
     {
         var rst = await _manageRepository.ListTags(request.Offset, request.Limit, request.Deleted, cancellationToken);
 

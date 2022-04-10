@@ -3,8 +3,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Swats.Model;
 using Swats.Model.Domain;
+using Swats.Model.Queries;
 
 namespace Swats.Data.Repository;
+
+public interface IAuthUserRepository
+{
+    Task<FetchUser> GetUser(string id, CancellationToken cancellationToken);
+
+    Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken);
+}
 
 public class AuthUserRepository : BasePostgresRepository
     , IUserStore<AuthUser>
@@ -13,12 +21,157 @@ public class AuthUserRepository : BasePostgresRepository
     , IUserPhoneNumberStore<AuthUser>
     , IUserTwoFactorStore<AuthUser>
     , IUserRoleStore<AuthUser>
+    , IAuthUserRepository
 {
+    #region Identity Base
+
     public AuthUserRepository(IOptions<ConnectionStringOptions> options) : base(options)
     {
     }
 
+    public Task<AuthUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"SELECT * FROM public.authuser WHERE normalizedemail = @NormalizedEmail";
+
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedEmail = normalizedEmail });
+        });
+    }
+
+    public Task<string> GetEmailAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.Email);
+    }
+
+    public Task<bool> GetEmailConfirmedAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.EmailConfirmed);
+    }
+
+    public Task<string> GetNormalizedEmailAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.NormalizedEmail);
+    }
+
+    public Task SetEmailAsync(AuthUser user, string email, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() => { user.Email = email; }, cancellationToken);
+    }
+
+    public Task SetEmailConfirmedAsync(AuthUser user, bool confirmed, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() => { user.EmailConfirmed = confirmed; }, cancellationToken);
+    }
+
+    public Task SetNormalizedEmailAsync(AuthUser user, string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() => { user.NormalizedEmail = normalizedEmail; }, cancellationToken);
+    }
+
+    public Task<string> GetPasswordHashAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.PasswordHash);
+    }
+
+    public Task<bool> HasPasswordAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
+    }
+
+    public Task SetPasswordHashAsync(AuthUser user, string passwordHash, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() => { user.PasswordHash = passwordHash; }, cancellationToken);
+    }
+
+    public Task<string> GetPhoneNumberAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.Phone);
+    }
+
+    public Task<bool> GetPhoneNumberConfirmedAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.PhoneConfirmed);
+    }
+
+    public Task SetPhoneNumberAsync(AuthUser user, string phoneNumber, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        throw new NotImplementedException();
+    }
+
+    public Task SetPhoneNumberConfirmedAsync(AuthUser user, bool confirmed, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() => { user.PhoneConfirmed = confirmed; }, cancellationToken);
+    }
+
     public Task AddToRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<string>> GetRolesAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection<IList<string>>(async conn =>
+        {
+            var query = @"
+                SELECT r.""name""
+                FROM authrole r
+                JOIN authuserrole ur ON r.id = ur.authrole
+                WHERE ur.authuser = @Id
+                ";
+
+            var result = await conn.QueryAsync<string>(query, new { user.Id });
+            return result.ToList();
+        });
+    }
+
+    public Task<IList<AuthUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> IsInRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        throw new NotImplementedException();
+    }
+
+    public Task RemoveFromRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -111,18 +264,6 @@ public class AuthUserRepository : BasePostgresRepository
         // Nothing to dispose.
     }
 
-    public Task<AuthUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return WithConnection(async conn =>
-        {
-            var query = @"SELECT * FROM public.authuser WHERE normalizedemail = @NormalizedEmail";
-
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedEmail = normalizedEmail });
-        });
-    }
-
     public Task<AuthUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -147,27 +288,6 @@ public class AuthUserRepository : BasePostgresRepository
         });
     }
 
-    public Task<string> GetEmailAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.Email);
-    }
-
-    public Task<bool> GetEmailConfirmedAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.EmailConfirmed);
-    }
-
-    public Task<string> GetNormalizedEmailAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.NormalizedEmail);
-    }
-
     public Task<string> GetNormalizedUserNameAsync(AuthUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -175,57 +295,11 @@ public class AuthUserRepository : BasePostgresRepository
         return Task.FromResult(user.NormalizedUserName);
     }
 
-    public Task<string> GetPasswordHashAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.PasswordHash);
-    }
-
-    public Task<string> GetPhoneNumberAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.Phone);
-    }
-
-    public Task<bool> GetPhoneNumberConfirmedAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.PhoneConfirmed);
-    }
-
-    public Task<IList<string>> GetRolesAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return WithConnection<IList<string>>(async conn =>
-        {
-            var query = @"
-                SELECT r.""name""
-                FROM authrole r
-                JOIN authuserrole ur ON r.id = ur.authrole
-                WHERE ur.authuser = @Id
-                ";
-
-            var result = await conn.QueryAsync<string>(query, new { user.Id });
-            return result.ToList();
-        });
-    }
-
-    public Task<bool> GetTwoFactorEnabledAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(user.TwoFactorEnabled);
-    }
-
     public Task<string> GetUserIdAsync(AuthUser user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.FromResult(user.Id.ToString());
+        return Task.FromResult(user.Id);
     }
 
     public Task<string> GetUserNameAsync(AuthUser user, CancellationToken cancellationToken)
@@ -235,119 +309,18 @@ public class AuthUserRepository : BasePostgresRepository
         return Task.FromResult(user.UserName);
     }
 
-    public Task<IList<AuthUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> HasPasswordAsync(AuthUser user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
-    }
-
-    public Task<bool> IsInRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveFromRoleAsync(AuthUser user, string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        throw new NotImplementedException();
-    }
-
-    public Task SetEmailAsync(AuthUser user, string email, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Run(() =>
-        {
-            user.Email = email;
-        }, cancellationToken);
-    }
-
-    public Task SetEmailConfirmedAsync(AuthUser user, bool confirmed, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Run(() =>
-        {
-            user.EmailConfirmed = confirmed;
-        }, cancellationToken);
-    }
-
-    public Task SetNormalizedEmailAsync(AuthUser user, string normalizedEmail, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Run(() =>
-        {
-            user.NormalizedEmail = normalizedEmail;
-        }, cancellationToken);
-    }
-
     public Task SetNormalizedUserNameAsync(AuthUser user, string normalizedName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.Run(() =>
-        {
-            user.NormalizedUserName = normalizedName;
-        }, cancellationToken);
-    }
-
-    public Task SetPasswordHashAsync(AuthUser user, string passwordHash, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Run(() =>
-        {
-            user.PasswordHash = passwordHash;
-        }, cancellationToken);
-    }
-
-    public Task SetPhoneNumberAsync(AuthUser user, string phoneNumber, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        throw new NotImplementedException();
-    }
-
-    public Task SetPhoneNumberConfirmedAsync(AuthUser user, bool confirmed, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Run(() =>
-        {
-            user.PhoneConfirmed = confirmed;
-        }, cancellationToken);
-    }
-
-    public Task SetTwoFactorEnabledAsync(AuthUser user, bool enabled, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Run(() =>
-        {
-            user.TwoFactorEnabled = enabled;
-        }, cancellationToken);
+        return Task.Run(() => { user.NormalizedUserName = normalizedName; }, cancellationToken);
     }
 
     public Task SetUserNameAsync(AuthUser user, string userName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.Run(() =>
-        {
-            user.UserName = userName;
-        }, cancellationToken);
+        return Task.Run(() => { user.UserName = userName; }, cancellationToken);
     }
 
     public Task<IdentityResult> UpdateAsync(AuthUser user, CancellationToken cancellationToken)
@@ -396,8 +369,78 @@ public class AuthUserRepository : BasePostgresRepository
             // TODO : Save Audit log
 
             return result > 0
-                  ? IdentityResult.Success
-                  : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
         });
     }
+
+    public Task<bool> GetTwoFactorEnabledAsync(AuthUser user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.FromResult(user.TwoFactorEnabled);
+    }
+
+    public Task SetTwoFactorEnabledAsync(AuthUser user, bool enabled, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() => { user.TwoFactorEnabled = enabled; }, cancellationToken);
+    }
+
+    #endregion Identity Base
+
+    #region AuthUser
+
+    public Task WriteLoginAuditAsync(LoginAudit audit, CancellationToken cancellationToken)
+    {
+        return WithConnection(async conn =>
+        {
+            var cmd = @"
+                INSERT INTO public.authloginauditlog
+                    (id
+                    , authuser
+                    , device
+                    , platform
+                    , browser
+                    , address)
+                VALUES(@Id
+                    , @AuthUser
+                    , @Device
+                    , @Platform
+                    , @Browser
+                    , @Address);
+                ";
+
+            var result = await conn.ExecuteAsync(cmd, new
+            {
+                audit.Id,
+                audit.AuthUser,
+                audit.Device,
+                audit.Platform,
+                audit.Browser,
+                audit.Address
+            });
+            return result;
+        });
+    }
+
+    public Task<FetchUser> GetUser(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT u.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = u.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = u.updatedby) AS UpdatedByName
+                FROM authuser u
+                WHERE u.id =  @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchUser>(query, new { Id = id });
+        });
+    }
+
+    #endregion AuthUser
 }

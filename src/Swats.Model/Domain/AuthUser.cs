@@ -18,3 +18,13 @@ public class AuthUser : DbAudit
     public bool Lockout { get; set; }
     public int FailedCount { get; set; }
 }
+
+public class LoginAudit
+{
+    public string Id { get; set; }
+    public string AuthUser { get; set; }
+    public string Device { get; set; }
+    public string Platform { get; set; }
+    public string Browser { get; set; }
+    public string Address { get; set; }
+}

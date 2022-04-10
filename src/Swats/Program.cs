@@ -7,6 +7,7 @@ using Swats.Data.Repository;
 using Swats.Infrastructure;
 using Swats.Model;
 using Swats.Model.Domain;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o =>
 {
-    o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-}).AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
+    o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+}).AddFluentValidation(f =>
+    f.RegisterValidatorsFromAssemblyContaining<ISwatsInfrastructure>(includeInternalTypes: true));
 builder.Services.AddMediatR(typeof(ISwatsInfrastructure));
 builder.Services.AddAutoMapper(typeof(ModelProfiles));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -24,6 +26,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddIdentity<AuthUser, AuthRole>(o =>
 {
     o.Password.RequireDigit = false;
+    o.Password.RequireNonAlphanumeric = false;
+    o.Password.RequireUppercase = false;
 }).AddDefaultTokenProviders();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -39,6 +43,7 @@ builder.Services.AddTransient<IUserStore<AuthUser>, AuthUserRepository>();
 builder.Services.AddTransient<IRoleStore<AuthRole>, AuthRoleRepository>();
 
 // repositories
+builder.Services.AddSingleton<IAuthUserRepository, AuthUserRepository>();
 builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
 builder.Services.AddSingleton<IManageRepository, ManageRepository>();
 builder.Services.AddSingleton<IAgentRepository, AgentReposiory>();
@@ -62,11 +67,11 @@ app.UseAuthorization();
 //app.UseSwatsSeed();
 
 app.MapAreaControllerRoute(
-    name: "areadefault",
-    areaName: "admin",
-    pattern: "admin/{controller=Settings}/{action=Index}/{id?}");
+    "areadefault",
+    "admin",
+    "admin/{controller=Settings}/{action=Index}/{id?}");
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+    "default",
+    "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();

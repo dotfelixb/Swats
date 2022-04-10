@@ -15,9 +15,11 @@ public class ListTicketTypeCommandHandler : IRequestHandler<ListTicketTypeComman
         _ticketRepository = ticketRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchTicketType>>> Handle(ListTicketTypeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchTicketType>>> Handle(ListTicketTypeCommand request,
+        CancellationToken cancellationToken)
     {
-        var rst = await _ticketRepository.ListTicketTypes(request.Offset, request.Limit, request.Deleted, cancellationToken);
+        var rst = await _ticketRepository.ListTicketTypes(request.Offset, request.Limit, request.Deleted,
+            cancellationToken);
 
         return Result.Ok(rst);
     }
