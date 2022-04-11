@@ -7,13 +7,14 @@ import {
   Alert,
   Breadcrumb,
   Button,
+  Checkbox,
   DatePicker,
   Form,
   Input,
   Select,
-  Switch,
   Timeline,
 } from "antd";
+import dayjs from "dayjs";
 import { FC, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
@@ -22,11 +23,11 @@ import { ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
 
-interface INewHour {}
+interface INewHour { }
 
 interface IOpenHour {
-  name: string;
-  label:string;
+  value: string;
+  label: string;
 }
 
 interface IFormData {
@@ -34,22 +35,69 @@ interface IFormData {
   timezone: string;
   status: string;
   description: string;
+
+  monday: string;
+  mondayhour: string;
+  mondayfrom: string;
+  mondayto: string;
+
+  tuesday: string;
+  tuesdayhour: string;
+  tuesdayfrom: string;
+  tuesdayto: string;
+
+  wednesday: string;
+  wednesdayhour: string;
+  wednesdayfrom: string;
+  wednesdayto: string;
+
+  thurday: string;
+  thurdayhour: string;
+  thurdayfrom: string;
+  thurdayto: string;
+
+  friday: string;
+  fridayhour: string;
+  fridayfrom: string;
+  fridayto: string;
+
+  saturday: string;
+  saturdayhour: string;
+  saturdayfrom: string;
+  saturdayto: string;
+
+  sunday: string;
+  sundayhour: string;
+  sundayfrom: string;
+  sundayto: string;
 }
 
-const OpenHour: FC<IOpenHour> = ({ name, label }) => {
+const OpenHour: FC<IOpenHour> = ({ value, label }) => {
+  const [dayDisabled, setDayDisabled] = useState(true);
+  const [dateDisabled, setDateDisabled] = useState(true);
+
+  const onChange = (e: any) => {
+    setDayDisabled(!e.target.checked);
+    setDateDisabled(!e.target.checked);
+  }
+
+  const onDayChange = (e: any) => {
+    setDateDisabled(e.target.checked)
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
-      <Form.Item name={name} valuePropName="checked">
-        <Switch size="small" /> <span>{label}</span>
+      <Form.Item name={value} valuePropName="checked">
+        <Checkbox onChange={onChange} >{label}</Checkbox>
       </Form.Item>
-      <Form.Item name={`${name}_day`} valuePropName="checked">
-        <Switch size="small" /> <span>Open 24 Hours</span>
+      <Form.Item name={`${value}hour`} valuePropName="checked">
+        <Checkbox onChange={onDayChange} disabled={dayDisabled}>Open 24 Hours</Checkbox>
       </Form.Item>
-      <Form.Item name={`${name}_from`} valuePropName="checked">
-        <DatePicker placeholder="From..." picker="time"/>
+      <Form.Item name={`${value}from`} valuePropName="checked">
+        <DatePicker placeholder="From" onChange={(t)=> console.log(t)} picker="time" disabled={dateDisabled} />
       </Form.Item>
-      <Form.Item name={`${name}_to`} valuePropName="checked">
-      <DatePicker placeholder="To..."  picker="time"/>
+      <Form.Item name={`${value}to`} valuePropName="checked">
+        <DatePicker placeholder="To" picker="time" disabled={dateDisabled} />
       </Form.Item>
     </div>
   );
@@ -62,17 +110,14 @@ const NewHour: FC<INewHour> = () => {
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
-  const onFinish = async ({
-    name,
-    timezone,
-    status,
-    description,
-  }: IFormData) => {
+  const onFinish = async (values: IFormData) => {
     const body = new FormData();
-    body.append("name", name ?? "");
-    body.append("timezone", timezone ?? "");
-    body.append("status", status ?? 1);
-    body.append("description", description ?? "");
+    body.append("name", values.name ?? "");
+    body.append("timezone", values.timezone ?? "");
+    body.append("status", values.status ?? 1);
+    body.append("description", values.description ?? "");
+
+    
 
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
@@ -132,13 +177,13 @@ const NewHour: FC<INewHour> = () => {
                 dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Open hours</div>
-                <OpenHour name="monday" label="Monday"/>
-                <OpenHour name="tuesday" label="Tuesday"/>
-                <OpenHour name="wednesday" label="Wednesday"/>
-                <OpenHour name="thursday" label="Thursday"/>
-                <OpenHour name="friday" label="Friday"/>
-                <OpenHour name="saturday" label="Saturday"/>
-                <OpenHour name="sunday" label="Sunday"/>
+                <OpenHour value="monday" label="Monday" />
+                <OpenHour value="tuesday" label="Tuesday" />
+                <OpenHour value="wednesday" label="Wednesday" />
+                <OpenHour value="thursday" label="Thursday" />
+                <OpenHour value="friday" label="Friday" />
+                <OpenHour value="saturday" label="Saturday" />
+                <OpenHour value="sunday" label="Sunday" />
               </Timeline.Item>
               <Timeline.Item
                 dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}

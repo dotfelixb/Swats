@@ -183,6 +183,23 @@ CREATE TABLE businesshour
     updatedat   TIMESTAMPTZ DEFAULT (now())
 );
 
+CREATE TABLE businesshouropens
+(
+    id          BPCHAR(36) PRIMARY KEY,
+    businesshour  BPCHAR(36),
+    name        VARCHAR(50),
+    enabled     BOOLEAN     DEFAULT (FALSE),
+    fullday	BOOLEAN  DEFAULT (FALSE),
+    fromtime    time,
+    totime      time,
+    rowversion  BPCHAR(36) NOT NULL,
+    createdby   BPCHAR(36),
+    createdat   TIMESTAMPTZ DEFAULT (now()),
+    updatedby   BPCHAR(36),
+    updatedat   TIMESTAMPTZ DEFAULT (now()),
+    FOREIGN KEY (businesshour) REFERENCES businesshour (id) ON DELETE CASCADE
+);
+
 CREATE TABLE businesshourauditlog
 (
     id          BPCHAR(36) PRIMARY KEY,
