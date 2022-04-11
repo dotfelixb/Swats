@@ -36,7 +36,15 @@ const context =  [
 
   "/methods/helptopic.list",
   "/methods/helptopic.get",
-  "/methods/helptopic.create"
+  "/methods/helptopic.create",
+
+  "/methods/sla.list",
+  "/methods/sla.get",
+  "/methods/sla.create",
+
+  "/methods/workflow.list",
+  "/methods/workflow.get",
+  "/methods/workflow.create"
 ];
 
 module.exports = function(app) {
