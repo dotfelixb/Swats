@@ -25,7 +25,7 @@ const { TextArea } = Input;
 
 interface INewHour { }
 
-interface IOpenHour {
+interface IOpenHourItem {
   value: string;
   label: string;
 }
@@ -35,44 +35,17 @@ interface IFormData {
   timezone: string;
   status: string;
   description: string;
-
-  monday: string;
-  mondayhour: string;
-  mondayfrom: string;
-  mondayto: string;
-
-  tuesday: string;
-  tuesdayhour: string;
-  tuesdayfrom: string;
-  tuesdayto: string;
-
-  wednesday: string;
-  wednesdayhour: string;
-  wednesdayfrom: string;
-  wednesdayto: string;
-
-  thurday: string;
-  thurdayhour: string;
-  thurdayfrom: string;
-  thurdayto: string;
-
-  friday: string;
-  fridayhour: string;
-  fridayfrom: string;
-  fridayto: string;
-
-  saturday: string;
-  saturdayhour: string;
-  saturdayfrom: string;
-  saturdayto: string;
-
-  sunday: string;
-  sundayhour: string;
-  sundayfrom: string;
-  sundayto: string;
 }
 
-const OpenHour: FC<IOpenHour> = ({ value, label }) => {
+interface IOpenHour {
+  name:string;
+  enabled: boolean;
+  fullday: boolean;
+  fromtime: string;
+  totime:string;
+}
+
+const OpenHourItem: FC<IOpenHourItem> = ({ value, label }) => {
   const [dayDisabled, setDayDisabled] = useState(true);
   const [dateDisabled, setDateDisabled] = useState(true);
 
@@ -107,6 +80,7 @@ const NewHour: FC<INewHour> = () => {
   const { user } = useAuth();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [openHoursList, setOpenHoursList] = useState<IOpenHour[]>([]);
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
@@ -117,7 +91,13 @@ const NewHour: FC<INewHour> = () => {
     body.append("status", values.status ?? 1);
     body.append("description", values.description ?? "");
 
-    
+    for (let index = 0; index < openHoursList.length; index++) {
+      body.append(`openhours[${index}].name`, openHoursList[index].name ?? "");
+      body.append(`openhours[${index}].enabled`, openHoursList[index].enabled?.toString() ?? "");
+      body.append(`openhours[${index}].fullday`, openHoursList[index].fullday?.toString() ?? "");
+      body.append(`openhours[${index}].fromtime`, openHoursList[index].fromtime?.toString() ?? "");
+      body.append(`openhours[${index}].totime`, openHoursList[index].totime?.toString() ?? "");
+    }
 
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
@@ -177,13 +157,13 @@ const NewHour: FC<INewHour> = () => {
                 dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Open hours</div>
-                <OpenHour value="monday" label="Monday" />
-                <OpenHour value="tuesday" label="Tuesday" />
-                <OpenHour value="wednesday" label="Wednesday" />
-                <OpenHour value="thursday" label="Thursday" />
-                <OpenHour value="friday" label="Friday" />
-                <OpenHour value="saturday" label="Saturday" />
-                <OpenHour value="sunday" label="Sunday" />
+                <OpenHourItem value="monday" label="Monday" />
+                <OpenHourItem value="tuesday" label="Tuesday" />
+                <OpenHourItem value="wednesday" label="Wednesday" />
+                <OpenHourItem value="thursday" label="Thursday" />
+                <OpenHourItem value="friday" label="Friday" />
+                <OpenHourItem value="saturday" label="Saturday" />
+                <OpenHourItem value="sunday" label="Sunday" />
               </Timeline.Item>
               <Timeline.Item
                 dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
