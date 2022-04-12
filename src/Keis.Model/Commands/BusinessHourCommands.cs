@@ -11,7 +11,7 @@ public class CreateBusinessHourCommand : IRequest<Result<string>>
     public string Description { get; set; }
     public string Timezone { get; set; }
     public DefaultStatus Status { get; set; }
-    public OpenHour[] OpenHours { get; set; }
+    public OpenHour[] OpenHours { get; set; } = Array.Empty<OpenHour>();
     public string CreatedBy { get; set; }
 }
 

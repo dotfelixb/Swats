@@ -9,7 +9,7 @@ public class BusinessHour : DbAudit
     public string Description { get; set; }
     public string Timezone { get; set; }
     public string[] Holidays { get; set; }
-    public OpenHour[] OpenHours { get; set; }
+    public OpenHour[] OpenHours { get; set; } = Array.Empty<OpenHour>();
 }
 
 public class OpenHour
@@ -18,6 +18,6 @@ public class OpenHour
     public string Name { get; set; }
     public bool Enabled { get; set; }
     public bool FullDay { get; set; }
-    public DateTime FromTime { get; set; }
-    public DateTime ToTime { get; set; }
+    public DateTimeOffset FromTime { get; set; }
+    public DateTimeOffset ToTime { get; set; }
 }

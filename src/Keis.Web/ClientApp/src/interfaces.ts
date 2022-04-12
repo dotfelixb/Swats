@@ -57,6 +57,15 @@ export interface IViewProps {
   children?: JSX.Element;
 }
 
+export interface IOpenHour {
+  id: number;
+  name: string;
+  enabled: boolean;
+  fullDay: boolean;
+  fromTime: string | undefined;
+  toTime: string | undefined;
+}
+
 export enum ControlType {
   Input,
   Select,
@@ -86,6 +95,7 @@ export interface IFetchBusinessHour extends IDataAudit {
   name: string;
   description: string;
   timezone: string;
+  openHours: IOpenHour[]
 }
 
 export interface IFetchTag extends IDataAudit {

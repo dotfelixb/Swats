@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using Microsoft.Extensions.Options;
 using Keis.Model;
 using Keis.Model.Domain;
 using Keis.Model.Queries;
+using Microsoft.Extensions.Options;
 
 namespace Keis.Data.Repository;
 
@@ -13,6 +13,7 @@ public interface IManageRepository
     Task<int> CreateBusinessHour(BusinessHour businessHour, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<FetchBusinessHour> GetBusinessHour(string id, CancellationToken cancellationToken);
+    Task<IEnumerable<OpenHour>> GetBusinessHourOpens(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000,
         bool includeDeleted = false, CancellationToken cancellationToken = default);
@@ -69,7 +70,7 @@ public interface IManageRepository
 
     Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
 
-    #endregion
+    #endregion Sla
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -119,6 +120,34 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 businessHour.UpdatedBy
             });
 
+            var hoursCmd = @"INSERT INTO public.openbusinesshour
+                    (id
+                    , businesshour
+                    , ""name""
+                    , enabled
+                    , fullday
+                    , fromtime
+                    , totime)
+                VALUES(@Id
+                    , @BusinessHour
+                    , @Name
+                    , @Enabled
+                    , @FullDay
+                    , @FromTime
+                    , @ToTime)";
+
+            var hours = businessHour.OpenHours.Select(h => new
+            {
+                h.Id,
+                BusinessHour = businessHour.Id,
+                h.Name,
+                h.Enabled,
+                h.FullDay,
+                h.FromTime,
+                h.ToTime
+            }).ToArray();
+            var hcrst = await conn.ExecuteAsync(hoursCmd, hours);
+
             var logCmd = @"
                 INSERT INTO public.businesshourauditlog
                     (id
@@ -167,6 +196,21 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 WHERE id = @Id";
 
             return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
+        });
+    }
+
+    public Task<IEnumerable<OpenHour>> GetBusinessHourOpens(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT ob.*
+                FROM openbusinesshour ob
+                WHERE ob.businesshour = @Id";
+
+            return await conn.QueryAsync<OpenHour>(query, new { Id = id });
         });
     }
 
@@ -745,7 +789,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @UpdatedBy)";
 
             var ctt = await conn.ExecuteAsync(cmd, new { });
-            
+
             var logCmd = @"
                 INSERT INTO public.slaauditlog
                     (id
@@ -775,10 +819,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 auditLog.ObjectData,
                 auditLog.CreatedBy
             });
-            
+
             return ctt + cl;
         });
     }
 
-    #endregion
+    #endregion Sla
 }

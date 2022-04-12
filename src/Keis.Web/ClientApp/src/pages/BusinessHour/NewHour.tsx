@@ -7,8 +7,6 @@ import {
   Alert,
   Breadcrumb,
   Button,
-  Checkbox,
-  DatePicker,
   Form,
   Input,
   Select,
@@ -17,18 +15,13 @@ import {
 import dayjs from "dayjs";
 import { FC, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { PageView } from "../../components";
+import { OpenHourItem, PageView } from "../../components";
 import { useAuth } from "../../context";
-import { ISingleResult } from "../../interfaces";
+import { IOpenHour, ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
 
 interface INewHour { }
-
-interface IOpenHourItem {
-  value: string;
-  label: string;
-}
 
 interface IFormData {
   name: string;
@@ -37,50 +30,21 @@ interface IFormData {
   description: string;
 }
 
-interface IOpenHour {
-  name:string;
-  enabled: boolean;
-  fullday: boolean;
-  fromtime: string;
-  totime:string;
-}
-
-const OpenHourItem: FC<IOpenHourItem> = ({ value, label }) => {
-  const [dayDisabled, setDayDisabled] = useState(true);
-  const [dateDisabled, setDateDisabled] = useState(true);
-
-  const onChange = (e: any) => {
-    setDayDisabled(!e.target.checked);
-    setDateDisabled(!e.target.checked);
-  }
-
-  const onDayChange = (e: any) => {
-    setDateDisabled(e.target.checked)
-  }
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
-      <Form.Item name={value} valuePropName="checked">
-        <Checkbox onChange={onChange} >{label}</Checkbox>
-      </Form.Item>
-      <Form.Item name={`${value}hour`} valuePropName="checked">
-        <Checkbox onChange={onDayChange} disabled={dayDisabled}>Open 24 Hours</Checkbox>
-      </Form.Item>
-      <Form.Item name={`${value}from`} valuePropName="checked">
-        <DatePicker placeholder="From" onChange={(t)=> console.log(t)} picker="time" disabled={dateDisabled} />
-      </Form.Item>
-      <Form.Item name={`${value}to`} valuePropName="checked">
-        <DatePicker placeholder="To" picker="time" disabled={dateDisabled} />
-      </Form.Item>
-    </div>
-  );
-};
+const initialOpenHours: IOpenHour[] = [
+  { id: 1, name: "Monday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+  { id: 2, name: "Tuesday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+  { id: 3, name: "Wednesday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+  { id: 4, name: "Thursday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+  { id: 5, name: "Friday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+  { id: 6, name: "Saturday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+  { id: 7, name: "Sunday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+];
 
 const NewHour: FC<INewHour> = () => {
   const { user } = useAuth();
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [openHoursList, setOpenHoursList] = useState<IOpenHour[]>([]);
+  const [hoursList, setHoursList] = useState<IOpenHour[]>(initialOpenHours);
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
@@ -91,12 +55,13 @@ const NewHour: FC<INewHour> = () => {
     body.append("status", values.status ?? 1);
     body.append("description", values.description ?? "");
 
-    for (let index = 0; index < openHoursList.length; index++) {
-      body.append(`openhours[${index}].name`, openHoursList[index].name ?? "");
-      body.append(`openhours[${index}].enabled`, openHoursList[index].enabled?.toString() ?? "");
-      body.append(`openhours[${index}].fullday`, openHoursList[index].fullday?.toString() ?? "");
-      body.append(`openhours[${index}].fromtime`, openHoursList[index].fromtime?.toString() ?? "");
-      body.append(`openhours[${index}].totime`, openHoursList[index].totime?.toString() ?? "");
+    const defaultDate = dayjs("01/01/0001 00:00:00").format().toString();
+    for (let index = 0; index < hoursList.length; index++) {
+      body.append(`openhours[${index}].name`, hoursList[index].name ?? "");
+      body.append(`openhours[${index}].enabled`, hoursList[index].enabled?.toString() ?? "");
+      body.append(`openhours[${index}].fullDay`, hoursList[index].fullDay?.toString() ?? "");
+      body.append(`openhours[${index}].fromTime`, hoursList[index].fromTime?.toString() ?? defaultDate);
+      body.append(`openhours[${index}].toTime`, hoursList[index].toTime?.toString() ?? defaultDate);
     }
 
     const headers = new Headers();
@@ -157,13 +122,13 @@ const NewHour: FC<INewHour> = () => {
                 dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Open hours</div>
-                <OpenHourItem value="monday" label="Monday" />
-                <OpenHourItem value="tuesday" label="Tuesday" />
-                <OpenHourItem value="wednesday" label="Wednesday" />
-                <OpenHourItem value="thursday" label="Thursday" />
-                <OpenHourItem value="friday" label="Friday" />
-                <OpenHourItem value="saturday" label="Saturday" />
-                <OpenHourItem value="sunday" label="Sunday" />
+                {hoursList.sort((a, b) => a.id - b.id).map(o => (
+                  <OpenHourItem
+                    key={o.name}
+                    data={o}
+                    hoursList={hoursList}
+                    setHoursList={setHoursList} />
+                ))}
               </Timeline.Item>
               <Timeline.Item
                 dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
