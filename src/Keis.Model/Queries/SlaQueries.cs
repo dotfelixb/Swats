@@ -4,5 +4,5 @@ namespace Keis.Model.Queries;
 
 public class FetchSla : Sla
 {
-    
+    public string BusinessHourName { get; set; }
 }

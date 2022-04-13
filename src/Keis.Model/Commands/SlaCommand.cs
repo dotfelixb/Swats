@@ -26,6 +26,6 @@ public class GetSlaCommand : GetType, IRequest<Result<FetchSla>>
 {
 }
 
-public class ListSlasCommand : ListType, IRequest<Result<IEnumerable<FetchSla>>>
+public class ListSlaCommand : ListType, IRequest<Result<IEnumerable<FetchSla>>>
 {
 }

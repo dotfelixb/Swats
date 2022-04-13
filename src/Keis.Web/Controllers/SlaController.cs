@@ -19,7 +19,7 @@ public class SlaController : MethodController
     }
     
     [HttpGet("sla.list", Name = nameof(ListSlas))]
-    public async Task<IActionResult> ListSlas([FromQuery] ListSlasCommand command)
+    public async Task<IActionResult> ListSlas([FromQuery] ListSlaCommand command)
     {
         const string msg = $"GET::{nameof(SlaController)}::{nameof(ListSlas)}";
         logger.LogInformation(msg);

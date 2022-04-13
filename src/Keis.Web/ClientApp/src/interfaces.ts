@@ -1,3 +1,5 @@
+import { Descriptions } from "antd";
+
 /// interface use by keis.web
 interface IResult {
   ok: boolean;
@@ -95,7 +97,7 @@ export interface IFetchBusinessHour extends IDataAudit {
   name: string;
   description: string;
   timezone: string;
-  openHours: IOpenHour[]
+  openHours: IOpenHour[];
 }
 
 export interface IFetchTag extends IDataAudit {
@@ -162,4 +164,20 @@ export interface IFetchAgent extends IDataAudit {
   typeName: string;
   mode: string;
   note: string;
+}
+
+export interface IFetchSla extends IDataAudit {
+  id: string;
+  name: string;
+  description: string;
+  businessHour: string;
+  businessHourName:string;
+  responsePeriod: number;
+  responseFormat: string;
+  responseNotify: boolean;
+  responseEmail: boolean;
+  resolvePeriod: number;
+  resolveFormat: string;
+  resolveNotify: boolean;
+  resolveEmail: boolean;
 }

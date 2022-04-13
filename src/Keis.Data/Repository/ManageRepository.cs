@@ -13,6 +13,7 @@ public interface IManageRepository
     Task<int> CreateBusinessHour(BusinessHour businessHour, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<FetchBusinessHour> GetBusinessHour(string id, CancellationToken cancellationToken);
+
     Task<IEnumerable<OpenHour>> GetBusinessHourOpens(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000,
@@ -69,6 +70,9 @@ public interface IManageRepository
     #region Sla
 
     Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
 
     #endregion Sla
 }
@@ -788,7 +792,25 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @CreatedBy
                         , @UpdatedBy)";
 
-            var ctt = await conn.ExecuteAsync(cmd, new { });
+            var ctt = await conn.ExecuteAsync(cmd, new
+            {
+                sla.Id,
+                sla.Name,
+                sla.BusinessHour,
+                sla.ResponsePeriod,
+                sla.ResponseFormat,
+                sla.ResponseNotify,
+                sla.ResponseEmail,
+                sla.ResolvePeriod,
+                sla.ResolveFormat,
+                sla.ResolveNotify,
+                sla.ResolveEmail,
+                sla.Description,
+                sla.Status,
+                sla.RowVersion,
+                sla.CreatedBy,
+                sla.UpdatedBy
+            });
 
             var logCmd = @"
                 INSERT INTO public.slaauditlog
@@ -821,6 +843,30 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             });
 
             return ctt + cl;
+        });
+    }
+
+    public   Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn => 
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND s.deleted = FALSE ";
+            var query = $@"
+                SELECT s.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.updatedby) AS UpdatedByName
+                    , b.""name"" AS businesshourname
+                FROM sla s
+                LEFT JOIN businesshour b ON b.id = s.businesshour
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchSla>(query, new { offset, limit });
         });
     }
 

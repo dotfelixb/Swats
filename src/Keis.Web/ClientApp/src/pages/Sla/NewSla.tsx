@@ -13,13 +13,23 @@ import { IFetchBusinessHour, IListResult, ISingleResult } from "../../interfaces
 
 const { TextArea } = Input;
 
-interface INewSla {}
+interface INewSla { }
 
 interface IFormData {
   name: string;
-  color: string;
+  hour: string;
+
+  responseperiod: string;
+  responseformat: string;
+  responsenotify: string;
+  responseemail: string;
+
+  resolveperiod: string;
+  resolveformat: string;
+  resolvenotify: string;
+  resolveemail: string;
+
   status: string;
-  visibility: string;
   description: string;
 }
 
@@ -54,16 +64,25 @@ const NewSla: FC<INewSla> = () => {
 
   const onFinish = async ({
     name,
-    color,
+    hour,
+    responseperiod, responseformat, responsenotify, responseemail,
+    resolveperiod, resolveformat, resolvenotify, resolveemail,
     status,
-    visibility,
     description,
   }: IFormData) => {
+
     const body = new FormData();
     body.append("name", name ?? "");
-    body.append("color", color ?? "");
+    body.append("businesshour", hour ?? "");
+    body.append("responseperiod", responseperiod ?? "");
+    body.append("responseformat", responseformat ?? "");
+    body.append("responsenotify", responsenotify ?? false);
+    body.append("responseemail", responseemail ?? false);
+    body.append("resolveperiod", resolveperiod ?? "");
+    body.append("resolveformat", resolveformat ?? "");
+    body.append("resolvenotify", resolvenotify ?? false);
+    body.append("resolveemail", resolveemail ?? false);
     body.append("status", status ?? "");
-    body.append("visibility", visibility ?? "");
     body.append("description", description ?? "");
 
     const headers = new Headers();
@@ -79,10 +98,10 @@ const NewSla: FC<INewSla> = () => {
 
     if (f.status === 201 && result.ok) {
       navigate(`/admin/sla/${result.data}`, { replace: true });
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
     }
-
-    setHasFormErrors(true);
-    setFormErrors(result?.errors);
   };
 
   const Breadcrumbs: FC = () => (
@@ -126,8 +145,8 @@ const NewSla: FC<INewSla> = () => {
                 <div className="font-bold mb-2">Working hours and status</div>
                 <Form.Item name="hour" label="Business Hour">
                   <Select>
-                  {hourList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
-                </Select>
+                    {hourList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                  </Select>
                 </Form.Item>
                 <Form.Item name="status" label="Status">
                   <Select>
@@ -155,14 +174,14 @@ const NewSla: FC<INewSla> = () => {
                   </Form.Item>
                   <Form.Item name="responsenotify" label="Inapp Notification">
                     <Select>
-                      <Select.Option value="1">Yes</Select.Option>
-                      <Select.Option value="2">No</Select.Option>
+                      <Select.Option value={true}>Yes</Select.Option>
+                      <Select.Option value={false}>No</Select.Option>
                     </Select>
                   </Form.Item>
                   <Form.Item name="responseemail" label="Escalation Email">
                     <Select>
-                      <Select.Option value="1">Yes</Select.Option>
-                      <Select.Option value="2">No</Select.Option>
+                      <Select.Option value={true}>Yes</Select.Option>
+                      <Select.Option value={false}>No</Select.Option>
                     </Select>
                   </Form.Item>
                 </div>
@@ -179,14 +198,14 @@ const NewSla: FC<INewSla> = () => {
                   </Form.Item>
                   <Form.Item name="resolvenotify" label="Inapp Notification">
                     <Select>
-                      <Select.Option value="1">Yes</Select.Option>
-                      <Select.Option value="2">No</Select.Option>
+                      <Select.Option value={true}>Yes</Select.Option>
+                      <Select.Option value={false}>No</Select.Option>
                     </Select>
                   </Form.Item>
                   <Form.Item name="resolveemail" label="Escalation Email">
                     <Select>
-                      <Select.Option value="1">Yes</Select.Option>
-                      <Select.Option value="2">No</Select.Option>
+                      <Select.Option value={true}>Yes</Select.Option>
+                      <Select.Option value={false}>No</Select.Option>
                     </Select>
                   </Form.Item>
                 </div>
