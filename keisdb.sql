@@ -478,7 +478,7 @@ CREATE TABLE slaauditlog
 	, objectdata VARCHAR NOT NULL
     , createdby BPCHAR(36)
 	, createdat TIMESTAMPTZ DEFAULT(now())
-	, FOREIGN KEY (target) REFERENCES slaauditlog(id) ON DELETE CASCADE
+	, FOREIGN KEY (target) REFERENCES sla(id) ON DELETE CASCADE
 );
 
 
