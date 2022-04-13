@@ -71,6 +71,8 @@ public interface IManageRepository
 
     Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
 
+    Task<FetchSla> GetSla(string id, CancellationToken cancellationToken);
+    
     Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
 
@@ -867,6 +869,25 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 ";
 
             return await conn.QueryAsync<FetchSla>(query, new { offset, limit });
+        });
+    }
+
+    public Task<FetchSla> GetSla(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT s.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.updatedby) AS UpdatedByName
+                    , b.""name"" AS businesshourname
+                FROM sla s
+                LEFT JOIN businesshour b ON b.id = s.businesshour
+                WHERE s.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchSla>(query, new { Id = id });
         });
     }
 
