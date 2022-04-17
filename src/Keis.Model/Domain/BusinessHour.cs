@@ -18,6 +18,6 @@ public class OpenHour
     public string Name { get; set; }
     public bool Enabled { get; set; }
     public bool FullDay { get; set; }
-    public DateTimeOffset FromTime { get; set; }
-    public DateTimeOffset ToTime { get; set; }
+    public DateTime FromTime { get; set; }
+    public DateTime ToTime { get; set; }
 }

@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using Keis.Infrastructure.Features.Agents.CreateAgent;
+using Keis.Infrastructure.Features.Agents.GetAgent;
+using Keis.Infrastructure.Features.Agents.ListAgent;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
 using Keis.Model.Commands;

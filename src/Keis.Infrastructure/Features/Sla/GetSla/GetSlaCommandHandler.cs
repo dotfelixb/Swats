@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace Keis.Infrastructure.Features.Sla.GetSla;
 
+public class GetSlaCommand : GetType, IRequest<Result<FetchSla>>
+{
+}
+
 public class GetSlaCommandHandler : IRequestHandler<GetSlaCommand, Result<FetchSla>>
 {
     private readonly IManageRepository _manageRepository;

@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.TicketTypes.GetTicketType;
 
+public class GetTicketTypeCommand : GetType, IRequest<Result<FetchTicketType>>
+{
+}
+
 public class GetTicketTypeCommandHandler : IRequestHandler<GetTicketTypeCommand, Result<FetchTicketType>>
 {
     private readonly ITicketRepository _ticketRepository;

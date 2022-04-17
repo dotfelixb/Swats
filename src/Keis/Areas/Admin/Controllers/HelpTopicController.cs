@@ -6,17 +6,21 @@ using Keis.Controllers;
 using Keis.Extensions;
 using Keis.Model.Commands;
 using System.Security.Claims;
+using Keis.Infrastructure.Features.Department.ListDepartment;
+using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.GetHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.ListHelpTopics;
 
 namespace Keis.Areas.Admin.Controllers;
 
 [Area("admin")]
 public class HelpTopicController : FrontEndController
 {
-    private readonly ILogger<TicketTypeController> _logger;
+    private readonly ILogger<HelpTopicController> _logger;
     private readonly IMediator _mediatr;
 
     public HelpTopicController(IHttpContextAccessor httpAccessor
-        , ILogger<TicketTypeController> logger
+        , ILogger<HelpTopicController> logger
         , IMediator mediatr) :base(httpAccessor)
     {
         _logger = logger;

@@ -1,3 +1,6 @@
+using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.GetHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.ListHelpTopics;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Keis.Model;

@@ -8,6 +8,16 @@ using System.Text.Json;
 
 namespace Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
 
+public class CreateBusinessHourCommand : IRequest<Result<string>>
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Timezone { get; set; }
+    public DefaultStatus Status { get; set; }
+    public OpenHour[] OpenHours { get; set; } = Array.Empty<OpenHour>();
+    public string CreatedBy { get; set; }
+}
+
 public class CreateBusinessHourCommandHandler : IRequestHandler<CreateBusinessHourCommand, Result<string>>
 {
     private readonly IManageRepository _manageRepository;

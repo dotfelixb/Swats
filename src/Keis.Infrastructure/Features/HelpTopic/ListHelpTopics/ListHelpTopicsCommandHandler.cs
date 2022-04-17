@@ -1,10 +1,13 @@
 ﻿using FluentResults;
 using MediatR;
-using Keis.Data.Repository;
-using Keis.Model.Commands;
+using Keis.Data.Repository; 
 using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.HelpTopic.ListHelpTopics;
+
+public class ListHelpTopicsCommand : ListType, IRequest<Result<IEnumerable<FetchHelpTopic>>>
+{
+}
 
 public class ListHelpTopicsCommandHandler : IRequestHandler<ListHelpTopicsCommand, Result<IEnumerable<FetchHelpTopic>>>
 {

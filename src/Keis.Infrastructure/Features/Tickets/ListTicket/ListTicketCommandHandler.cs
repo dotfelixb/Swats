@@ -7,6 +7,14 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Tickets.ListTicket;
 
+public class ListTicketCommand : ListType, IRequest<Result<ListResult<FetchTicket>>>
+{
+    public string Id { get; set; }
+    public bool IncludeDepartment { get; set; }
+    public bool IncludeTeam { get; set; }
+    public bool IncludeHelpTopic { get; set; }
+}
+
 public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Result<ListResult<FetchTicket>>>
 {
     private readonly ITicketRepository _ticketRepository;

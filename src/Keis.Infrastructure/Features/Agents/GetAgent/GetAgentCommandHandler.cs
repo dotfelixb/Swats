@@ -7,6 +7,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Agents.GetAgent;
 
+public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
+{
+}
+
 public class GetAgentCommandHandler : IRequestHandler<GetAgentCommand, Result<FetchAgent>>
 {
     private readonly IAgentRepository _agentRepository;

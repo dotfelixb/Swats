@@ -1,4 +1,13 @@
 ﻿using AutoMapper;
+using Keis.Infrastructure.Features.Agents.CreateAgent;
+using Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
+using Keis.Infrastructure.Features.Department.CreateDepartment;
+using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
+using Keis.Infrastructure.Features.Sla.CreateSla;
+using Keis.Infrastructure.Features.Tags.CreateTag;
+using Keis.Infrastructure.Features.Teams.CreateTeam;
+using Keis.Infrastructure.Features.Tickets.CreateTicket;
+using Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
 using Keis.Model.Commands;
 using Keis.Model.Domain;
 

@@ -6,6 +6,10 @@ using Keis.Controllers;
 using Keis.Extensions;
 using Keis.Model.Commands;
 using System.Security.Claims;
+using Keis.Infrastructure.Features.BusinessHour.ListBusinessHour;
+using Keis.Infrastructure.Features.Department.CreateDepartment;
+using Keis.Infrastructure.Features.Department.GetDepartment;
+using Keis.Infrastructure.Features.Department.ListDepartment;
 
 namespace Keis.Areas.Admin.Controllers;
 

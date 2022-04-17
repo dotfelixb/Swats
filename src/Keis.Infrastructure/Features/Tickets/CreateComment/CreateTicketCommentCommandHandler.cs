@@ -6,6 +6,13 @@ using Keis.Model.Domain;
 
 namespace Keis.Infrastructure.Features.Tickets.CreateComment;
 
+public class CreateTicketCommentCommand : TicketCommentCommand, IRequest<Result<string>>
+{
+    public string FromEmail { get; set; }
+    public string FromName { get; set; }    
+    public string CreatedBy { get; set; }
+}
+
 public class CreateTicketCommentCommandHandler : IRequestHandler<CreateTicketCommentCommand, Result<string>>
 {
     private readonly ITicketRepository _ticketRepository;

@@ -1,4 +1,8 @@
-﻿using MediatR;
+﻿using Keis.Infrastructure.Features.Tickets.AssignTicket;
+using Keis.Infrastructure.Features.Tickets.CreateTicket;
+using Keis.Infrastructure.Features.Tickets.GetTicket;
+using Keis.Infrastructure.Features.Tickets.ListTicket;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
 using Keis.Model.Commands;

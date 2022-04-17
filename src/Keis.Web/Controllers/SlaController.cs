@@ -1,7 +1,9 @@
+using Keis.Infrastructure.Features.Sla.CreateSla;
+using Keis.Infrastructure.Features.Sla.GetSla;
+using Keis.Infrastructure.Features.Sla.ListSla;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
 

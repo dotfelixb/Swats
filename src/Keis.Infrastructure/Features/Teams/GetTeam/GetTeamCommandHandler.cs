@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Teams.GetTeam;
 
+public class GetTeamCommand : GetType, IRequest<Result<FetchTeam>>
+{
+}
+
 public class GetTeamCommandHandler : IRequestHandler<GetTeamCommand, Result<FetchTeam>>
 {
     private readonly IManageRepository _manageRepository;

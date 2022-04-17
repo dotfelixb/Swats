@@ -74,3 +74,9 @@ public enum DefaultTimeFormat
     Hour,
     Day
 }
+
+public enum EventType
+{
+    NewTicket = 1,
+    ChangeTicketType
+}

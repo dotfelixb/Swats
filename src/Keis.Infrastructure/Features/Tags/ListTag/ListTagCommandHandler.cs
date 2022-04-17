@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Tags.ListTag;
 
+public class ListTagsCommand : ListType, IRequest<Result<IEnumerable<FetchTag>>>
+{
+}
+
 public class ListTagCommandHandler : IRequestHandler<ListTagsCommand, Result<IEnumerable<FetchTag>>>
 {
     private readonly IManageRepository _manageRepository;

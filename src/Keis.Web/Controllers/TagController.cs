@@ -1,3 +1,6 @@
+using Keis.Infrastructure.Features.Tags.CreateTag;
+using Keis.Infrastructure.Features.Tags.GetTag;
+using Keis.Infrastructure.Features.Tags.ListTag;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
@@ -72,7 +75,6 @@ public class TagController : MethodController
         
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
-
         if (result.IsFailed)
         {
             return BadRequest(new ErrorResult

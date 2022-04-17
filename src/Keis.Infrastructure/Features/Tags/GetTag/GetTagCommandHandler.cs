@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Tags.GetTag;
 
+public class GetTagCommand : GetType, IRequest<Result<FetchTag>>
+{
+}
+
 public class GetTagCommandHandler : IRequestHandler<GetTagCommand, Result<FetchTag>>
 {
     private readonly IManageRepository _manageRepository;

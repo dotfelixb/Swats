@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.BusinessHour.GetBusinessHour;
 
+public class GetBusinessHourCommand : GetType, IRequest<Result<FetchBusinessHour>>
+{
+}
+
 public class GetBusinessHourCommandHandler : IRequestHandler<GetBusinessHourCommand, Result<FetchBusinessHour>>
 {
     private readonly IManageRepository _manageRepository;

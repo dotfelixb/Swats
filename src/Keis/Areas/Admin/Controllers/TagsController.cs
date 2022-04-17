@@ -5,17 +5,20 @@ using Keis.Controllers;
 using Keis.Extensions;
 using Keis.Model.Commands;
 using System.Security.Claims;
+using Keis.Infrastructure.Features.Tags.CreateTag;
+using Keis.Infrastructure.Features.Tags.GetTag;
+using Keis.Infrastructure.Features.Tags.ListTag;
 
 namespace Keis.Areas.Admin.Controllers;
 
 [Area("admin")]
 public class TagsController : FrontEndController
 {
-    private readonly ILogger<TicketTypeController> _logger;
+    private readonly ILogger<TagsController> _logger;
     private readonly IMediator _mediatr;
 
     public TagsController(IHttpContextAccessor httpAccessor
-        , ILogger<TicketTypeController> logger
+        , ILogger<TagsController> logger
         , IMediator mediatr) : base(httpAccessor)
     {
         _logger = logger;

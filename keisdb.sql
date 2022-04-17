@@ -5,6 +5,7 @@
 
 -- CREATE DATABASE keisdesk;
 
+
 -- sequences
 CREATE SEQUENCE TicketCode INCREMENT 1 START 1;
 CREATE SEQUENCE DepartmentCode INCREMENT 1 START 1;
@@ -183,20 +184,15 @@ CREATE TABLE businesshour
     updatedat   TIMESTAMPTZ DEFAULT (now())
 );
 
-CREATE TABLE businesshouropens
+CREATE TABLE openbusinesshour
 (
-    id          BPCHAR(36) PRIMARY KEY,
-    businesshour  BPCHAR(36),
-    name        VARCHAR(50),
-    enabled     BOOLEAN     DEFAULT (FALSE),
-    fullday	BOOLEAN  DEFAULT (FALSE),
-    fromtime    time,
-    totime      time,
-    rowversion  BPCHAR(36) NOT NULL,
-    createdby   BPCHAR(36),
-    createdat   TIMESTAMPTZ DEFAULT (now()),
-    updatedby   BPCHAR(36),
-    updatedat   TIMESTAMPTZ DEFAULT (now()),
+    id          		BPCHAR(36) PRIMARY KEY,
+    businesshour  	BPCHAR(36),
+    name        		VARCHAR(50),
+    enabled     		BOOLEAN     DEFAULT (FALSE),
+    fullday			BOOLEAN  DEFAULT (FALSE),
+    fromtime    		TIMESTAMP,
+    totime      		TIMESTAMP,
     FOREIGN KEY (businesshour) REFERENCES businesshour (id) ON DELETE CASCADE
 );
 

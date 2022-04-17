@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Department.ListDepartment;
 
+public class ListDepartmentCommand : ListType, IRequest<Result<IEnumerable<FetchDepartment>>>
+{
+}
+
 public class ListDepartmentCommandHandler : IRequestHandler<ListDepartmentCommand, Result<IEnumerable<FetchDepartment>>>
 {
     private readonly IManageRepository _manageRepository;

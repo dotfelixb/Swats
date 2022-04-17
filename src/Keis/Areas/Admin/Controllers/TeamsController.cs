@@ -6,17 +6,21 @@ using Keis.Controllers;
 using Keis.Extensions;
 using Keis.Model.Commands;
 using System.Security.Claims;
+using Keis.Infrastructure.Features.Department.ListDepartment;
+using Keis.Infrastructure.Features.Teams.CreateTeam;
+using Keis.Infrastructure.Features.Teams.GetTeam;
+using Keis.Infrastructure.Features.Teams.ListTeams;
 
 namespace Keis.Areas.Admin.Controllers;
 
 [Area("admin")]
 public class TeamsController : FrontEndController
 {
-    private readonly ILogger<TicketTypeController> _logger;
+    private readonly ILogger<TeamsController> _logger;
     private readonly IMediator _mediatr;
 
     public TeamsController(IHttpContextAccessor httpAccessor
-        , ILogger<TicketTypeController> logger
+        , ILogger<TeamsController> logger
         , IMediator mediatr) : base(httpAccessor)
     {
         _logger = logger;

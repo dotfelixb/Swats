@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.HelpTopic.GetHelpTopic;
 
+public class GetHelpTopicCommand : GetType, IRequest<Result<FetchHelpTopic>>
+{
+}
+
 public class GetHelpTopicCommandHandler : IRequestHandler<GetHelpTopicCommand, Result<FetchHelpTopic>>
 {
     private readonly IManageRepository _manageRepository;

@@ -1,3 +1,6 @@
+using Keis.Infrastructure.Features.Department.CreateDepartment;
+using Keis.Infrastructure.Features.Department.GetDepartment;
+using Keis.Infrastructure.Features.Department.ListDepartment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Keis.Model;

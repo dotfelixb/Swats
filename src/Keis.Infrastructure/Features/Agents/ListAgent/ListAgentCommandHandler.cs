@@ -6,6 +6,10 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.Agents.ListAgent;
 
+public class ListAgentCommand : ListType, IRequest<Result<IEnumerable<FetchAgent>>>
+{
+}
+
 public class ListAgentCommandHandler : IRequestHandler<ListAgentCommand, Result<IEnumerable<FetchAgent>>>
 {
     private readonly IAgentRepository _agentRepository;

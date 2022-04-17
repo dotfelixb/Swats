@@ -6,6 +6,10 @@ using MediatR;
 
 namespace Keis.Infrastructure.Features.Sla.ListSla;
 
+public class ListSlaCommand : ListType, IRequest<Result<IEnumerable<FetchSla>>>
+{
+}
+
 public class ListSlaCommandHandler : IRequestHandler<ListSlaCommand, Result<IEnumerable<FetchSla>>>
 {
     private readonly IManageRepository _manageRepository;

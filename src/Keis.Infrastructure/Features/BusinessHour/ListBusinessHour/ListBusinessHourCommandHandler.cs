@@ -6,8 +6,11 @@ using Keis.Model.Queries;
 
 namespace Keis.Infrastructure.Features.BusinessHour.ListBusinessHour;
 
-public class
-    ListBusinessHourCommandHandler : IRequestHandler<ListBusinessHourCommand, Result<IEnumerable<FetchBusinessHour>>>
+public class ListBusinessHourCommand : ListType, IRequest<Result<IEnumerable<FetchBusinessHour>>>
+{
+}
+
+public class ListBusinessHourCommandHandler : IRequestHandler<ListBusinessHourCommand, Result<IEnumerable<FetchBusinessHour>>>
 {
     private readonly IManageRepository _manageRepository;
 
