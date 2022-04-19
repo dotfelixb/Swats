@@ -1,12 +1,11 @@
 using Keis.Infrastructure.Features.Department.CreateDepartment;
 using Keis.Infrastructure.Features.Department.GetDepartment;
 using Keis.Infrastructure.Features.Department.ListDepartment;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -43,13 +42,13 @@ public class DepartmentController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("department.get", Name = nameof(GetDepartment))]
     public async Task<IActionResult> GetDepartment([FromQuery] GetDepartmentCommand command)
     {
         var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(GetDepartment)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
         {
@@ -66,9 +65,9 @@ public class DepartmentController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpPost("department.create", Name = nameof(CreateDepartment))]
-    public async Task<IActionResult> CreateDepartment( CreateDepartmentCommand command)
+    public async Task<IActionResult> CreateDepartment(CreateDepartmentCommand command)
     {
         var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(CreateDepartment)}";
         logger.LogInformation(msg);

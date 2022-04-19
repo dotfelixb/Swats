@@ -2,59 +2,59 @@ const createProxyMiddleware = require('http-proxy-middleware');
 const { env } = require('process');
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-  env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:58729';
+    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:58729';
 
-const context =  [
-  "/methods/auth.login",
-  "/methods/ticket.list",
-  "/methods/ticket.get",
-  "/methods/ticket.create",
+const context = [
+    "/methods/auth.login",
+    "/methods/ticket.list",
+    "/methods/ticket.get",
+    "/methods/ticket.create",
 
-  "/methods/agent.list",
-  "/methods/agent.get",
-  "/methods/agent.create",
+    "/methods/agent.list",
+    "/methods/agent.get",
+    "/methods/agent.create",
 
-  "/methods/businesshour.list",
-  "/methods/businesshour.get",
-  "/methods/businesshour.create",
+    "/methods/businesshour.list",
+    "/methods/businesshour.get",
+    "/methods/businesshour.create",
 
-  "/methods/department.list",
-  "/methods/department.get",
-  "/methods/department.create",
+    "/methods/department.list",
+    "/methods/department.get",
+    "/methods/department.create",
 
-  "/methods/team.list",
-  "/methods/team.get",
-  "/methods/team.create",
+    "/methods/team.list",
+    "/methods/team.get",
+    "/methods/team.create",
 
-  "/methods/tag.list",
-  "/methods/tag.get",
-  "/methods/tag.create",
-  
-  "/methods/tickettype.list",
-  "/methods/tickettype.get",
-  "/methods/tickettype.create",
+    "/methods/tag.list",
+    "/methods/tag.get",
+    "/methods/tag.create",
 
-  "/methods/helptopic.list",
-  "/methods/helptopic.get",
-  "/methods/helptopic.create",
+    "/methods/tickettype.list",
+    "/methods/tickettype.get",
+    "/methods/tickettype.create",
 
-  "/methods/sla.list",
-  "/methods/sla.get",
-  "/methods/sla.create",
+    "/methods/helptopic.list",
+    "/methods/helptopic.get",
+    "/methods/helptopic.create",
 
-  "/methods/workflow.list",
-  "/methods/workflow.get",
-  "/methods/workflow.create"
+    "/methods/sla.list",
+    "/methods/sla.get",
+    "/methods/sla.create",
+
+    "/methods/workflow.list",
+    "/methods/workflow.get",
+    "/methods/workflow.create"
 ];
 
-module.exports = function(app) {
-  const appProxy = createProxyMiddleware(context, {
-    target: target,
-    secure: false,
-    headers: {
-      Connection: 'Keep-Alive'
-    }
-  });
+module.exports = function (app) {
+    const appProxy = createProxyMiddleware(context, {
+        target: target,
+        secure: false,
+        headers: {
+            Connection: 'Keep-Alive'
+        }
+    });
 
-  app.use(appProxy);
+    app.use(appProxy);
 };

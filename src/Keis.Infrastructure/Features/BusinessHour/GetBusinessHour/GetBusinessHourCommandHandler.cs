@@ -1,14 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.BusinessHour.GetBusinessHour;
-
-public class GetBusinessHourCommand : GetType, IRequest<Result<FetchBusinessHour>>
-{
-}
 
 public class GetBusinessHourCommandHandler : IRequestHandler<GetBusinessHourCommand, Result<FetchBusinessHour>>
 {
@@ -25,9 +20,9 @@ public class GetBusinessHourCommandHandler : IRequestHandler<GetBusinessHourComm
         var rst = await _manageRepository.GetBusinessHour(request.Id, cancellationToken);
         var rstHours = await _manageRepository.GetBusinessHourOpens(request.Id, cancellationToken);
 
-        if(rst is null)
+        if (rst is null)
         {
-           return Result.Fail<FetchBusinessHour>($"Business Hour with id [{request.Id}] does not exist!");
+            return Result.Fail<FetchBusinessHour>($"Business Hour with id [{request.Id}] does not exist!");
         }
 
         rst.OpenHours = rstHours.ToArray();

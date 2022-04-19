@@ -632,13 +632,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 1.5rem;
   line-height: 2rem;
 }
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 .font-semibold {
   font-weight: 600;
@@ -693,7 +693,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
-.statcard-container .statcard-ring {
+    .statcard-container .statcard-ring {
   position: relative;
   display: flex;
   height: 4rem;
@@ -707,7 +707,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-color: rgb(199 210 254 / var(--tw-border-opacity));
 }
 
-.statcard-container .statcard-ring span {
+        .statcard-container .statcard-ring span {
   text-align: center;
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -716,7 +716,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(99 102 241 / var(--tw-text-opacity));
 }
 
-.statcard-container .statcard-ring div {
+        .statcard-container .statcard-ring div {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -731,14 +731,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(67 56 202 / var(--tw-bg-opacity));
 }
 
-.statcard-container .statcard-title {
+    .statcard-container .statcard-title {
   display: flex;
   align-items: center;
   justify-content: center;
   padding-top: 1.25rem;
 }
 
-.statcard-container .statcard-title span {
+        .statcard-container .statcard-title span {
   text-align: center;
   font-size: 0.75rem;
   line-height: 1rem;
@@ -749,23 +749,23 @@ button {
 }
 
 .quill {
-  /* border: 1px solid #d9d9d9; */
-  border-radius: 2px;
+    /* border: 1px solid #d9d9d9; */
+    border-radius: 2px;
 }
 
 .ql-editor:focus {
-  border-color: #9197ff;
-  box-shadow: 0 0 0 2px rgb(99 102 241 / 20%);
-  outline: 0;
+    border-color: #9197ff;
+    box-shadow: 0 0 0 2px rgb(99 102 241 / 20%);
+    outline: 0;
 }
 
 tbody tr {
-  border-top: 1px solid rgb(229 231 235);
+    border-top: 1px solid rgb(229 231 235);
 }
 
-tbody tr:nth-of-type(2n) td {
-  background-color: #f7f7f7;
-}
+    tbody tr:nth-of-type(2n) td {
+        background-color: #f7f7f7;
+    }
 
 .edit-sidebar li {
   padding-top: 0.25rem;
@@ -773,12 +773,13 @@ tbody tr:nth-of-type(2n) td {
   font-size: 0.75rem;
   line-height: 1rem;
 }
-.edit-sidebar li > div {
+
+    .edit-sidebar li > div {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
 
-.edit-sidebar li div:first-child {
+    .edit-sidebar li div:first-child {
   font-size: 0.75rem;
   line-height: 1rem;
   font-weight: 600;
@@ -786,7 +787,7 @@ tbody tr:nth-of-type(2n) td {
   color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
-.edit-sidebar li div:last-child {
+    .edit-sidebar li div:last-child {
   font-size: 0.75rem;
   line-height: 1rem;
   --tw-text-opacity: 1;
@@ -838,7 +839,7 @@ tbody tr:nth-of-type(2n) td {
 .datatable tr th div:last-child {
   font-size: 0.75rem;
   line-height: 1rem;
-  color: #6b6b6b;
+    color: #6b6b6b;
 }
 
 @media (min-width: 640px) {

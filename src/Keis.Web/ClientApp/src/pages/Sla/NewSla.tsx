@@ -1,8 +1,8 @@
 import {
-  ClockCircleOutlined,
-  CommentOutlined,
-  FormOutlined,
-  ScheduleOutlined,
+    ClockCircleOutlined,
+    CommentOutlined,
+    FormOutlined,
+    ScheduleOutlined,
 } from "@ant-design/icons";
 import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
 import React, { FC, useEffect, useState } from "react";
@@ -16,227 +16,226 @@ const { TextArea } = Input;
 interface INewSla { }
 
 interface IFormData {
-  name: string;
-  hour: string;
+    name: string;
+    hour: string;
 
-  responseperiod: string;
-  responseformat: string;
-  responsenotify: string;
-  responseemail: string;
+    responseperiod: string;
+    responseformat: string;
+    responsenotify: string;
+    responseemail: string;
 
-  resolveperiod: string;
-  resolveformat: string;
-  resolvenotify: string;
-  resolveemail: string;
+    resolveperiod: string;
+    resolveformat: string;
+    resolvenotify: string;
+    resolveemail: string;
 
-  status: string;
-  description: string;
+    status: string;
+    description: string;
 }
 
 const NewSla: FC<INewSla> = () => {
-  const { user } = useAuth();
-  const { get } = useApp();
-  const [form] = Form.useForm();
-  const navigate = useNavigate();
-  const [hourList, setHourList] = useState<IFetchBusinessHour[]>();
-  const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>();
+    const { user } = useAuth();
+    const { get } = useApp();
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
+    const [hourList, setHourList] = useState<IFetchBusinessHour[]>();
+    const [hasFormErrors, setHasFormErrors] = useState(false);
+    const [formErrors, setFormErrors] = useState<string[]>();
 
-  useEffect(() => {
-    const loadHour = async () => {
-      const g: Response = await get(`methods/businesshour.list`);
+    useEffect(() => {
+        const loadHour = async () => {
+            const g: Response = await get(`methods/businesshour.list`);
 
-      if (g != null) {
-        const d: IListResult<IFetchBusinessHour[]> = await g.json();
+            if (g != null) {
+                const d: IListResult<IFetchBusinessHour[]> = await g.json();
 
-        if (g.status === 200 && d.ok) {
-          setHourList(d.data);
-        } else {
-          // TODO: display error to user
+                if (g.status === 200 && d.ok) {
+                    setHourList(d.data);
+                } else {
+                    // TODO: display error to user
+                }
+            }
+        };
+
+        if (user != null) {
+            loadHour()
         }
-      }
+    }, [user, get]);
+
+    const onFinish = async ({
+        name,
+        hour,
+        responseperiod, responseformat, responsenotify, responseemail,
+        resolveperiod, resolveformat, resolvenotify, resolveemail,
+        status,
+        description,
+    }: IFormData) => {
+        const body = new FormData();
+        body.append("name", name ?? "");
+        body.append("businesshour", hour ?? "");
+        body.append("responseperiod", responseperiod ?? "");
+        body.append("responseformat", responseformat ?? "");
+        body.append("responsenotify", responsenotify ?? false);
+        body.append("responseemail", responseemail ?? false);
+        body.append("resolveperiod", resolveperiod ?? "");
+        body.append("resolveformat", resolveformat ?? "");
+        body.append("resolvenotify", resolvenotify ?? false);
+        body.append("resolveemail", resolveemail ?? false);
+        body.append("status", status ?? "");
+        body.append("description", description ?? "");
+
+        const headers = new Headers();
+        headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+        const f = await fetch("methods/sla.create", {
+            method: "POST",
+            body,
+            headers,
+        });
+
+        const result: ISingleResult<string> = await f.json();
+
+        if (f.status === 201 && result.ok) {
+            navigate(`/admin/sla/${result.data}`, { replace: true });
+        } else {
+            setHasFormErrors(true);
+            setFormErrors(result?.errors);
+        }
     };
 
-    if (user != null) {
-      loadHour()
-    }
-  }, [user, get]);
+    const Breadcrumbs: FC = () => (
+        <Breadcrumb separator="/">
+            <Breadcrumb.Item>
+                <Link to="/">Home</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+                <Link to="/admin">Admin</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+                <Link to="/admin/sla">SLA</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>New SLA</Breadcrumb.Item>
+        </Breadcrumb>
+    );
 
-  const onFinish = async ({
-    name,
-    hour,
-    responseperiod, responseformat, responsenotify, responseemail,
-    resolveperiod, resolveformat, resolvenotify, resolveemail,
-    status,
-    description,
-  }: IFormData) => {
-
-    const body = new FormData();
-    body.append("name", name ?? "");
-    body.append("businesshour", hour ?? "");
-    body.append("responseperiod", responseperiod ?? "");
-    body.append("responseformat", responseformat ?? "");
-    body.append("responsenotify", responsenotify ?? false);
-    body.append("responseemail", responseemail ?? false);
-    body.append("resolveperiod", resolveperiod ?? "");
-    body.append("resolveformat", resolveformat ?? "");
-    body.append("resolvenotify", resolvenotify ?? false);
-    body.append("resolveemail", resolveemail ?? false);
-    body.append("status", status ?? "");
-    body.append("description", description ?? "");
-
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
-
-    const f = await fetch("methods/sla.create", {
-      method: "POST",
-      body,
-      headers,
-    });
-
-    const result: ISingleResult<string> = await f.json();
-
-    if (f.status === 201 && result.ok) {
-      navigate(`/admin/sla/${result.data}`, { replace: true });
-    } else {
-      setHasFormErrors(true);
-      setFormErrors(result?.errors);
-    }
-  };
-
-  const Breadcrumbs: FC = () => (
-    <Breadcrumb separator="/">
-      <Breadcrumb.Item>
-        <Link to="/">Home</Link>
-      </Breadcrumb.Item>
-      <Breadcrumb.Item>
-        <Link to="/admin">Admin</Link>
-      </Breadcrumb.Item>
-      <Breadcrumb.Item>
-        <Link to="/admin/sla">SLA</Link>
-      </Breadcrumb.Item>
-      <Breadcrumb.Item>New SLA</Breadcrumb.Item>
-    </Breadcrumb>
-  );
-
-  return (
-    <PageView title="New SLA" breadcrumbs={<Breadcrumbs />}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div>
-          <Form form={form} layout="vertical" onFinish={onFinish}>
-            {hasFormErrors &&
-              formErrors?.map((e) => (
-                <div key={e} className="py-2">
-                  <Alert message={e} type="error" className="py-2" />
+    return (
+        <PageView title="New SLA" breadcrumbs={<Breadcrumbs />}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <div>
+                    <Form form={form} layout="vertical" onFinish={onFinish}>
+                        {hasFormErrors &&
+                            formErrors?.map((e) => (
+                                <div key={e} className="py-2">
+                                    <Alert message={e} type="error" className="py-2" />
+                                </div>
+                            ))}
+                        <Timeline>
+                            <Timeline.Item
+                                dot={<FormOutlined style={{ fontSize: "16px" }} />}
+                            >
+                                <div className="font-bold mb-2">Sla info</div>
+                                <Form.Item name="name" label="Name" htmlFor="name">
+                                    <Input />
+                                </Form.Item>
+                            </Timeline.Item>
+                            <Timeline.Item
+                                dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
+                            >
+                                <div className="font-bold mb-2">Working hours and status</div>
+                                <Form.Item name="hour" label="Business Hour">
+                                    <Select>
+                                        {hourList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item name="status" label="Status">
+                                    <Select>
+                                        <Select.Option value="1">Active</Select.Option>
+                                        <Select.Option value="2">Inactive</Select.Option>
+                                    </Select>
+                                </Form.Item>
+                            </Timeline.Item>
+                            <Timeline.Item
+                                dot={<ScheduleOutlined style={{ fontSize: "16px" }} />}
+                            >
+                                <div className="font-bold mb-2">
+                                    Sla actions and resolution period
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+                                    <Form.Item name="responseperiod" label="Response Period">
+                                        <Input type="number" />
+                                    </Form.Item>
+                                    <Form.Item name="responseformat" label="Period Format">
+                                        <Select>
+                                            <Select.Option value="1">Minute(s)</Select.Option>
+                                            <Select.Option value="2">Hour(s)</Select.Option>
+                                            <Select.Option value="3">Day(s)</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name="responsenotify" label="Inapp Notification">
+                                        <Select>
+                                            <Select.Option value={true}>Yes</Select.Option>
+                                            <Select.Option value={false}>No</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name="responseemail" label="Escalation Email">
+                                        <Select>
+                                            <Select.Option value={true}>Yes</Select.Option>
+                                            <Select.Option value={false}>No</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+                                    <Form.Item name="resolveperiod" label="Resolution Period">
+                                        <Input type="number" />
+                                    </Form.Item>
+                                    <Form.Item name="resolveformat" label="Period Format">
+                                        <Select>
+                                            <Select.Option value="1">Minute(s)</Select.Option>
+                                            <Select.Option value="2">Hour(s)</Select.Option>
+                                            <Select.Option value="3">Day(s)</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name="resolvenotify" label="Inapp Notification">
+                                        <Select>
+                                            <Select.Option value={true}>Yes</Select.Option>
+                                            <Select.Option value={false}>No</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name="resolveemail" label="Escalation Email">
+                                        <Select>
+                                            <Select.Option value={true}>Yes</Select.Option>
+                                            <Select.Option value={false}>No</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                </div>
+                            </Timeline.Item>
+                            <Timeline.Item
+                                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                            >
+                                <div className="font-bold mb-2">
+                                    Addition description for this SLA (optional)
+                                </div>
+                                <Form.Item name="description" label="Description" htmlFor="description">
+                                    <TextArea rows={4} />
+                                </Form.Item>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit">
+                                        Submit
+                                    </Button>
+                                </Form.Item>
+                            </Timeline.Item>
+                        </Timeline>
+                    </Form>
                 </div>
-              ))}
-            <Timeline>
-              <Timeline.Item
-                dot={<FormOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">Sla info</div>
-                <Form.Item name="name" label="Name" htmlFor="name">
-                  <Input />
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item
-                dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">Working hours and status</div>
-                <Form.Item name="hour" label="Business Hour">
-                  <Select>
-                    {hourList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
-                  </Select>
-                </Form.Item>
-                <Form.Item name="status" label="Status">
-                  <Select>
-                    <Select.Option value="1">Active</Select.Option>
-                    <Select.Option value="2">Inactive</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item
-                dot={<ScheduleOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">
-                  Sla actions and resolution period
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-                  <Form.Item name="responseperiod" label="Response Period">
-                    <Input type="number" />
-                  </Form.Item>
-                  <Form.Item name="responseformat" label="Period Format">
-                    <Select>
-                      <Select.Option value="1">Minute(s)</Select.Option>
-                      <Select.Option value="2">Hour(s)</Select.Option>
-                      <Select.Option value="3">Day(s)</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="responsenotify" label="Inapp Notification">
-                    <Select>
-                      <Select.Option value={true}>Yes</Select.Option>
-                      <Select.Option value={false}>No</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="responseemail" label="Escalation Email">
-                    <Select>
-                      <Select.Option value={true}>Yes</Select.Option>
-                      <Select.Option value={false}>No</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-                  <Form.Item name="resolveperiod" label="Resolution Period">
-                    <Input type="number" />
-                  </Form.Item>
-                  <Form.Item name="resolveformat" label="Period Format">
-                    <Select>
-                      <Select.Option value="1">Minute(s)</Select.Option>
-                      <Select.Option value="2">Hour(s)</Select.Option>
-                      <Select.Option value="3">Day(s)</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="resolvenotify" label="Inapp Notification">
-                    <Select>
-                      <Select.Option value={true}>Yes</Select.Option>
-                      <Select.Option value={false}>No</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="resolveemail" label="Escalation Email">
-                    <Select>
-                      <Select.Option value={true}>Yes</Select.Option>
-                      <Select.Option value={false}>No</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </div>
-              </Timeline.Item>
-              <Timeline.Item
-                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">
-                  Addition description for this SLA (optional)
-                </div>
-                <Form.Item name="description" label="Description" htmlFor="description">
-                  <TextArea rows={4} />
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Timeline.Item>
-            </Timeline>
-          </Form>
-        </div>
 
-        <div></div>
-      </div>
+                <div></div>
+            </div>
 
-      <Outlet />
-    </PageView>
-  );
+            <Outlet />
+        </PageView>
+    );
 };
 
 export default NewSla;

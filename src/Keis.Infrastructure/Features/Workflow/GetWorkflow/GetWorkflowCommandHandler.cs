@@ -4,10 +4,6 @@ using MediatR;
 
 namespace Keis.Infrastructure.Features.Workflow.GetWorkflow;
 
-public class GetWorkflowCommand : GetType, IRequest<Result<FetchWorkflow>>
-{
-}
-
 public class GetWorkflowCommandHandler : IRequestHandler<GetWorkflowCommand, Result<FetchWorkflow>>
 {
     public Task<Result<FetchWorkflow>> Handle(GetWorkflowCommand request, CancellationToken cancellationToken)

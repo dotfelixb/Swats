@@ -1,22 +1,11 @@
 ﻿using AutoMapper;
 using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Domain;
+using MediatR;
 using System.Text.Json;
 
 namespace Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
-
-public class CreateTicketTypeCommand : IRequest<Result<string>>
-{
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string Color { get; set; }
-    public DefaultType Visibility { get; set; }
-    public DefaultStatus Status { get; set; }
-    public string CreatedBy { get; set; }
-}
 
 public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCommand, Result<string>>
 {

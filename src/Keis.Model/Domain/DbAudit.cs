@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using MassTransit;
+﻿using MassTransit;
+using System.Text.Json.Serialization;
 
 namespace Keis.Model.Domain;
 
@@ -17,6 +17,7 @@ public class DbAudit
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultStatus Status { get; set; }
+
     public string RowVersion { get; set; } = Guid.NewGuid().ToString();
     public bool Deleted { get; set; }
     public string CreatedBy { get; set; }

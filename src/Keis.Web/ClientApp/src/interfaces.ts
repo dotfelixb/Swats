@@ -2,182 +2,182 @@ import { Descriptions } from "antd";
 
 /// interface use by keis.web
 interface IResult {
-  ok: boolean;
-  type: string;
-  ts: number;
-  errors: string[];
+    ok: boolean;
+    type: string;
+    ts: number;
+    errors: string[];
 }
 
 export interface ISingleResult<T> extends IResult {
-  data: T;
+    data: T;
 }
 
 export interface IListResult<T> extends IResult {
-  data: T;
+    data: T;
 }
 
 export interface IUser {
-  token: string;
-  fullname: string;
-  permissions: string[];
+    token: string;
+    fullname: string;
+    permissions: string[];
 }
 
 export interface ILogin {
-  username: string;
-  password: string;
-  remember: boolean;
+    username: string;
+    password: string;
+    remember: boolean;
 }
 
 export interface ILoginResult {
-  fullname: string;
-  token: string;
-  permissions: string[];
-  errors: string[];
-  ok: boolean;
-  ts: Number;
+    fullname: string;
+    token: string;
+    permissions: string[];
+    errors: string[];
+    ok: boolean;
+    ts: Number;
 }
 
 export interface IAuthContext {
-  isAuthenticated: boolean;
-  browserLoaded: boolean;
-  user: IUser | null;
-  signIn: ({
-    username,
-    password,
-    remember,
-  }: ILogin) => Promise<ILoginResult | null>;
-  signOut: () => boolean;
+    isAuthenticated: boolean;
+    browserLoaded: boolean;
+    user: IUser | null;
+    signIn: ({
+        username,
+        password,
+        remember,
+    }: ILogin) => Promise<ILoginResult | null>;
+    signOut: () => boolean;
 }
 
 export interface IAppContext {
-  post: (endPoint: string, body: FormData) => Promise<any>;
-  get: (endPoint: string) => Promise<any>;
-  dateFormats: { longDateFormat: string; shortDateFormat: string };
+    post: (endPoint: string, body: FormData) => Promise<any>;
+    get: (endPoint: string) => Promise<any>;
+    dateFormats: { longDateFormat: string; shortDateFormat: string };
 }
 
 export interface IViewProps {
-  children?: JSX.Element;
+    children?: JSX.Element;
 }
 
 export interface IOpenHour {
-  id: number;
-  name: string;
-  enabled: boolean;
-  fullDay: boolean;
-  fromTime: string | undefined;
-  toTime: string | undefined;
+    id: number;
+    name: string;
+    enabled: boolean;
+    fullDay: boolean;
+    fromTime: string | undefined;
+    toTime: string | undefined;
 }
 
 export enum ControlType {
-  Input,
-  Select,
-  Multiselect,
+    Input,
+    Select,
+    Multiselect,
 }
 
 export interface IPickerType {
-  value: string;
-  text: string;
-  control: ControlType;
+    value: string;
+    text: string;
+    control: ControlType;
 }
 
 interface IDataAudit {
-  status: string;
+    status: string;
 
-  createdBy: string;
-  createdByName: string;
-  createdAt: Date;
+    createdBy: string;
+    createdByName: string;
+    createdAt: Date;
 
-  updatedBy: string;
-  updatedByName: string;
-  updatedAt: Date;
+    updatedBy: string;
+    updatedByName: string;
+    updatedAt: Date;
 }
 
 export interface IFetchBusinessHour extends IDataAudit {
-  id: string;
-  name: string;
-  description: string;
-  timezone: string;
-  openHours: IOpenHour[];
+    id: string;
+    name: string;
+    description: string;
+    timezone: string;
+    openHours: IOpenHour[];
 }
 
 export interface IFetchTag extends IDataAudit {
-  id: string;
-  name: string;
-  note: string;
-  visibility: string;
-  color: string;
+    id: string;
+    name: string;
+    note: string;
+    visibility: string;
+    color: string;
 }
 
 export interface IFetchTopic extends IDataAudit {
-  id: string;
-  topic: string;
-  department: string;
-  departmentName: string;
-  type: string;
-  note: string;
+    id: string;
+    topic: string;
+    department: string;
+    departmentName: string;
+    type: string;
+    note: string;
 }
 
 export interface IFetchDepartment extends IDataAudit {
-  id: string;
-  code: string;
-  name: string;
-  manager: string;
-  managerName: string;
-  businessHour: string;
-  businessHourName: string;
-  outgoingEmail: string;
-  type: string;
-  response: string;
+    id: string;
+    code: string;
+    name: string;
+    manager: string;
+    managerName: string;
+    businessHour: string;
+    businessHourName: string;
+    outgoingEmail: string;
+    type: string;
+    response: string;
 }
 
 export interface IFetchTeam extends IDataAudit {
-  id: string;
-  name: string;
-  department: string;
-  departmentName: string;
-  lead: string;
-  leadName: string;
-  note: string;
+    id: string;
+    name: string;
+    department: string;
+    departmentName: string;
+    lead: string;
+    leadName: string;
+    note: string;
 }
 
 export interface IFetchType extends IDataAudit {
-  id: string;
-  name: string;
-  description: string;
-  visibility: string;
-  color: string;
+    id: string;
+    name: string;
+    description: string;
+    visibility: string;
+    color: string;
 }
 
 export interface IFetchAgent extends IDataAudit {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  mobile: string;
-  telephone: string;
-  timezone: string;
-  department: string;
-  departmentName: string;
-  team: string;
-  teamName: string;
-  type: string;
-  typeName: string;
-  mode: string;
-  note: string;
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    mobile: string;
+    telephone: string;
+    timezone: string;
+    department: string;
+    departmentName: string;
+    team: string;
+    teamName: string;
+    type: string;
+    typeName: string;
+    mode: string;
+    note: string;
 }
 
 export interface IFetchSla extends IDataAudit {
-  id: string;
-  name: string;
-  description: string;
-  businessHour: string;
-  businessHourName:string;
-  responsePeriod: number;
-  responseFormat: string;
-  responseNotify: boolean;
-  responseEmail: boolean;
-  resolvePeriod: number;
-  resolveFormat: string;
-  resolveNotify: boolean;
-  resolveEmail: boolean;
+    id: string;
+    name: string;
+    description: string;
+    businessHour: string;
+    businessHourName: string;
+    responsePeriod: number;
+    responseFormat: string;
+    responseNotify: boolean;
+    responseEmail: boolean;
+    resolvePeriod: number;
+    resolveFormat: string;
+    resolveNotify: boolean;
+    resolveEmail: boolean;
 }

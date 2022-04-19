@@ -1,15 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Agents.GetAgent;
-
-public class GetAgentCommand : GetType, IRequest<Result<FetchAgent>>
-{
-}
 
 public class GetAgentCommandHandler : IRequestHandler<GetAgentCommand, Result<FetchAgent>>
 {
@@ -28,4 +22,8 @@ public class GetAgentCommandHandler : IRequestHandler<GetAgentCommand, Result<Fe
             ? Result.Fail<FetchAgent>($"Agent with id [{request.Id}] does not exist!")
             : Result.Ok(result);
     }
+}
+
+public class GetAgentResult
+{
 }

@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using MassTransit;
+﻿using MassTransit;
+using System.Text.Json.Serialization;
 
 namespace Keis.Model.Domain;
 
@@ -15,7 +15,9 @@ public class Agent : DbAudit
     public string Department { get; set; }
     public string Team { get; set; }
     public string Type { get; set; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public AgentMode Mode { get; set; }
+
     public string Note { get; set; }
 }

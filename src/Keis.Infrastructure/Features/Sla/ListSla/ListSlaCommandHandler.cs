@@ -1,14 +1,9 @@
 ﻿using FluentResults;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using MediatR;
 
 namespace Keis.Infrastructure.Features.Sla.ListSla;
-
-public class ListSlaCommand : ListType, IRequest<Result<IEnumerable<FetchSla>>>
-{
-}
 
 public class ListSlaCommandHandler : IRequestHandler<ListSlaCommand, Result<IEnumerable<FetchSla>>>
 {

@@ -1,14 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Agents.ListAgent;
-
-public class ListAgentCommand : ListType, IRequest<Result<IEnumerable<FetchAgent>>>
-{
-}
 
 public class ListAgentCommandHandler : IRequestHandler<ListAgentCommand, Result<IEnumerable<FetchAgent>>>
 {

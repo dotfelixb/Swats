@@ -1,19 +1,10 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.ListTicket;
-
-public class ListTicketCommand : ListType, IRequest<Result<ListResult<FetchTicket>>>
-{
-    public string Id { get; set; }
-    public bool IncludeDepartment { get; set; }
-    public bool IncludeTeam { get; set; }
-    public bool IncludeHelpTopic { get; set; }
-}
 
 public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Result<ListResult<FetchTicket>>>
 {

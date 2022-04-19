@@ -1,7 +1,7 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
 using Keis.Model.Commands;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Dashboard.AgentTickets
 {

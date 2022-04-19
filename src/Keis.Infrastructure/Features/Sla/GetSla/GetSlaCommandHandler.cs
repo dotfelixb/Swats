@@ -1,19 +1,9 @@
 ﻿using FluentResults;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Keis.Infrastructure.Features.Sla.GetSla;
-
-public class GetSlaCommand : GetType, IRequest<Result<FetchSla>>
-{
-}
 
 public class GetSlaCommandHandler : IRequestHandler<GetSlaCommand, Result<FetchSla>>
 {

@@ -2,10 +2,10 @@
 using Keis.Infrastructure.Features.Tickets.CreateTicket;
 using Keis.Infrastructure.Features.Tickets.GetTicket;
 using Keis.Infrastructure.Features.Tickets.ListTicket;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
 using Keis.Model.Commands;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -34,7 +34,7 @@ public class TicketController : MethodController
         return Ok(result.Value);
     }
 
-    [HttpGet("tickets.get", Name =nameof(GetTicket))]
+    [HttpGet("tickets.get", Name = nameof(GetTicket))]
     public async Task<IActionResult> GetTicket([FromQuery] GetTicketCommand command)
     {
         logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(GetTicket)}");
@@ -43,14 +43,14 @@ public class TicketController : MethodController
         if (result.IsFailed)
         {
             var error = result.Reasons.FirstOrDefault()?.Message;
-            return NotFound(new ErrorResult { Ok = false, Errors = new []{error }});
+            return NotFound(new ErrorResult { Ok = false, Errors = new[] { error } });
         }
 
         return Ok(result.Value);
     }
 
     [HttpPost("tickets.create", Name = nameof(CreateTicket))]
-    public async Task<IActionResult> CreateTicket( CreateTicketCommand command)
+    public async Task<IActionResult> CreateTicket(CreateTicketCommand command)
     {
         logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(CreateTicket)}");
 

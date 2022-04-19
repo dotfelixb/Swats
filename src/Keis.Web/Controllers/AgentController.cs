@@ -1,12 +1,12 @@
 ﻿using Keis.Infrastructure.Features.Agents.CreateAgent;
 using Keis.Infrastructure.Features.Agents.GetAgent;
 using Keis.Infrastructure.Features.Agents.ListAgent;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
 using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -49,7 +49,7 @@ public class AgentController : MethodController
     {
         const string msg = $"GET::{nameof(AgentController)}::{nameof(GetAgent)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
         {
@@ -72,7 +72,7 @@ public class AgentController : MethodController
     {
         const string msg = $"POST::{nameof(AgentController)}::{nameof(CreateAgent)}";
         logger.LogInformation(msg);
-        
+
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
 
@@ -84,7 +84,7 @@ public class AgentController : MethodController
                 Errors = result.Reasons.Select(s => s.Message)
             });
         }
-        
+
         var uri = $"/methods/agent.get?id={result.Value}";
         return Created(uri, new SingleResult<string>
         {

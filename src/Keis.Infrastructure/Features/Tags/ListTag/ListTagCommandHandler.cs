@@ -1,14 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Tags.ListTag;
-
-public class ListTagsCommand : ListType, IRequest<Result<IEnumerable<FetchTag>>>
-{
-}
 
 public class ListTagCommandHandler : IRequestHandler<ListTagsCommand, Result<IEnumerable<FetchTag>>>
 {

@@ -7,4 +7,5 @@ public class FetchSla : Sla
     public string BusinessHourName { get; set; }
 }
 
-public class FetchWorkflow : Workflow {}
+public class FetchWorkflow : Workflow
+{ }

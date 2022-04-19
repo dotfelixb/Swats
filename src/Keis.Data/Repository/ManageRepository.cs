@@ -72,7 +72,7 @@ public interface IManageRepository
     Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<FetchSla> GetSla(string id, CancellationToken cancellationToken);
-    
+
     Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
 
@@ -126,7 +126,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 businessHour.UpdatedBy
             });
 
-            var hoursCmd = @"INSERT INTO public.openbusinesshour
+            var hoursCmd = @"INSERT INTO public.businessopenhour
                     (id
                     , businesshour
                     , ""name""
@@ -212,9 +212,9 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         return WithConnection(async conn =>
         {
             var query = @"
-                SELECT ob.*
-                FROM openbusinesshour ob
-                WHERE ob.businesshour = @Id";
+                SELECT bo.*
+                FROM businessopenhour bo
+                WHERE bo.businesshour = @Id";
 
             return await conn.QueryAsync<OpenHour>(query, new { Id = id });
         });
@@ -848,12 +848,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    public   Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
+    public Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return WithConnection(async conn => 
+        return WithConnection(async conn =>
         {
             var _includeDeleted = includeDeleted ? " " : " AND s.deleted = FALSE ";
             var query = $@"

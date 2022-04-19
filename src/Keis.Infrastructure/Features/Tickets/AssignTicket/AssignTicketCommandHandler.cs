@@ -1,16 +1,20 @@
 ﻿using FluentResults;
-using Keis.Model;
+using Keis.Data.Repository;
 using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.AssignTicket;
 
-public class AssignTicketCommand : IRequest<Result<SingleResult<string>>>
+public class AssignTicketCommandHandler : IRequestHandler<AssignTicketCommand, Result<string>>
 {
-    public string Id { get; set; }
-    public string AssignedTo { get; set; }
-    public string CreatedBy { get; set; }
-}
+    private readonly ITicketRepository _ticketRepository;
 
-public class AssignTicketCommandHandler
-{
+    public AssignTicketCommandHandler(ITicketRepository ticketRepository)
+    {
+        _ticketRepository = ticketRepository;
+    }
+
+    public Task<Result<string>> Handle(AssignTicketCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

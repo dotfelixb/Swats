@@ -6,29 +6,27 @@ import { PageView } from "../../components";
 interface IListTickets { }
 
 const ListTickets: FC<IListTickets> = () => {
+    const Buttons: FC = () => (
+        <div className="space-x-2">
+            <Link to="/ticket/new">
+                <Button type="primary" >New Ticket</Button>
+            </Link>
+        </div>
+    );
 
-  const Buttons: FC = () => (
-    <div className="space-x-2">
-      <Link to="/ticket/new">
-        <Button type="primary" >New Ticket</Button>
-      </Link>
-    </div>
-  );
+    const Breadcrumbs: FC = () => (
+        <Breadcrumb separator="/">
+            <Breadcrumb.Item>
+                <Link to="/">Home</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>Tickets</Breadcrumb.Item>
+        </Breadcrumb>
+    )
 
-  const Breadcrumbs: FC = () => (
-    <Breadcrumb separator="/">
-      <Breadcrumb.Item>
-        <Link to="/">Home</Link>
-      </Breadcrumb.Item>
-      <Breadcrumb.Item>Tickets</Breadcrumb.Item>
-    </Breadcrumb>
-  )
+    return (<PageView title="Tickets" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
 
-  return (<PageView title="Tickets" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
-
-
-    <Outlet />
-  </PageView>)
+        <Outlet />
+    </PageView>)
 }
 
 export default ListTickets;

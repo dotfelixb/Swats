@@ -1,14 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Department.ListDepartment;
-
-public class ListDepartmentCommand : ListType, IRequest<Result<IEnumerable<FetchDepartment>>>
-{
-}
 
 public class ListDepartmentCommandHandler : IRequestHandler<ListDepartmentCommand, Result<IEnumerable<FetchDepartment>>>
 {

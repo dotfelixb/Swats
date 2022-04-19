@@ -6,13 +6,12 @@
     background-color: rgb(249 250 251/var(--tw-bg-opacity));
 }
 
-.ui.selection.dropdown:hover , .ui.selection.dropdown:focus{
-    --tw-border-opacity: 1;
-    border-color: rgb(209 213 219/var(--tw-border-opacity));
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
-
+    .ui.selection.dropdown:hover, .ui.selection.dropdown:focus {
+        --tw-border-opacity: 1;
+        border-color: rgb(209 213 219/var(--tw-border-opacity));
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
 
 /*--tw-border-opacity: 1;*/
 /*border-color: rgb(165 180 252/var(--tw-border-opacity));*/

@@ -80,3 +80,24 @@ public enum EventType
     NewTicket = 1,
     ChangeTicketType
 }
+
+public enum CriteriaType
+{
+    Subject = 1,
+    Department,
+    Team,
+    Status,
+    Priority
+}
+
+public enum CriteriaCondition
+{
+    Equals = 1,
+    Contains
+}
+
+public enum ActionType
+{
+    Equals = 1,
+    Contains
+}

@@ -27,7 +27,7 @@ public class WorkflowController : MethodController
     {
         const string msg = $"GET::{nameof(WorkflowController)}::{nameof(ListWorkflows)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
         {
@@ -44,13 +44,13 @@ public class WorkflowController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("workflow.get", Name = nameof(GetWorkflow))]
     public async Task<IActionResult> GetWorkflow([FromQuery] GetWorkflowCommand command)
     {
-       const string msg = $"GET::{nameof(WorkflowController)}::{nameof(GetWorkflow)}";
+        const string msg = $"GET::{nameof(WorkflowController)}::{nameof(GetWorkflow)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
         {
@@ -67,13 +67,13 @@ public class WorkflowController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpPost("workflow.create", Name = nameof(CreateWorkflow))]
     public async Task<IActionResult> CreateWorkflow(CreateWorkflowCommand command)
     {
         const string msg = $"POST::{nameof(WorkflowController)}::{nameof(CreateWorkflow)}";
         logger.LogInformation(msg);
-        
+
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
         if (result.IsFailed)
@@ -92,13 +92,13 @@ public class WorkflowController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("workflow.events", Name = nameof(ListWorkflowEvents))]
     public async Task<IActionResult> ListWorkflowEvents([FromQuery] ListWorkflowEventCommand command)
     {
         var msg = $"{Request.Method}::{nameof(WorkflowController)}::{nameof(ListWorkflowEvents)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
         {

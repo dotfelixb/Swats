@@ -1,13 +1,9 @@
 using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Teams.ListTeams;
-
-public class ListTeamsCommand : ListType, IRequest<Result<IEnumerable<FetchTeam>>>
-{
-}
 
 public class ListTeamsCommandHandler : IRequestHandler<ListTeamsCommand, Result<IEnumerable<FetchTeam>>>
 {

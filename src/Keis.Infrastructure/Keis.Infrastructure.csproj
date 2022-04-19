@@ -29,14 +29,6 @@
         <None Remove="Features\HelpTopic\ListHelpTopics\" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Features\BusinessHour\" />
-        <Folder Include="Features\BusinessHour\CreateBusinessHour\" />
-        <Folder Include="Features\BusinessHour\ListBusinessHour\" />
-        <Folder Include="Features\BusinessHour\GetBusinessHour\" />
-        <Folder Include="Features\HelpTopic\" />
-        <Folder Include="Features\HelpTopic\GetHelpTopic\" />
-        <Folder Include="Features\HelpTopic\CreateHelpTopic\" />
-        <Folder Include="Features\HelpTopic\ListHelpTopics\" />
         <Folder Include="Features\Users\GetUser\" />
     </ItemGroup>
 </Project>

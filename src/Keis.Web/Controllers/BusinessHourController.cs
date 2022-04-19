@@ -1,12 +1,11 @@
 using Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
 using Keis.Infrastructure.Features.BusinessHour.GetBusinessHour;
 using Keis.Infrastructure.Features.BusinessHour.ListBusinessHour;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -43,7 +42,7 @@ public class BusinessHourController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("businesshour.get", Name = nameof(GetHour))]
     public async Task<IActionResult> GetHour([FromQuery] GetBusinessHourCommand command)
     {
@@ -84,7 +83,7 @@ public class BusinessHourController : MethodController
                 Errors = result.Reasons.Select(s => s.Message)
             });
         }
-        
+
         var uri = $"/methods/businesshour.get?id={result.Value}";
         return Created(uri, new SingleResult<string>
         {

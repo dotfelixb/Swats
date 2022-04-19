@@ -1,14 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Department.GetDepartment;
-
-public class GetDepartmentCommand : GetType, IRequest<Result<FetchDepartment>>
-{
-}
 
 public class GetDepartmentCommandHandler : IRequestHandler<GetDepartmentCommand, Result<FetchDepartment>>
 {

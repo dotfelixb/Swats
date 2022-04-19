@@ -1,15 +1,9 @@
 using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.ListComments;
-
-public class ListTicketCommentCommand : ListType, IRequest<Result<IEnumerable<FetchTicketComment>>>
-{
-    public string TicketId { get; set; }
-}
 
 public class ListTicketCommentsCommandHandler : IRequestHandler<ListTicketCommentCommand, Result<IEnumerable<FetchTicketComment>>>
 {

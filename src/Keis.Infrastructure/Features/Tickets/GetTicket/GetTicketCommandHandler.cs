@@ -1,14 +1,9 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.GetTicket;
-
-public class GetTicketCommand : GetType, IRequest<Result<FetchTicket>>
-{
-}
 
 public class GetTicketCommandHandler : IRequestHandler<GetTicketCommand, Result<FetchTicket>>
 {

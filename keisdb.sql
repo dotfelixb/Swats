@@ -184,7 +184,7 @@ CREATE TABLE businesshour
     updatedat   TIMESTAMPTZ DEFAULT (now())
 );
 
-CREATE TABLE openbusinesshour
+CREATE TABLE businessopenhour
 (
     id          		BPCHAR(36) PRIMARY KEY,
     businesshour  	BPCHAR(36),

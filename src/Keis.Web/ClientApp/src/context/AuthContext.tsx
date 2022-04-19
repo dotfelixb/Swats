@@ -1,11 +1,11 @@
 import { createContext, FC, useContext, useEffect, useState } from "react";
 import { login } from "../functions";
 import {
-  IAuthContext,
-  ILogin,
-  ILoginResult,
-  IUser,
-  IViewProps,
+    IAuthContext,
+    ILogin,
+    ILoginResult,
+    IUser,
+    IViewProps,
 } from "../interfaces";
 
 export const AuthContext = createContext<IAuthContext>(null!);
@@ -13,61 +13,61 @@ export const AuthContext = createContext<IAuthContext>(null!);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: FC<IViewProps> = ({ children }) => {
-  const [isAuthenticated, setAuthentication] = useState(false);
-  const [browserLoaded, setBrowserLoaded] = useState(false);
-  const [user, setUser] = useState<IUser>(null!);
-  const isAuthKey = "sw::auth::isauth";
-  const authUserKey = "sw::auth::user";
+    const [isAuthenticated, setAuthentication] = useState(false);
+    const [browserLoaded, setBrowserLoaded] = useState(false);
+    const [user, setUser] = useState<IUser>(null!);
+    const isAuthKey = "sw::auth::isauth";
+    const authUserKey = "sw::auth::user";
 
-  useEffect(() => {
-    // load the app from browser state
-    const getIsAuth = localStorage.getItem(isAuthKey);
-    const getAuthUser = localStorage.getItem(authUserKey);
-    
-    if (getIsAuth != null && getAuthUser != null) {
-      const isAuth = JSON.parse(getIsAuth);
-      const authUser = JSON.parse(getAuthUser);
-      
-      if(isAuth){
-        setAuthentication(isAuth);
-        setUser(authUser)
-      }
-    }
+    useEffect(() => {
+        // load the app from browser state
+        const getIsAuth = localStorage.getItem(isAuthKey);
+        const getAuthUser = localStorage.getItem(authUserKey);
 
-    setBrowserLoaded(true)
-  }, []);
+        if (getIsAuth != null && getAuthUser != null) {
+            const isAuth = JSON.parse(getIsAuth);
+            const authUser = JSON.parse(getAuthUser);
 
-  const signIn = async ({
-    username,
-    password,
-    remember,
-  }: ILogin): Promise<ILoginResult | null> => {
-    const result = await login({ username, password, remember });
-    if (result !== null && result.ok) {
-      const user : IUser = {
-        fullname: result.fullname,
-        token: result.token,
-        permissions: result.permissions,
-      };
+            if (isAuth) {
+                setAuthentication(isAuth);
+                setUser(authUser)
+            }
+        }
 
-      setAuthentication(true);
-      setUser(user);
+        setBrowserLoaded(true)
+    }, []);
 
-      // set set
-      localStorage.setItem(isAuthKey, JSON.stringify(true));
-      localStorage.setItem(authUserKey, JSON.stringify(user))
-    }
+    const signIn = async ({
+        username,
+        password,
+        remember,
+    }: ILogin): Promise<ILoginResult | null> => {
+        const result = await login({ username, password, remember });
+        if (result !== null && result.ok) {
+            const user: IUser = {
+                fullname: result.fullname,
+                token: result.token,
+                permissions: result.permissions,
+            };
 
-    return result;
-  };
+            setAuthentication(true);
+            setUser(user);
 
-  const signOut = () => {
-    return false;
-  };
+            // set set
+            localStorage.setItem(isAuthKey, JSON.stringify(true));
+            localStorage.setItem(authUserKey, JSON.stringify(user))
+        }
 
-  return (
-    <AuthContext.Provider value={{ browserLoaded, isAuthenticated, user, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+        return result;
+    };
+
+    const signOut = () => {
+        return false;
+    };
+
+    return (
+        <AuthContext.Provider value={{ browserLoaded, isAuthenticated, user, signIn, signOut }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };

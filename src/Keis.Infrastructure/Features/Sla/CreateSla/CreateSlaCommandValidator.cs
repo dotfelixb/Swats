@@ -1,5 +1,4 @@
 using FluentValidation;
-using Keis.Model.Commands;
 
 namespace Keis.Infrastructure.Features.Sla.CreateSla;
 

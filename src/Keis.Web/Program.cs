@@ -1,17 +1,16 @@
-using System.Net.Mime;
-using System.Text;
-using System.Text.Json;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Keis.Data.Repository;
 using Keis.Infrastructure;
 using Keis.Model;
-using System.Text.Json.Serialization;
+using Keis.Model.Domain;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Keis.Model.Domain;
+using System.Net.Mime;
+using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var bearerKey = builder.Configuration.GetSection("SecurityKey:Bearer").Value;
@@ -88,11 +87,11 @@ app.UseStatusCodePages(async statusCodeContext =>
         401 => "Unauthorized request",
         _ => ""
     };
-    
+
     var unAuth = JsonSerializer.Serialize(new ErrorResult
     {
         Ok = false,
-        Errors = new[] {codeMsg}
+        Errors = new[] { codeMsg }
     });
 
     await statusCodeContext.HttpContext.Response.WriteAsync(unAuth);
@@ -107,6 +106,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html"); 
+app.MapFallbackToFile("index.html");
 
 app.Run();

@@ -1,12 +1,11 @@
 using Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
 using Keis.Infrastructure.Features.TicketTypes.GetTicketType;
 using Keis.Infrastructure.Features.TicketTypes.ListTicketType;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 

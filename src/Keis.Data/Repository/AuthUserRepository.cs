@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Keis.Model;
 using Keis.Model.Domain;
 using Keis.Model.Queries;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace Keis.Data.Repository;
 
