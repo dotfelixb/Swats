@@ -33,6 +33,8 @@ public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Result<
         };
 
         var rst = await _manageRepository.CreateTag(tag, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(tag.Id) : Result.Fail<string>("Not able to create now!");
+        return rst > 0
+            ? Result.Ok(tag.Id)
+            : Result.Fail<string>("Not able to create now!");
     }
 }

@@ -181,3 +181,8 @@ export interface IFetchSla extends IDataAudit {
     resolveNotify: boolean;
     resolveEmail: boolean;
 }
+
+export interface IWorkflowEvent {
+    name:string;
+    type:string;
+}

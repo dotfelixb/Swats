@@ -8,10 +8,6 @@ public abstract class KeisResult
     public bool Ok { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    [JsonPropertyName("type")]
-    public string Type { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("errors")]
     public IEnumerable<string> Errors { get; set; }
 
@@ -23,12 +19,18 @@ public class SingleResult<T> : KeisResult
 {
     [JsonPropertyName("data")]
     public T Data { get; set; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "single";
 }
 
 public class ListResult<T> : KeisResult
 {
     [JsonPropertyName("data")]
     public IEnumerable<T> Data { get; set; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "list";
 }
 
 public class AuthResult : KeisResult

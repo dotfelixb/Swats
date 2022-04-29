@@ -12,4 +12,5 @@ public class CreateWorkflowCommand : IRequest<Result<string>>
     public WorkflowAction[] Actions { get; set; }
     public string Description { get; set; }
     public string CreatedBy { get; set; }
+    public DefaultStatus Status { get; set; } = DefaultStatus.Active;
 }

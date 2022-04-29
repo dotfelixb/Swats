@@ -1,4 +1,4 @@
-using Keis.Infrastructure.Features.Workflow.CreateWorkflow;
+﻿using Keis.Infrastructure.Features.Workflow.CreateWorkflow;
 using Keis.Infrastructure.Features.Workflow.GetWorkflow;
 using Keis.Infrastructure.Features.Workflow.ListWorkflow;
 using Keis.Infrastructure.Features.Workflow.ListWorkflowEvent;
@@ -68,6 +68,29 @@ public class WorkflowController : MethodController
         });
     }
 
+    [HttpGet("workflow.events", Name = nameof(ListWorkflowEvents))]
+    public async Task<IActionResult> ListWorkflowEvents([FromQuery] ListWorkflowEventCommand command)
+    {
+        var msg = $"{Request.Method}::{nameof(WorkflowController)}::{nameof(ListWorkflowEvents)}";
+        logger.LogInformation(msg);
+
+        var result = await mediatr.Send(command);
+        if (result.IsFailed)
+        {
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+        }
+
+        return Ok(new ListResult<WorkflowEvent>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
     [HttpPost("workflow.create", Name = nameof(CreateWorkflow))]
     public async Task<IActionResult> CreateWorkflow(CreateWorkflowCommand command)
     {
@@ -87,29 +110,6 @@ public class WorkflowController : MethodController
 
         var uri = $"/methods/workflow.get?id={result.Value}";
         return Created(uri, new SingleResult<string>
-        {
-            Ok = true,
-            Data = result.Value
-        });
-    }
-
-    [HttpGet("workflow.events", Name = nameof(ListWorkflowEvents))]
-    public async Task<IActionResult> ListWorkflowEvents([FromQuery] ListWorkflowEventCommand command)
-    {
-        var msg = $"{Request.Method}::{nameof(WorkflowController)}::{nameof(ListWorkflowEvents)}";
-        logger.LogInformation(msg);
-
-        var result = await mediatr.Send(command);
-        if (result.IsFailed)
-        {
-            return BadRequest(new ErrorResult
-            {
-                Ok = false,
-                Errors = result.Reasons.Select(s => s.Message)
-            });
-        }
-
-        return Ok(new ListResult<WorkflowEvent>
         {
             Ok = true,
             Data = result.Value

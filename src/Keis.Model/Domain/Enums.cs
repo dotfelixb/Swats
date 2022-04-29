@@ -78,7 +78,11 @@ public enum DefaultTimeFormat
 public enum EventType
 {
     NewTicket = 1,
-    ChangeTicketType
+    ChangeTicketType,
+    ChangeDepartment,
+    ChangeTeam,
+    ChangeTicketPriority,
+    ChangeTicketStatus
 }
 
 public enum CriteriaType
