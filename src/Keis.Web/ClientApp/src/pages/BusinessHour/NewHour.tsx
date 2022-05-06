@@ -1,27 +1,16 @@
-import {
-    ClockCircleOutlined,
-    CommentOutlined,
-    FormOutlined,
-} from "@ant-design/icons";
-import {
-    Alert,
-    Breadcrumb,
-    Button,
-    Form,
-    Input,
-    Select,
-    Timeline,
-} from "antd";
+import {ClockCircleOutlined, CommentOutlined, FormOutlined,} from "@ant-design/icons";
+import {Alert, Breadcrumb, Button, Form, Input, Select, Timeline,} from "antd";
 import dayjs from "dayjs";
-import { FC, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { OpenHourItem, PageView } from "../../components";
-import { useAuth } from "../../context";
-import { IOpenHour, ISingleResult } from "../../interfaces";
+import {FC, useState} from "react";
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import {OpenHourItem, PageView} from "../../components";
+import {useAuth} from "../../context";
+import {IOpenHour, ISingleResult} from "../../interfaces";
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
-interface INewHour { }
+interface INewHour {
+}
 
 interface IFormData {
     name: string;
@@ -31,17 +20,17 @@ interface IFormData {
 }
 
 const initialOpenHours: IOpenHour[] = [
-    { id: 1, name: "Monday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
-    { id: 2, name: "Tuesday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
-    { id: 3, name: "Wednesday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
-    { id: 4, name: "Thursday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
-    { id: 5, name: "Friday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
-    { id: 6, name: "Saturday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
-    { id: 7, name: "Sunday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined },
+    {id: 1, name: "Monday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
+    {id: 2, name: "Tuesday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
+    {id: 3, name: "Wednesday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
+    {id: 4, name: "Thursday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
+    {id: 5, name: "Friday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
+    {id: 6, name: "Saturday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
+    {id: 7, name: "Sunday", enabled: false, fullDay: false, fromTime: undefined, toTime: undefined},
 ];
 
 const NewHour: FC<INewHour> = () => {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [hoursList, setHoursList] = useState<IOpenHour[]>(initialOpenHours);
@@ -76,7 +65,7 @@ const NewHour: FC<INewHour> = () => {
         const result: ISingleResult<string> = await f.json();
 
         if (f.status === 201 && result.ok) {
-            navigate(`/admin/businesshour/${result.data}`, { replace: true });
+            navigate(`/admin/businesshour/${result.data}`, {replace: true});
         }
 
         setHasFormErrors(true);
@@ -99,27 +88,27 @@ const NewHour: FC<INewHour> = () => {
     );
 
     return (
-        <PageView title="New Hour" breadcrumbs={<Breadcrumbs />}>
+        <PageView title="New Hour" breadcrumbs={<Breadcrumbs/>}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 <div>
                     <Form form={form} layout="vertical" onFinish={onFinish}>
                         {hasFormErrors &&
                             formErrors?.map((e) => (
                                 <div key={e} className="py-2">
-                                    <Alert message={e} type="error" className="py-2" />
+                                    <Alert message={e} type="error" className="py-2"/>
                                 </div>
                             ))}
                         <Timeline>
                             <Timeline.Item
-                                dot={<FormOutlined style={{ fontSize: "16px" }} />}
+                                dot={<FormOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Business hour name</div>
                                 <Form.Item name="name" label="Name" htmlFor="name">
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
+                                dot={<ClockCircleOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Open hours</div>
                                 {hoursList.sort((a, b) => a.id - b.id).map(o => (
@@ -127,11 +116,11 @@ const NewHour: FC<INewHour> = () => {
                                         key={o.name}
                                         data={o}
                                         hoursList={hoursList}
-                                        setHoursList={setHoursList} />
+                                        setHoursList={setHoursList}/>
                                 ))}
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}
+                                dot={<ClockCircleOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Timezone and status</div>
                                 <Form.Item name="timezone" label="Timezone">
@@ -146,7 +135,7 @@ const NewHour: FC<INewHour> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                                dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">
                                     The description of this hour (optional)
@@ -156,7 +145,7 @@ const NewHour: FC<INewHour> = () => {
                                     label="Description"
                                     htmlFor="description"
                                 >
-                                    <TextArea rows={4} />
+                                    <TextArea rows={4}/>
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item>
@@ -172,7 +161,7 @@ const NewHour: FC<INewHour> = () => {
 
                 <div></div>
             </div>
-            <Outlet />
+            <Outlet/>
         </PageView>
     );
 };

@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 
-interface INoMatch { }
+interface INoMatch {
+}
 
 const NoMatch: FC<INoMatch> = () => {
     return (<div>

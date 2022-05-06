@@ -28,13 +28,11 @@ public class TeamController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchTeam>
         {
@@ -51,13 +49,11 @@ public class TeamController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchTeam>
         {
@@ -76,13 +72,11 @@ public class TeamController : MethodController
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         var uri = $"/methods/team.get?id={result.Value}";
         return Created(uri, new SingleResult<string>

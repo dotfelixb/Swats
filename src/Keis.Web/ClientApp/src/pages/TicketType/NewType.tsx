@@ -1,14 +1,15 @@
-import { CommentOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
-import { Breadcrumb, Form, Select, Input, Timeline, Button, Alert } from 'antd';
-import { FC, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { PageView } from '../../components';
-import { useAuth } from '../../context';
-import { ISingleResult } from '../../interfaces';
+import {CommentOutlined, EyeOutlined, FormOutlined} from '@ant-design/icons';
+import {Alert, Breadcrumb, Button, Form, Input, Select, Timeline} from 'antd';
+import {FC, useState} from 'react';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
+import {PageView} from '../../components';
+import {useAuth} from '../../context';
+import {ISingleResult} from '../../interfaces';
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
-interface INewType { }
+interface INewType {
+}
 
 interface IFormData {
     name: string;
@@ -19,13 +20,13 @@ interface IFormData {
 }
 
 const NewType: FC<INewType> = () => {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [hasFormErrors, setHasFormErrors] = useState(false);
     const [formErrors, setFormErrors] = useState<string[]>();
 
-    const onFinish = async ({ name, color, status, visibility, description }: IFormData) => {
+    const onFinish = async ({name, color, status, visibility, description}: IFormData) => {
         const body = new FormData();
         body.append("name", name ?? "");
         body.append("color", color ?? "");
@@ -45,7 +46,7 @@ const NewType: FC<INewType> = () => {
         const result: ISingleResult<string> = await f.json();
 
         if (f.status === 201 && result.ok) {
-            navigate(`/admin/tickettype/${result.data}`, { replace: true });
+            navigate(`/admin/tickettype/${result.data}`, {replace: true});
         }
 
         setHasFormErrors(true);
@@ -67,48 +68,48 @@ const NewType: FC<INewType> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title='New Type' breadcrumbs={<Breadcrumbs />}>
+    return (<PageView title='New Type' breadcrumbs={<Breadcrumbs/>}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
                 <Form form={form} layout="vertical" onFinish={onFinish}>
                     {hasFormErrors &&
                         formErrors?.map((e) => (
                             <div key={e} className="py-2">
-                                <Alert message={e} type="error" className="py-2" />
+                                <Alert message={e} type="error" className="py-2"/>
                             </div>
                         ))}
                     <Timeline>
                         <Timeline.Item
-                            dot={<FormOutlined style={{ fontSize: "16px" }} />}
+                            dot={<FormOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">Ticket type name</div>
                             <Form.Item name='name' label="Name" htmlFor="name">
-                                <Input />
+                                <Input/>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item
-                            dot={<EyeOutlined style={{ fontSize: "16px" }} />}
+                            dot={<EyeOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">External visibility and status</div>
                             <Form.Item name="visibility" label="Visibility">
-                                <Select >
+                                <Select>
                                     <Select.Option value="1">Public</Select.Option>
                                     <Select.Option value="2">Private</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item name="status" label="Status">
-                                <Select >
+                                <Select>
                                     <Select.Option value="1">Active</Select.Option>
                                     <Select.Option value="2">Inactive</Select.Option>
                                 </Select>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item
-                            dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                            dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">The description of this type (optional)</div>
                             <Form.Item name='description' label="Description" htmlFor='description'>
-                                <TextArea rows={4} />
+                                <TextArea rows={4}/>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item>
@@ -124,7 +125,7 @@ const NewType: FC<INewType> = () => {
 
             <div></div>
         </div>
-        <Outlet />
+        <Outlet/>
     </PageView>)
 }
 

@@ -1,15 +1,13 @@
 ﻿using Htmx;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Keis.Controllers;
 using Keis.Extensions;
-using Keis.Model.Commands;
-using System.Security.Claims;
 using Keis.Infrastructure.Features.Department.ListDepartment;
 using Keis.Infrastructure.Features.Teams.CreateTeam;
 using Keis.Infrastructure.Features.Teams.GetTeam;
 using Keis.Infrastructure.Features.Teams.ListTeams;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Keis.Areas.Admin.Controllers;
 
@@ -57,7 +55,7 @@ public class TeamsController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -81,7 +79,7 @@ public class TeamsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TeamsController)}::{nameof(Edit)}");
 
-        var query = new GetTeamCommand { Id = id };
+        var query = new GetTeamCommand {Id = id};
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -101,7 +99,7 @@ public class TeamsController : FrontEndController
 
         CreateTeamCommand command = new()
         {
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id})
         };
 
         return Request.IsHtmx()

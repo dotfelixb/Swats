@@ -1,16 +1,16 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using FluentResults;
 using Keis.Data.Repository;
 using Keis.Model.Domain;
 using MediatR;
-using System.Text.Json;
 
 namespace Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
 
 public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCommand, Result<string>>
 {
-    private readonly ITicketRepository _ticketRepository;
     private readonly IMapper _mapper;
+    private readonly ITicketRepository _ticketRepository;
 
     public CreateTicketTypeCommandHandler(ITicketRepository ticketRepository, IMapper mapper)
     {

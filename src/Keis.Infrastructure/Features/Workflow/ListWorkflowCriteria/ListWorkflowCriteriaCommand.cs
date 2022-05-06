@@ -1,5 +1,4 @@
-﻿using System;
-using FluentResults;
+﻿using FluentResults;
 using Keis.Model.Domain;
 using MediatR;
 

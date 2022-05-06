@@ -1,27 +1,28 @@
-import { Breadcrumb, Button } from "antd";
+import {Breadcrumb, Button} from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { DataTable, PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchAgent, IListResult } from "../../interfaces";
+import React, {FC, useEffect, useState} from "react";
+import {Link, Outlet} from "react-router-dom";
+import {DataTable, PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchAgent, IListResult} from "../../interfaces";
 
-interface IListAgents { }
+interface IListAgents {
+}
 
 const columns = [
-    { key: "email", column: [{ title: "Name" }, { title: "" }] },
-    { key: "name", column: [{ title: "Email" }, { title: "Mobile" }] },
-    { key: "departmentTeam", column: [{ title: "Department" }, { title: "Team" }] },
+    {key: "email", column: [{title: "Name"}, {title: ""}]},
+    {key: "name", column: [{title: "Email"}, {title: "Mobile"}]},
+    {key: "departmentTeam", column: [{title: "Department"}, {title: "Team"}]},
     {
         key: "created",
-        column: [{ title: "Created By" }, { title: "Created At" }],
+        column: [{title: "Created By"}, {title: "Created At"}],
     },
-    { key: "extra", column: [{ title: "" }] },
+    {key: "extra", column: [{title: ""}]},
 ];
 
 const ListAgents: FC<IListAgents> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
     const [agentList, setAgentList] = useState<IFetchAgent[]>();
 
     useEffect(() => {
@@ -64,7 +65,7 @@ const ListAgents: FC<IListAgents> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title="Agents" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
+    return (<PageView title="Agents" buttons={<Buttons/>} breadcrumbs={<Breadcrumbs/>}>
         <DataTable columns={columns}>
             {agentList?.map(a => (
                 <tr className="px-10" key={a.id}>
@@ -72,27 +73,27 @@ const ListAgents: FC<IListAgents> = () => {
                         <Link to={`/admin/agent/${a.id}`}>
                             <div className="">{`${a.firstName} ${a.lastName}`}</div>
                         </Link>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{a.email}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {a.mobile}
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{a.departmentName}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {a.teamName}
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{a.createdByName}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {dayjs(a.createdAt).format(dateFormats.longDateFormat)}
                         </div>
                     </td>
@@ -104,7 +105,7 @@ const ListAgents: FC<IListAgents> = () => {
             ))}
         </DataTable>
 
-        <Outlet />
+        <Outlet/>
     </PageView>)
 }
 

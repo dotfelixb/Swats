@@ -5,7 +5,8 @@ using MediatR;
 namespace Keis.Model.Commands;
 
 public class DashboardCommands
-{ }
+{
+}
 
 public class AgentTicketsCommand : GetType, IRequest<Result<int>>
 {

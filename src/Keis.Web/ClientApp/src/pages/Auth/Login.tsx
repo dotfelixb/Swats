@@ -1,10 +1,11 @@
-import { Alert, Button, Checkbox, Form, Input, Layout } from "antd";
-import { FC, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { PageView } from "../../components";
-import { useAuth } from "../../context";
+import {Alert, Button, Checkbox, Form, Input, Layout} from "antd";
+import {FC, useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {PageView} from "../../components";
+import {useAuth} from "../../context";
 
-const { Header, Content } = Layout;
+const {Header, Content} = Layout;
+
 interface ILogin {
     from?: string;
 }
@@ -16,13 +17,13 @@ interface ILoginForm {
 }
 
 const Login: FC<ILogin> = () => {
-    const { signIn } = useAuth();
+    const {signIn} = useAuth();
     const [form] = Form.useForm();
     const [loginFailed, setLoginFailed] = useState(false);
     const [loginErrors, setLoginErrors] = useState<string[]>();
     const navigate = useNavigate();
     const [returnUrl, setReturnUrl] = useState("/");
-    const { state } = useLocation();
+    const {state} = useLocation();
     const _state: any = state;
 
     useEffect(() => {
@@ -32,13 +33,13 @@ const Login: FC<ILogin> = () => {
     }, [_state]);
 
     const onFinish = async ({
-        username,
-        password,
-        remember,
-    }: ILoginForm): Promise<void> => {
-        const result = await signIn({ username, password, remember });
+                                username,
+                                password,
+                                remember,
+                            }: ILoginForm): Promise<void> => {
+        const result = await signIn({username, password, remember});
         if (result !== null && result.ok) {
-            navigate(returnUrl, { replace: true });
+            navigate(returnUrl, {replace: true});
         } else {
             // login failed do something
             setLoginFailed(true);
@@ -63,14 +64,14 @@ const Login: FC<ILogin> = () => {
                             <div>
                                 {loginFailed &&
                                     loginErrors?.map((e) => (
-                                        <Alert key={e} message={e} type="error" className="py-2" />
+                                        <Alert key={e} message={e} type="error" className="py-2"/>
                                     ))}
                                 <Form form={form} onFinish={onFinish} layout="vertical">
                                     <Form.Item name="username" label="Username or Email">
-                                        <Input placeholder="" />
+                                        <Input placeholder=""/>
                                     </Form.Item>
                                     <Form.Item name="password" label="Password">
-                                        <Input.Password placeholder="" />
+                                        <Input.Password placeholder=""/>
                                     </Form.Item>
                                     <Form.Item name="remember" valuePropName="checked">
                                         <Checkbox>Remember me</Checkbox>

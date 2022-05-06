@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using Keis.Model;
 using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.AssignTicket;

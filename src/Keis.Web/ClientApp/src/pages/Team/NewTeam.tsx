@@ -1,14 +1,15 @@
-import { CommentOutlined, FormOutlined, TeamOutlined } from '@ant-design/icons';
-import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from 'antd';
-import { FC, useEffect, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { IFetchDepartment, IListResult, ISingleResult } from '../../interfaces';
+import {CommentOutlined, FormOutlined, TeamOutlined} from '@ant-design/icons';
+import {Alert, Breadcrumb, Button, Form, Input, Select, Timeline} from 'antd';
+import {FC, useEffect, useState} from 'react';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
+import {PageView} from '../../components';
+import {useApp, useAuth} from '../../context';
+import {IFetchDepartment, IListResult, ISingleResult} from '../../interfaces';
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
-interface INewTeam { }
+interface INewTeam {
+}
 
 interface IFormData {
     name: string;
@@ -19,8 +20,8 @@ interface IFormData {
 }
 
 const NewTeam: FC<INewTeam> = () => {
-    const { user } = useAuth();
-    const { get } = useApp();
+    const {user} = useAuth();
+    const {get} = useApp();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
@@ -47,7 +48,7 @@ const NewTeam: FC<INewTeam> = () => {
         }
     }, [user, get]);
 
-    const onFinish = async ({ name, department, status, team, note }: IFormData) => {
+    const onFinish = async ({name, department, status, team, note}: IFormData) => {
         const body = new FormData();
         body.append("name", name ?? "");
         body.append("department", department ?? "");
@@ -67,7 +68,7 @@ const NewTeam: FC<INewTeam> = () => {
         const result: ISingleResult<string> = await f.json();
 
         if (f.status === 201 && result.ok) {
-            navigate(`/admin/team/${result.data}`, { replace: true });
+            navigate(`/admin/team/${result.data}`, {replace: true});
         }
 
         setHasFormErrors(true);
@@ -89,51 +90,52 @@ const NewTeam: FC<INewTeam> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title='New Team' breadcrumbs={<Breadcrumbs />}>
+    return (<PageView title='New Team' breadcrumbs={<Breadcrumbs/>}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
                 <Form form={form} layout="vertical" onFinish={onFinish}>
                     {hasFormErrors &&
                         formErrors?.map((e) => (
                             <div key={e} className="py-2">
-                                <Alert message={e} type="error" className="py-2" />
+                                <Alert message={e} type="error" className="py-2"/>
                             </div>
                         ))}
                     <Timeline>
                         <Timeline.Item
-                            dot={<FormOutlined style={{ fontSize: "16px" }} />}
+                            dot={<FormOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">Team name</div>
                             <Form.Item name='name' label="Name" htmlFor="name">
-                                <Input />
+                                <Input/>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item
-                            dot={<TeamOutlined style={{ fontSize: "16px" }} />}
+                            dot={<TeamOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">Team lead, department and status</div>
                             <Form.Item name="team" label="Team Lead">
-                                <Select >
+                                <Select>
                                 </Select>
                             </Form.Item>
                             <Form.Item name="department" label="Team Department">
-                                <Select >
-                                    {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                <Select>
+                                    {departmentList?.map(d => (
+                                        <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                 </Select>
                             </Form.Item>
                             <Form.Item name="status" label="Status">
-                                <Select >
+                                <Select>
                                     <Select.Option value="1">Active</Select.Option>
                                     <Select.Option value="2">Inactive</Select.Option>
                                 </Select>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item
-                            dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                            dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">The default response to send in email (optional)</div>
                             <Form.Item name='note' label="Default Response" htmlFor='note'>
-                                <TextArea rows={4} />
+                                <TextArea rows={4}/>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item>
@@ -150,7 +152,7 @@ const NewTeam: FC<INewTeam> = () => {
             <div></div>
         </div>
 
-        <Outlet />
+        <Outlet/>
     </PageView>)
 }
 

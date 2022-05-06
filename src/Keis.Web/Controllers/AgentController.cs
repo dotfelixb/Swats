@@ -39,13 +39,11 @@ public class AgentController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchAgent>
         {
@@ -62,13 +60,11 @@ public class AgentController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchAgent>
         {
@@ -86,33 +82,29 @@ public class AgentController : MethodController
         command.CreatedBy = Request.HttpContext.UserId();
         // get user name from email
         command.UserName = command.Email.Split('@').FirstOrDefault(); // lisa.paige@keis.app => lisa.paige
-        
+
         // create a user
         logger.LogInformation($"{msg} - Creating user for agent");
-        
+
         // email before at '@' symbol and @1
         var password = $"{command.UserName}@1"; // lisa.paige@keis.app => lisa.paige@1
         var user = mapper.Map<CreateAgentCommand, AuthUser>(command);
         var userResult = await userManager.CreateAsync(user, password);
         if (!userResult.Succeeded)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = userResult.Errors.Select(s => s.Description)
             });
-        }
-        
+
         // create agent
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         var uri = $"/methods/agent.get?id={result.Value}";
         return Created(uri, new SingleResult<string>

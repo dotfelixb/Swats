@@ -242,7 +242,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 LEFT JOIN agent r on r.id = t.requester
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new {Id = id});
         });
     }
 
@@ -295,7 +295,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicket>(query, new { agent, offset, limit });
+            return await conn.QueryAsync<FetchTicket>(query, new {agent, offset, limit});
         });
     }
 
@@ -312,7 +312,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 WHERE 1=1
                 {_filter}";
 
-            return await conn.ExecuteScalarAsync<int>(query, new { Id = id });
+            return await conn.ExecuteScalarAsync<int>(query, new {Id = id});
         });
     }
 
@@ -407,7 +407,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 FROM tickettype t
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTicketType>(query, new {Id = id});
         });
     }
 
@@ -429,7 +429,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTicketType>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTicketType>(query, new {offset, limit});
         });
     }
 
@@ -507,7 +507,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 WHERE tc.ticket = @Id
                 ORDER BY tc.createdat DESC";
 
-            return await conn.QueryAsync<FetchTicketComment>(query, new { Id = id });
+            return await conn.QueryAsync<FetchTicketComment>(query, new {Id = id});
         });
     }
 

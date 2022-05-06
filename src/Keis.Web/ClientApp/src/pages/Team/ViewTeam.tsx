@@ -1,17 +1,18 @@
-import { Breadcrumb } from "antd";
+import {Breadcrumb} from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchTeam, ISingleResult } from "../../interfaces";
+import React, {FC, useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import {PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchTeam, ISingleResult} from "../../interfaces";
 
-interface IViewTeam { }
+interface IViewTeam {
+}
 
 const ViewTeam: FC<IViewTeam> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
-    const { id } = useParams();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
+    const {id} = useParams();
     const [team, setTeam] = useState<IFetchTeam>();
 
     useEffect(() => {
@@ -49,9 +50,9 @@ const ViewTeam: FC<IViewTeam> = () => {
     );
 
     return (
-        <PageView title={team?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+        <PageView title={team?.name ?? ""} breadcrumbs={<Breadcrumbs/>}>
             <div className="w-full flex flex-row">
-                <div style={{ width: "220px" }} className="">
+                <div style={{width: "220px"}} className="">
                     <div className="pr-2">
                         <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
                     </div>

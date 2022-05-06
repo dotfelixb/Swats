@@ -1,8 +1,5 @@
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Keis.Model.Domain;
-using Keis.Model.Queries;
 
 namespace Keis.Model.Commands;
 
@@ -26,10 +23,10 @@ public class TicketCommentCommand
 {
     public string CommentId { get; set; }
     public string TicketId { get; set; }
-    public string  Body { get; set; }
+    public string Body { get; set; }
 }
 
-public class CreateTicketReplyCommand :TicketCommentCommand, IRequest<Result<string>>
+public class CreateTicketReplyCommand : TicketCommentCommand, IRequest<Result<string>>
 {
     public string Subject { get; set; }
     public string ToEmail { get; set; }
@@ -37,4 +34,3 @@ public class CreateTicketReplyCommand :TicketCommentCommand, IRequest<Result<str
 }
 
 #endregion
-

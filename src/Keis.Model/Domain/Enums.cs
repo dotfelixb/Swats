@@ -104,7 +104,7 @@ public enum CriteriaType
 
 public enum ControlType
 {
-    Input =  1,
+    Input = 1,
     Select,
     Multiselect
 }

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 
 interface IDataColumn {
     column: { title: string }[];
@@ -9,18 +9,18 @@ interface IDataTable {
     columns: IDataColumn[];
 }
 
-const DataTable: FC<IDataTable> = ({ columns, children }) => {
+const DataTable: FC<IDataTable> = ({columns, children}) => {
     const renderColumn = (
         <thead className="datatable">
-            <tr className="text-left px-3 bg-indigo-50">
-                {columns.map((c) => {
-                    return (
-                        <th key={c.key} className="px-3 py-3 font-semibold">
-                            {c.column.map(cc => (<div key={cc.title}>{cc.title}</div>))}
-                        </th>
-                    );
-                })}
-            </tr>
+        <tr className="text-left px-3 bg-indigo-50">
+            {columns.map((c) => {
+                return (
+                    <th key={c.key} className="px-3 py-3 font-semibold">
+                        {c.column.map(cc => (<div key={cc.title}>{cc.title}</div>))}
+                    </th>
+                );
+            })}
+        </tr>
         </thead>
     );
 
@@ -30,12 +30,12 @@ const DataTable: FC<IDataTable> = ({ columns, children }) => {
             <div className="grid grid-cols-5 gap-4 px-5 py-5">
                 <div>
                     <div className="w-full">
-                        <input className="form-input-search" placeholder="Name" />
+                        <input className="form-input-search" placeholder="Name"/>
                     </div>
                 </div>
                 <div>
                     <div className="w-full">
-                        <input className="form-input-search" placeholder="Name" />
+                        <input className="form-input-search" placeholder="Name"/>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@ const DataTable: FC<IDataTable> = ({ columns, children }) => {
                 <table className="w-full table-auto">
                     {renderColumn}
                     <tbody>
-                        {children}
+                    {children}
                     </tbody>
                 </table>
             </div>

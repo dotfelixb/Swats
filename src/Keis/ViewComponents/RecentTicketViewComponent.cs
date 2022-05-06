@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Keis.Model.ViewModel;
+﻿using Keis.Model.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.ViewComponents;
 

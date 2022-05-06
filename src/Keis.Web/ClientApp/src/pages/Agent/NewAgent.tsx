@@ -1,19 +1,15 @@
-import {
-    CommentOutlined,
-    CustomerServiceOutlined,
-    PhoneOutlined,
-    UserSwitchOutlined,
-} from "@ant-design/icons";
-import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import { FC, useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchDepartment, IFetchTeam, IFetchType, IListResult, ISingleResult } from "../../interfaces";
+import {CommentOutlined, CustomerServiceOutlined, PhoneOutlined, UserSwitchOutlined,} from "@ant-design/icons";
+import {Alert, Breadcrumb, Button, Form, Input, Select, Timeline} from "antd";
+import {FC, useEffect, useState} from "react";
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import {PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchDepartment, IFetchTeam, IFetchType, IListResult, ISingleResult} from "../../interfaces";
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
-interface INew { }
+interface INew {
+}
 
 interface IFormData {
     firstname: string;
@@ -31,9 +27,9 @@ interface IFormData {
 }
 
 const New: FC<INew> = () => {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const [form] = Form.useForm();
-    const { get } = useApp();
+    const {get} = useApp();
     const navigate = useNavigate();
     const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
     const [teamList, setTeamList] = useState<IFetchTeam[]>();
@@ -92,19 +88,19 @@ const New: FC<INew> = () => {
     }, [user, get]);
 
     const onFinish = async ({
-        firstname,
-        lastname,
-        email,
-        mobile,
-        telephone,
-        timezone,
-        department,
-        team,
-        type,
-        mode,
-        status,
-        note,
-    }: IFormData) => {
+                                firstname,
+                                lastname,
+                                email,
+                                mobile,
+                                telephone,
+                                timezone,
+                                department,
+                                team,
+                                type,
+                                mode,
+                                status,
+                                note,
+                            }: IFormData) => {
         const body = new FormData();
         body.append("firstname", firstname ?? "");
         body.append("lastname", lastname ?? "");
@@ -131,7 +127,7 @@ const New: FC<INew> = () => {
         const result: ISingleResult<string> = await f.json();
 
         if (f.status === 201 && result.ok) {
-            navigate(`/admin/agent/${result.data}`, { replace: true });
+            navigate(`/admin/agent/${result.data}`, {replace: true});
         }
 
         setHasFormErrors(true);
@@ -154,19 +150,19 @@ const New: FC<INew> = () => {
     );
 
     return (
-        <PageView title="New Agent" breadcrumbs={<Breadcrumbs />}>
+        <PageView title="New Agent" breadcrumbs={<Breadcrumbs/>}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 <div>
                     <Form form={form} layout="vertical" onFinish={onFinish}>
                         {hasFormErrors &&
                             formErrors?.map((e) => (
                                 <div key={e} className="py-2">
-                                    <Alert message={e} type="error" className="py-2" />
+                                    <Alert message={e} type="error" className="py-2"/>
                                 </div>
                             ))}
                         <Timeline>
                             <Timeline.Item
-                                dot={<CustomerServiceOutlined style={{ fontSize: "16px" }} />}
+                                dot={<CustomerServiceOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Agent info</div>
                                 <Form.Item
@@ -174,10 +170,10 @@ const New: FC<INew> = () => {
                                     label="First Name"
                                     htmlFor="firstname"
                                 >
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                                 <Form.Item name="lastname" label="Last Name" htmlFor="lastname">
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                                 <Form.Item name="status" label="Status">
                                     <Select>
@@ -187,21 +183,21 @@ const New: FC<INew> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<PhoneOutlined style={{ fontSize: "16px" }} />}
+                                dot={<PhoneOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Agent contact</div>
                                 <Form.Item name="email" label="Email" htmlFor="email">
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                                 <Form.Item name="mobile" label="Mobile" htmlFor="mobile">
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                                 <Form.Item
                                     name="telephone"
                                     label="Telephone"
                                     htmlFor="telephone"
                                 >
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                                 <Form.Item name="timezone" label="Timezone">
                                     <Select>
@@ -210,24 +206,27 @@ const New: FC<INew> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<UserSwitchOutlined style={{ fontSize: "16px" }} />}
+                                dot={<UserSwitchOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">
                                     Agent department, team and service
                                 </div>
                                 <Form.Item name="department" label="Department">
                                     <Select>
-                                        {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                        {departmentList?.map(d => (
+                                            <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                     </Select>
                                 </Form.Item>
                                 <Form.Item name="team" label="Team">
                                     <Select>
-                                        {teamList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                        {teamList?.map(d => (
+                                            <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                     </Select>
                                 </Form.Item>
                                 <Form.Item name="type" label="Default Ticket Type">
                                     <Select>
-                                        {typeList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                        {typeList?.map(d => (
+                                            <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                     </Select>
                                 </Form.Item>
                                 <Form.Item name="mode" label="Mode">
@@ -238,13 +237,13 @@ const New: FC<INew> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                                dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">
                                     Email signature for agent (optional)
                                 </div>
                                 <Form.Item name="note" label="Signature" htmlFor="note">
-                                    <TextArea rows={4} />
+                                    <TextArea rows={4}/>
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item>
@@ -261,7 +260,7 @@ const New: FC<INew> = () => {
                 <div></div>
             </div>
 
-            <Outlet />
+            <Outlet/>
         </PageView>
     );
 };

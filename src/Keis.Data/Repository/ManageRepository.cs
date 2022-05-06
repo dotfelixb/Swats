@@ -77,14 +77,14 @@ public interface IManageRepository
         CancellationToken cancellationToken = default);
 
     #endregion Sla
-    
+
     #region Workflow
 
     Task<int> CreateWorkflow(Workflow workflow, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchWorkflow>> ListWorkflow(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
-    
+
     Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken);
 
     #endregion
@@ -212,7 +212,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businesshour b
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new {Id = id});
         });
     }
 
@@ -227,7 +227,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businessopenhour bo
                 WHERE bo.businesshour = @Id";
 
-            return await conn.QueryAsync<OpenHour>(query, new { Id = id });
+            return await conn.QueryAsync<OpenHour>(query, new {Id = id});
         });
     }
 
@@ -249,7 +249,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchBusinessHour>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchBusinessHour>(query, new {offset, limit});
         });
     }
 
@@ -345,7 +345,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM tags t
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new {Id = id});
         });
     }
 
@@ -367,7 +367,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTag>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTag>(query, new {offset, limit});
         });
     }
 
@@ -485,7 +485,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE d.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new {Id = id});
         });
     }
 
@@ -511,7 +511,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchDepartment>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchDepartment>(query, new {offset, limit});
         });
     }
 
@@ -608,7 +608,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new {Id = id});
         });
     }
 
@@ -634,7 +634,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTeam>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTeam>(query, new {offset, limit});
         });
     }
 
@@ -732,7 +732,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN department d ON d.id = h.department
                 WHERE h.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new {Id = id});
         });
     }
 
@@ -756,7 +756,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchHelpTopic>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchHelpTopic>(query, new {offset, limit});
         });
     }
 
@@ -879,7 +879,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchSla>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchSla>(query, new {offset, limit});
         });
     }
 
@@ -898,12 +898,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN businesshour b ON b.id = s.businesshour
                 WHERE s.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchSla>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchSla>(query, new {Id = id});
         });
     }
 
     #endregion Sla
-    
+
     #region Workflow
 
     public Task<int> CreateWorkflow(Workflow workflow, DbAuditLog auditLog, CancellationToken cancellationToken)
@@ -933,7 +933,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @CreatedBy
                         , @UpdatedBy)";
 
-            var eventArray = workflow.Events.Select(s => (int)s).ToArray();
+            var eventArray = workflow.Events.Select(s => (int) s).ToArray();
             var cmdRst = await conn.ExecuteAsync(cmd, new
             {
                 workflow.Id,
@@ -968,12 +968,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 s.Id,
                 Workflow = workflow.Id,
                 s.Name,
-                Criteria =  (int)s.Criteria,
-                Condition = (int)s.Condition,
+                Criteria = (int) s.Criteria,
+                Condition = (int) s.Condition,
                 s.Match
             }).ToArray();
-            var crtRst = await conn.ExecuteAsync(cmdCrt, criteria );
-            
+            var crtRst = await conn.ExecuteAsync(cmdCrt, criteria);
+
             const string cmdAct = @"
                     INSERT INTO public.workflowaction
                         (id
@@ -993,10 +993,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 s.Id,
                 Workflow = workflow.Id,
                 s.Name,
-                ActionFrom =(int) s.ActionFrom,
+                ActionFrom = (int) s.ActionFrom,
                 s.ActionTo
             }).ToArray();
-            var actRst = await conn.ExecuteAsync(cmdAct, actions );
+            var actRst = await conn.ExecuteAsync(cmdAct, actions);
 
             const string logCmd = @"
                 INSERT INTO public.workflowauditlog
@@ -1050,10 +1050,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchWorkflow>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchWorkflow>(query, new {offset, limit});
         });
     }
-        
+
     public Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -1066,10 +1066,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.updatedby) AS UpdatedByName
                 FROM workflow w
                 WHERE w.id = @Id";
-            
-            return await conn.QueryFirstOrDefaultAsync<FetchWorkflow>(query, new { Id = id });
+
+            return await conn.QueryFirstOrDefaultAsync<FetchWorkflow>(query, new {Id = id});
         });
     }
-    
+
     #endregion
 }

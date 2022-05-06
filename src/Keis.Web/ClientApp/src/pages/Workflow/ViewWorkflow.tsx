@@ -1,17 +1,18 @@
-import { Breadcrumb } from 'antd';
+import {Breadcrumb} from 'antd';
 import dayjs from 'dayjs';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { ISingleResult, IFetchWorkflow } from '../../interfaces';
+import React, {FC, useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
+import {PageView} from '../../components';
+import {useApp, useAuth} from '../../context';
+import {IFetchWorkflow, ISingleResult} from '../../interfaces';
 
-interface IViewWorkflow { }
+interface IViewWorkflow {
+}
 
 const ViewWorkflow: FC<IViewWorkflow> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
-    const { id } = useParams();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
+    const {id} = useParams();
     const [workflow, setWorkflow] = useState<IFetchWorkflow>();
 
     useEffect(() => {
@@ -30,7 +31,7 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
             load();
         }
     }, [user, id, get]);
-    
+
     const Breadcrumbs: FC = () => (
         <Breadcrumb separator="/">
             <Breadcrumb.Item>
@@ -47,9 +48,9 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title={workflow?.name ?? 'View Workflow'} breadcrumbs={<Breadcrumbs />}>
- <div className="w-full flex flex-row ">
-            <div style={{ width: "220px" }} className="">
+    return (<PageView title={workflow?.name ?? 'View Workflow'} breadcrumbs={<Breadcrumbs/>}>
+        <div className="w-full flex flex-row ">
+            <div style={{width: "220px"}} className="">
                 <div className="pr-2">
                     <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
                 </div>
@@ -68,7 +69,7 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
                     </li>
                     <li>
                         <div>Updated By</div>
-                        <div>{ workflow?.updatedByName ?? ""}</div>
+                        <div>{workflow?.updatedByName ?? ""}</div>
                     </li>
                     <li>
                         <div>Updated At</div>

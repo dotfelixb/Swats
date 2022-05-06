@@ -1,5 +1,5 @@
-﻿using MassTransit;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using MassTransit;
 
 namespace Keis.Model.Domain;
 

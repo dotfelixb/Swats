@@ -1,26 +1,27 @@
-import { Breadcrumb, Button } from "antd";
+import {Breadcrumb, Button} from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { DataTable, PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchSla, IListResult } from "../../interfaces";
+import React, {FC, useEffect, useState} from "react";
+import {Link, Outlet} from "react-router-dom";
+import {DataTable, PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchSla, IListResult} from "../../interfaces";
 
-interface IListSla { }
+interface IListSla {
+}
 
 const columns = [
-    { key: "name", column: [{ title: "Name" }, { title: "" }] },
-    { key: "hour", column: [{ title: "Business Hour" }, { title: "Status" }] },
+    {key: "name", column: [{title: "Name"}, {title: ""}]},
+    {key: "hour", column: [{title: "Business Hour"}, {title: "Status"}]},
     {
         key: "created",
-        column: [{ title: "Created By" }, { title: "Created At" }],
+        column: [{title: "Created By"}, {title: "Created At"}],
     },
-    { key: "extra", column: [{ title: "" }] },
+    {key: "extra", column: [{title: ""}]},
 ];
 
 const ListSla: FC<IListSla> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
     const [slaList, setSlaList] = useState<IFetchSla[]>();
 
     useEffect(() => {
@@ -63,7 +64,7 @@ const ListSla: FC<IListSla> = () => {
         </Breadcrumb>
     );
 
-    return <PageView title="SLA" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
+    return <PageView title="SLA" buttons={<Buttons/>} breadcrumbs={<Breadcrumbs/>}>
         <DataTable columns={columns}>
             {slaList?.map((s) => (
                 <tr className="px-10" key={s.id}>
@@ -71,21 +72,21 @@ const ListSla: FC<IListSla> = () => {
                         <Link to={`/admin/sla/${s.id}`}>
                             <div className="">{s.name}</div>
                         </Link>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
 
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{s.businessHourName}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {s.status}
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{s.createdByName}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {dayjs(s.createdAt).format(dateFormats.longDateFormat)}
                         </div>
                     </td>
@@ -96,7 +97,7 @@ const ListSla: FC<IListSla> = () => {
                 </tr>
             ))}
         </DataTable>
-        <Outlet />
+        <Outlet/>
     </PageView>;
 };
 

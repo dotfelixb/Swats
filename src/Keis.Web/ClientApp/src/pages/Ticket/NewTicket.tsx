@@ -1,19 +1,15 @@
-import {
-    BookOutlined,
-    CommentOutlined,
-    SaveOutlined,
-    SkinOutlined,
-} from "@ant-design/icons";
-import { Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import { FC, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { PageView } from "../../components";
+import {BookOutlined, CommentOutlined, SaveOutlined, SkinOutlined,} from "@ant-design/icons";
+import {Breadcrumb, Button, Form, Input, Select, Timeline} from "antd";
+import {FC, useState} from "react";
+import {Link, Outlet} from "react-router-dom";
+import {PageView} from "../../components";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 // const { TextArea } = Input;
 
-interface INewTicket { }
+interface INewTicket {
+}
 
 const NewTicket: FC<INewTicket> = () => {
     const [form] = Form.useForm();
@@ -23,7 +19,7 @@ const NewTicket: FC<INewTicket> = () => {
         <div className="space-x-2">
             <Button type="primary">
                 <div className="flex flex-row items-center space-x-2">
-                    <SaveOutlined />
+                    <SaveOutlined/>
                     <div>Submit</div>
                 </div>
             </Button>
@@ -45,15 +41,15 @@ const NewTicket: FC<INewTicket> = () => {
     return (
         <PageView
             title="Create ticket"
-            buttons={<Buttons />}
-            breadcrumbs={<Breadcrumbs />}
+            buttons={<Buttons/>}
+            breadcrumbs={<Breadcrumbs/>}
         >
             <Form form={form} layout="vertical">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div>
                         <Timeline>
                             <Timeline.Item
-                                dot={<BookOutlined style={{ fontSize: "16px" }} />}
+                                dot={<BookOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Where is the ticket from</div>
                                 <Form.Item label="Requester" htmlFor="requester">
@@ -65,7 +61,7 @@ const NewTicket: FC<INewTicket> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<SkinOutlined style={{ fontSize: "16px" }} />}
+                                dot={<SkinOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Who should work on it</div>
                                 <Form.Item label="Assigned To">
@@ -77,15 +73,16 @@ const NewTicket: FC<INewTicket> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                                dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">What is the issue</div>
                                 <Form.Item label="Subject">
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                                 <Form.Item label="Description">
                                     {/* <TextArea rows={4} /> */}
-                                    <ReactQuill theme="snow" value={value} onChange={setValue} style={{ height: '240px' }} />
+                                    <ReactQuill theme="snow" value={value} onChange={setValue}
+                                                style={{height: '240px'}}/>
                                 </Form.Item>
                             </Timeline.Item>
                         </Timeline>
@@ -94,7 +91,7 @@ const NewTicket: FC<INewTicket> = () => {
                     <div></div>
                 </div>
             </Form>
-            <Outlet />
+            <Outlet/>
         </PageView>
     );
 };

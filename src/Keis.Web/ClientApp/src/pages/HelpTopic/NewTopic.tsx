@@ -1,19 +1,15 @@
-import {
-    CommentOutlined,
-    EyeOutlined,
-    FormOutlined,
-    UserSwitchOutlined,
-} from "@ant-design/icons";
-import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import React, { FC, useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchDepartment, IListResult, ISingleResult } from "../../interfaces";
+import {CommentOutlined, EyeOutlined, FormOutlined, UserSwitchOutlined,} from "@ant-design/icons";
+import {Alert, Breadcrumb, Button, Form, Input, Select, Timeline} from "antd";
+import React, {FC, useEffect, useState} from "react";
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import {PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchDepartment, IListResult, ISingleResult} from "../../interfaces";
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
-interface INewTopic { }
+interface INewTopic {
+}
 
 interface IFormData {
     topic: string;
@@ -25,8 +21,8 @@ interface IFormData {
 }
 
 const NewTopic: FC<INewTopic> = () => {
-    const { user } = useAuth();
-    const { get } = useApp();
+    const {user} = useAuth();
+    const {get} = useApp();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
@@ -54,13 +50,13 @@ const NewTopic: FC<INewTopic> = () => {
     }, [user, get]);
 
     const onFinish = async ({
-        topic,
-        department,
-        type,
-        status,
-        visibility,
-        note,
-    }: IFormData) => {
+                                topic,
+                                department,
+                                type,
+                                status,
+                                visibility,
+                                note,
+                            }: IFormData) => {
         const body = new FormData();
         body.append("topic", topic ?? "");
         body.append("department", department ?? "");
@@ -81,7 +77,7 @@ const NewTopic: FC<INewTopic> = () => {
         const result: ISingleResult<string> = await f.json();
 
         if (f.status === 201 && result.ok) {
-            navigate(`/admin/helptopic/${result.data}`, { replace: true });
+            navigate(`/admin/helptopic/${result.data}`, {replace: true});
         }
 
         setHasFormErrors(true);
@@ -104,26 +100,26 @@ const NewTopic: FC<INewTopic> = () => {
     );
 
     return (
-        <PageView title="New Topic" breadcrumbs={<Breadcrumbs />}>
+        <PageView title="New Topic" breadcrumbs={<Breadcrumbs/>}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 <div>
                     <Form form={form} layout="vertical" onFinish={onFinish}>
                         {hasFormErrors &&
                             formErrors?.map((e) => (
                                 <div key={e} className="py-2">
-                                    <Alert message={e} type="error" className="py-2" />
+                                    <Alert message={e} type="error" className="py-2"/>
                                 </div>
                             ))}
                         <Timeline>
                             <Timeline.Item
-                                dot={<FormOutlined style={{ fontSize: "16px" }} />}
+                                dot={<FormOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">Help topic name</div>
                                 <Form.Item name="topic" label="Topic" htmlFor="topic">
-                                    <Input />
+                                    <Input/>
                                 </Form.Item>
                             </Timeline.Item>
-                            <Timeline.Item dot={<EyeOutlined style={{ fontSize: "16px" }} />}>
+                            <Timeline.Item dot={<EyeOutlined style={{fontSize: "16px"}}/>}>
                                 <div className="font-bold mb-2">
                                     External visibility and status
                                 </div>
@@ -141,25 +137,26 @@ const NewTopic: FC<INewTopic> = () => {
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<UserSwitchOutlined style={{ fontSize: "16px" }} />}
+                                dot={<UserSwitchOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">
                                     Which department is this topic linked to
                                 </div>
                                 <Form.Item name="department" label="Department" htmlFor="department">
                                     <Select showSearch>
-                                        {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                        {departmentList?.map(d => (
+                                            <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                     </Select>
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item
-                                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                                dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                             >
                                 <div className="font-bold mb-2">
                                     Additional note for this topic (optional)
                                 </div>
                                 <Form.Item name="note" label="Note" htmlFor="note">
-                                    <TextArea rows={4} />
+                                    <TextArea rows={4}/>
                                 </Form.Item>
                             </Timeline.Item>
                             <Timeline.Item>
@@ -175,7 +172,7 @@ const NewTopic: FC<INewTopic> = () => {
 
                 <div></div>
             </div>
-            <Outlet />
+            <Outlet/>
         </PageView>
     );
 };

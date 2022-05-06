@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, {FC, useEffect} from "react";
 
 interface IPageView {
     title: string;
@@ -6,7 +6,7 @@ interface IPageView {
     breadcrumbs?: React.ReactNode;
 }
 
-const PageView: FC<IPageView> = ({ title, children, buttons, breadcrumbs }) => {
+const PageView: FC<IPageView> = ({title, children, buttons, breadcrumbs}) => {
     useEffect(() => {
         document.title = title;
     }, [title]);

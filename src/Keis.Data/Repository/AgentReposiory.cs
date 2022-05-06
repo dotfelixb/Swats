@@ -121,6 +121,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
         {
             var query = @"
                 SELECT g.*
+                    , CONCAT(g.firstname, ' ', g.lastname) as ""name"" 
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
 	                , d.""name"" AS departmentname
@@ -132,7 +133,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 LEFT JOIN tickettype tt ON tt.id = g.tickettype
                 WHERE g.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new {Id = id});
         });
     }
 
@@ -146,6 +147,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
             var _includeDeleted = includeDeleted ? " " : " AND g.deleted = FALSE ";
             var query = $@"
                 SELECT g.*
+                    , CONCAT(g.firstname, ' ', g.lastname) as ""name"" 
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
 	                , d.""name"" AS departmentname
@@ -160,7 +162,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchAgent>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchAgent>(query, new {offset, limit});
         });
     }
 }

@@ -1,9 +1,8 @@
 using Htmx;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Extensions;
 using Keis.Model.Commands;
-using System.Security.Claims;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Controllers.FrontEnd;
 
@@ -22,7 +21,7 @@ public class UserController : FrontEndController
 
     public async Task<IActionResult> Index()
     {
-        var result = await _mediatr.Send(new GetUserCommand { Id = UserId });
+        var result = await _mediatr.Send(new GetUserCommand {Id = UserId});
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
         result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/user/{UserId}".GenerateQrCode();

@@ -20,8 +20,8 @@ public class WorkflowController : MethodController
 
     public WorkflowController(ILogger<WorkflowController> logger, IMediator mediatr)
     {
-        this._logger = logger;
-        this._mediatr = mediatr;
+        _logger = logger;
+        _mediatr = mediatr;
     }
 
     [HttpGet("workflow.list", Name = nameof(ListWorkflows))]
@@ -32,13 +32,11 @@ public class WorkflowController : MethodController
 
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchWorkflow>
         {
@@ -55,13 +53,11 @@ public class WorkflowController : MethodController
 
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchWorkflow>
         {
@@ -78,13 +74,11 @@ public class WorkflowController : MethodController
 
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<WorkflowEvent>
         {
@@ -101,13 +95,11 @@ public class WorkflowController : MethodController
 
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<WorkflowCriteria>
         {
@@ -124,13 +116,11 @@ public class WorkflowController : MethodController
 
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<WorkflowAction>
         {
@@ -148,13 +138,11 @@ public class WorkflowController : MethodController
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await _mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         var uri = $"/methods/workflow.get?id={result.Value}";
         return Created(uri, new SingleResult<string>

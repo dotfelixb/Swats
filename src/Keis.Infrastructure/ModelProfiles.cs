@@ -48,7 +48,7 @@ public class ModelProfiles : Profile
 
         CreateMap<CreateSlaCommand, Sla>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
-            
+
         CreateMap<CreateWorkflowCommand, Workflow>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 

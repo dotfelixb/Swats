@@ -10,7 +10,9 @@ public class Workflow : DbAudit
     public EventType[] Events { get; set; }
     public WorkflowCriteria[] Criteria { get; set; }
     public WorkflowAction[] Actions { get; set; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public WorkflowPriority Priority { get; set; }
+
     public string Note { get; set; }
 }

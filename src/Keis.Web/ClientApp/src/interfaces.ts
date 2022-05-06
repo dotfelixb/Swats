@@ -40,10 +40,10 @@ export interface IAuthContext {
     browserLoaded: boolean;
     user: IUser | null;
     signIn: ({
-        username,
-        password,
-        remember,
-    }: ILogin) => Promise<ILoginResult | null>;
+                 username,
+                 password,
+                 remember,
+             }: ILogin) => Promise<ILoginResult | null>;
     signOut: () => boolean;
 }
 
@@ -178,31 +178,31 @@ export interface IFetchSla extends IDataAudit {
 export interface IList {
     id: string;
     name: string;
-  }
+}
 
 export interface IWorkflowEvent {
-    name:string;
-    type:string;
+    name: string;
+    type: string;
 }
 
 export interface IWorkflowCriteria {
     key: number;
-    name?:string;
+    name?: string;
     criteria?: number;
     condition?: number;
-    match?:string;
+    match?: string;
     control?: ControlType;
-    type?:string;
-    link?:string;
+    type?: string;
+    link?: string;
 }
 
 export interface IWorkflowAction {
     key: number;
-    name?:string;
+    name?: string;
     actionFrom?: number;
-    actionTo?:string;
+    actionTo?: string;
     control?: ControlType;
-    link?:string;
+    link?: string;
 }
 
 export interface IFetchWorkflow extends IDataAudit {

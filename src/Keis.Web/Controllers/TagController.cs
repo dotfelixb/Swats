@@ -28,13 +28,11 @@ public class TagController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchTag>
         {
@@ -51,13 +49,11 @@ public class TagController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchTag>
         {
@@ -75,13 +71,11 @@ public class TagController : MethodController
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         var uri = $"/methods/tag.get?id={result.Value}";
         return Created(uri, new SingleResult<string>

@@ -14,7 +14,8 @@ public class ListWorkflowCommandHandler : IRequestHandler<ListWorkflowCommand, R
         _manageRepository = manageRepository;
     }
 
-    public async Task<Result<IEnumerable<FetchWorkflow>>> Handle(ListWorkflowCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FetchWorkflow>>> Handle(ListWorkflowCommand request,
+        CancellationToken cancellationToken)
     {
         var rst = await _manageRepository.ListWorkflow(request.Offset, request.Limit, request.Deleted,
             cancellationToken);

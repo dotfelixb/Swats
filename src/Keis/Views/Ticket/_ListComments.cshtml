@@ -5,7 +5,8 @@
     <div id="ticket-reply" class="grid grid-cols-1 gap-5"></div>
     @foreach (var item in Model)
     {
-        @await  Html.PartialAsync("~/Views/Ticket/_Comment.cshtml", item);
+        @await Html.PartialAsync("~/Views/Ticket/_Comment.cshtml", item)
+        ;
     }
-        
+
 </div>

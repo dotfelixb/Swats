@@ -21,7 +21,7 @@ public class CreateWorkflowCommandHandler : IRequestHandler<CreateWorkflowComman
     public async Task<Result<string>> Handle(CreateWorkflowCommand request, CancellationToken cancellationToken)
     {
         var workflow = _mapper.Map<CreateWorkflowCommand, Model.Domain.Workflow>(request);
-        
+
         var auditLog = new DbAuditLog
         {
             Target = workflow.Id,

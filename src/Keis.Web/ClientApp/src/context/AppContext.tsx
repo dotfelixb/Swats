@@ -1,17 +1,17 @@
-import { createContext, FC, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { IAppContext, IViewProps } from "../interfaces";
-import { useAuth } from "./AuthContext";
+import {createContext, FC, useContext} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {IAppContext, IViewProps} from "../interfaces";
+import {useAuth} from "./AuthContext";
 
 export const AppContext = createContext<IAppContext>(null!);
 
 export const useApp = () => useContext(AppContext);
 
-export const AppProvider: FC<IViewProps> = ({ children }) => {
-    const { user } = useAuth();
+export const AppProvider: FC<IViewProps> = ({children}) => {
+    const {user} = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const dateFormats = { longDateFormat: "MMM DD, YYYY @ h:mm a", shortDateFormat: "MMM DD, YYYY" };
+    const dateFormats = {longDateFormat: "MMM DD, YYYY @ h:mm a", shortDateFormat: "MMM DD, YYYY"};
 
     const post = async (endPoint: string, body: FormData): Promise<any> => {
         const headers = new Headers();
@@ -24,7 +24,7 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
         });
 
         return f.status === 401
-            ? navigate("/login", { replace: true, state: { from: location } })
+            ? navigate("/login", {replace: true, state: {from: location}})
             : f;
     };
 
@@ -38,11 +38,11 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
         });
 
         return f.status === 401
-            ? navigate("/login", { replace: true, state: { from: location } })
+            ? navigate("/login", {replace: true, state: {from: location}})
             : f;
     };
 
     return (
-        <AppContext.Provider value={{ post, get, dateFormats }}>{children}</AppContext.Provider>
+        <AppContext.Provider value={{post, get, dateFormats}}>{children}</AppContext.Provider>
     );
 };

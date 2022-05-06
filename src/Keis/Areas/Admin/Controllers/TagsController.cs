@@ -1,13 +1,11 @@
 using Htmx;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Controllers;
 using Keis.Extensions;
-using Keis.Model.Commands;
-using System.Security.Claims;
 using Keis.Infrastructure.Features.Tags.CreateTag;
 using Keis.Infrastructure.Features.Tags.GetTag;
 using Keis.Infrastructure.Features.Tags.ListTag;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Areas.Admin.Controllers;
 
@@ -55,7 +53,7 @@ public class TagsController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -79,7 +77,7 @@ public class TagsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(TagsController)}::{nameof(Edit)}");
 
-        var query = new GetTagCommand { Id = id };
+        var query = new GetTagCommand {Id = id};
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 

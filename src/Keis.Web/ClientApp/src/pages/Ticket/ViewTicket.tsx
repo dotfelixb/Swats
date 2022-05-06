@@ -1,8 +1,9 @@
-import { Breadcrumb, Button } from "antd";
-import React, { FC } from "react";
-import { Link } from "react-router-dom";
+import {Breadcrumb, Button} from "antd";
+import React, {FC} from "react";
+import {Link} from "react-router-dom";
 
-interface IViewTicket { }
+interface IViewTicket {
+}
 
 const ViewTicket: FC<IViewTicket> = () => {
     return (<div>

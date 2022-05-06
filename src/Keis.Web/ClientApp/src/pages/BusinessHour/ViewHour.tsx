@@ -1,17 +1,18 @@
-import { Breadcrumb, Checkbox } from "antd";
+import {Breadcrumb, Checkbox} from "antd";
 import dayjs from "dayjs";
-import { FC, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchBusinessHour, ISingleResult } from "../../interfaces";
+import {FC, useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import {PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchBusinessHour, ISingleResult} from "../../interfaces";
 
-interface IViewHour { }
+interface IViewHour {
+}
 
 const ViewHour: FC<IViewHour> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
-    const { id } = useParams();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
+    const {id} = useParams();
     const [hour, setHour] = useState<IFetchBusinessHour>();
 
     useEffect(() => {
@@ -47,9 +48,9 @@ const ViewHour: FC<IViewHour> = () => {
     );
 
     return (
-        <PageView title={hour?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+        <PageView title={hour?.name ?? ""} breadcrumbs={<Breadcrumbs/>}>
             <div className="w-full flex flex-row ">
-                <div style={{ width: "220px" }} className="">
+                <div style={{width: "220px"}} className="">
                     <div className="pr-2">
                         <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
                     </div>
@@ -99,12 +100,12 @@ const ViewHour: FC<IViewHour> = () => {
                                 return (
                                     <div key={h.id} className="grid grid-cols-4 gap-5 py-4 text-xs">
                                         <div>
-                                            <div><Checkbox checked={h.enabled} >
+                                            <div><Checkbox checked={h.enabled}>
                                                 <span className="text-sm">{h.name}</span>
                                             </Checkbox></div>
                                         </div>
                                         <div>
-                                            <div><Checkbox checked={h.fullDay} >
+                                            <div><Checkbox checked={h.fullDay}>
                                                 <span className="text-sm">Open 24 Hours</span>
                                             </Checkbox></div>
                                         </div>

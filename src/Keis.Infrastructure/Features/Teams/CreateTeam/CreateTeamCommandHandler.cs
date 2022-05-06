@@ -1,9 +1,9 @@
+using System.Text.Json;
 using AutoMapper;
 using FluentResults;
 using Keis.Data.Repository;
 using Keis.Model.Domain;
 using MediatR;
-using System.Text.Json;
 
 namespace Keis.Infrastructure.Features.Teams.CreateTeam;
 

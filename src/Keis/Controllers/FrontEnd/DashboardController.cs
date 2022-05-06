@@ -1,8 +1,7 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Keis.Model.Commands;
+﻿using Keis.Model.Commands;
 using Keis.Model.ViewModel;
-using System.Security.Claims;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Controllers.FrontEnd;
 
@@ -12,7 +11,8 @@ public class DashboardController : FrontEndController
     private readonly IMediator _mediatr;
 
 
-    public DashboardController(IHttpContextAccessor httpAccessor, ILogger<DashboardController> logger, IMediator mediatr) : base(httpAccessor)
+    public DashboardController(IHttpContextAccessor httpAccessor, ILogger<DashboardController> logger,
+        IMediator mediatr) : base(httpAccessor)
     {
         _logger = logger;
         _mediatr = mediatr;
@@ -29,13 +29,10 @@ public class DashboardController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DashboardController)}::{nameof(Tickets)}");
 
-        var result = await _mediatr.Send(new AgentTicketsCommand { Id = UserId });
-        StatsCard statsCard = new StatsCard { Title = "My Tickets", Location = "/dashboard/tickets" };
+        var result = await _mediatr.Send(new AgentTicketsCommand {Id = UserId});
+        var statsCard = new StatsCard {Title = "My Tickets", Location = "/dashboard/tickets"};
 
-        if(result.IsSuccess)
-        {
-            statsCard.Count = result.Value;
-        }
+        if (result.IsSuccess) statsCard.Count = result.Value;
         return PartialView("~/Views/Dashboard/_Tickets.cshtml", statsCard);
     }
 
@@ -43,13 +40,10 @@ public class DashboardController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DashboardController)}::{nameof(Overdue)}");
 
-        var result = await _mediatr.Send(new AgentTicketsCommand { Id = UserId, OverdueOnly = true });
-        StatsCard statsCard = new StatsCard { Title = "My Overdue Tickets", Location = "/dashboard/tickets" };
+        var result = await _mediatr.Send(new AgentTicketsCommand {Id = UserId, OverdueOnly = true});
+        var statsCard = new StatsCard {Title = "My Overdue Tickets", Location = "/dashboard/tickets"};
 
-        if (result.IsSuccess)
-        {
-            statsCard.Count = result.Value;
-        }
+        if (result.IsSuccess) statsCard.Count = result.Value;
         return PartialView("~/Views/Dashboard/_Tickets.cshtml", statsCard);
     }
 
@@ -57,13 +51,10 @@ public class DashboardController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DashboardController)}::{nameof(DueToday)}");
 
-        var result = await _mediatr.Send(new AgentTicketsCommand { Id = UserId, DueToday = true });
-        StatsCard statsCard = new StatsCard { Title = "My due Today", Location = "/dashboard/tickets" };
+        var result = await _mediatr.Send(new AgentTicketsCommand {Id = UserId, DueToday = true});
+        var statsCard = new StatsCard {Title = "My due Today", Location = "/dashboard/tickets"};
 
-        if (result.IsSuccess)
-        {
-            statsCard.Count = result.Value;
-        }
+        if (result.IsSuccess) statsCard.Count = result.Value;
         return PartialView("~/Views/Dashboard/_Tickets.cshtml", statsCard);
     }
 
@@ -71,13 +62,10 @@ public class DashboardController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DashboardController)}::{nameof(OpenTickets)}");
 
-        var result = await _mediatr.Send(new AgentTicketsCommand { Id = null });
-        StatsCard statsCard = new StatsCard { Title = "Open Tickets", Location = "/dashboard/tickets" };
+        var result = await _mediatr.Send(new AgentTicketsCommand {Id = null});
+        var statsCard = new StatsCard {Title = "Open Tickets", Location = "/dashboard/tickets"};
 
-        if (result.IsSuccess)
-        {
-            statsCard.Count = result.Value;
-        }
+        if (result.IsSuccess) statsCard.Count = result.Value;
         return PartialView("~/Views/Dashboard/_Tickets.cshtml", statsCard);
     }
 
@@ -85,13 +73,10 @@ public class DashboardController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DashboardController)}::{nameof(OpenOverdue)}");
 
-        var result = await _mediatr.Send(new AgentTicketsCommand { Id = null });
-        StatsCard statsCard = new StatsCard { Title = "Overdue Tickets", Location = "/dashboard/tickets" };
+        var result = await _mediatr.Send(new AgentTicketsCommand {Id = null});
+        var statsCard = new StatsCard {Title = "Overdue Tickets", Location = "/dashboard/tickets"};
 
-        if (result.IsSuccess)
-        {
-            statsCard.Count = result.Value;
-        }
+        if (result.IsSuccess) statsCard.Count = result.Value;
         return PartialView("~/Views/Dashboard/_Tickets.cshtml", statsCard);
     }
 }

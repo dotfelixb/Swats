@@ -1,7 +1,7 @@
-import { Checkbox, DatePicker, Form } from "antd";
+import {Checkbox, DatePicker, Form} from "antd";
 import dayjs from "dayjs";
-import { FC, useState } from "react";
-import { IOpenHour } from "../interfaces";
+import {FC, useState} from "react";
+import {IOpenHour} from "../interfaces";
 
 interface IOpenHourItem {
     data: IOpenHour;
@@ -9,7 +9,7 @@ interface IOpenHourItem {
     setHoursList: React.Dispatch<React.SetStateAction<IOpenHour[]>>;
 }
 
-const OpenHourItem: FC<IOpenHourItem> = ({ data, hoursList, setHoursList }) => {
+const OpenHourItem: FC<IOpenHourItem> = ({data, hoursList, setHoursList}) => {
     const [newData, setNewData] = useState(data);
     const [dayDisabled, setDayDisabled] = useState(true);
     const [dateDisabled, setDateDisabled] = useState(true);

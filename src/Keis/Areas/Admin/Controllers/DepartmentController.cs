@@ -1,15 +1,13 @@
 ﻿using Htmx;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Keis.Controllers;
 using Keis.Extensions;
-using Keis.Model.Commands;
-using System.Security.Claims;
 using Keis.Infrastructure.Features.BusinessHour.ListBusinessHour;
 using Keis.Infrastructure.Features.Department.CreateDepartment;
 using Keis.Infrastructure.Features.Department.GetDepartment;
 using Keis.Infrastructure.Features.Department.ListDepartment;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Keis.Areas.Admin.Controllers;
 
@@ -57,7 +55,7 @@ public class DepartmentController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -81,7 +79,7 @@ public class DepartmentController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(DepartmentController)}::{nameof(Edit)}");
 
-        var query = new GetDepartmentCommand { Id = id };
+        var query = new GetDepartmentCommand {Id = id};
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -102,7 +100,7 @@ public class DepartmentController : FrontEndController
         CreateDepartmentCommand command = new()
         {
             BusinessHours =
-                businesshourResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
+                businesshourResult.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()})
         };
 
         return Request.IsHtmx()

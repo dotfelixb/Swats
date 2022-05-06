@@ -1,14 +1,15 @@
-import { CommentOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
-import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { IFetchBusinessHour, IFetchDepartment, IListResult, ISingleResult } from '../../interfaces';
+import {CommentOutlined, EyeOutlined, FormOutlined} from '@ant-design/icons';
+import {Alert, Breadcrumb, Button, Form, Input, Select, Timeline} from 'antd';
+import React, {FC, useEffect, useState} from 'react';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
+import {PageView} from '../../components';
+import {useApp, useAuth} from '../../context';
+import {IFetchBusinessHour, IFetchDepartment, IListResult, ISingleResult} from '../../interfaces';
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
-interface INewDepartment { }
+interface INewDepartment {
+}
 
 interface IFormData {
     name: string;
@@ -21,8 +22,8 @@ interface IFormData {
 }
 
 const NewDepartment: FC<INewDepartment> = () => {
-    const { user } = useAuth();
-    const { get } = useApp();
+    const {user} = useAuth();
+    const {get} = useApp();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
@@ -65,7 +66,7 @@ const NewDepartment: FC<INewDepartment> = () => {
         }
     }, [user, get]);
 
-    const onFinish = async ({ name, type, agent, businessHour, outgoingEmail, status, response }: IFormData) => {
+    const onFinish = async ({name, type, agent, businessHour, outgoingEmail, status, response}: IFormData) => {
         const body = new FormData();
         body.append("name", name ?? "");
         body.append("type", type ?? "");
@@ -87,7 +88,7 @@ const NewDepartment: FC<INewDepartment> = () => {
         const result: ISingleResult<string> = await f.json();
 
         if (f.status === 201 && result.ok) {
-            navigate(`/admin/department/${result.data}`, { replace: true });
+            navigate(`/admin/department/${result.data}`, {replace: true});
         }
 
         setHasFormErrors(true);
@@ -109,61 +110,63 @@ const NewDepartment: FC<INewDepartment> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title='New Department' breadcrumbs={<Breadcrumbs />}>
+    return (<PageView title='New Department' breadcrumbs={<Breadcrumbs/>}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
                 <Form form={form} layout="vertical" onFinish={onFinish}>
                     {hasFormErrors &&
                         formErrors?.map((e) => (
                             <div key={e} className="py-2">
-                                <Alert message={e} type="error" className="py-2" />
+                                <Alert message={e} type="error" className="py-2"/>
                             </div>
                         ))}
                     <Timeline>
                         <Timeline.Item
-                            dot={<FormOutlined style={{ fontSize: "16px" }} />}
+                            dot={<FormOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">Department name and type</div>
                             <Form.Item name='name' label="Name" htmlFor="name">
-                                <Input />
+                                <Input/>
                             </Form.Item>
                             <Form.Item name="type" label="Type">
-                                <Select >
+                                <Select>
                                     <Select.Option value="1">Public</Select.Option>
                                     <Select.Option value="2">Private</Select.Option>
                                 </Select>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item
-                            dot={<EyeOutlined style={{ fontSize: "16px" }} />}
+                            dot={<EyeOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">Department lead, working hour and status</div>
                             <Form.Item name="manager" label="Manager">
-                                <Select >
-                                    {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                <Select>
+                                    {departmentList?.map(d => (
+                                        <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                 </Select>
                             </Form.Item>
                             <Form.Item name="businessHour" label="Business Hour">
-                                <Select >
-                                    {hourList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                                <Select>
+                                    {hourList?.map(d => (
+                                        <Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
                                 </Select>
                             </Form.Item>
                             <Form.Item name='outgoingEmail' label="Outgoing Email" htmlFor="outgoingEmail">
-                                <Input />
+                                <Input/>
                             </Form.Item>
                             <Form.Item name="status" label="Status">
-                                <Select >
+                                <Select>
                                     <Select.Option value="1">Active</Select.Option>
                                     <Select.Option value="2">Inactive</Select.Option>
                                 </Select>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item
-                            dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                            dot={<CommentOutlined style={{fontSize: "16px"}}/>}
                         >
                             <div className="font-bold mb-2">The default response to send in email (optional)</div>
                             <Form.Item name='response' label="Default Response" htmlFor='response'>
-                                <TextArea rows={4} />
+                                <TextArea rows={4}/>
                             </Form.Item>
                         </Timeline.Item>
                         <Timeline.Item>
@@ -180,7 +183,7 @@ const NewDepartment: FC<INewDepartment> = () => {
             <div></div>
         </div>
 
-        <Outlet />
+        <Outlet/>
     </PageView>)
 }
 

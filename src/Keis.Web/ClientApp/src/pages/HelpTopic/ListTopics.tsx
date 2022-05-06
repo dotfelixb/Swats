@@ -1,26 +1,27 @@
-import { Breadcrumb, Button } from 'antd';
+import {Breadcrumb, Button} from 'antd';
 import dayjs from 'dayjs';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import { DataTable, PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { IFetchTopic, IListResult } from '../../interfaces';
+import React, {FC, useEffect, useState} from 'react';
+import {Link, Outlet} from 'react-router-dom';
+import {DataTable, PageView} from '../../components';
+import {useApp, useAuth} from '../../context';
+import {IFetchTopic, IListResult} from '../../interfaces';
 
-interface IListTopics { }
+interface IListTopics {
+}
 
 const columns = [
-    { key: "name", column: [{ title: "Name" }, { title: "" }] },
-    { key: "status", column: [{ title: "Type" }, { title: "Status" }] },
+    {key: "name", column: [{title: "Name"}, {title: ""}]},
+    {key: "status", column: [{title: "Type"}, {title: "Status"}]},
     {
         key: "created",
-        column: [{ title: "Created By" }, { title: "Created At" }],
+        column: [{title: "Created By"}, {title: "Created At"}],
     },
-    { key: "extra", column: [{ title: "" }] },
+    {key: "extra", column: [{title: ""}]},
 ];
 
 const ListTopics: FC<IListTopics> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
     const [topicList, setTopicList] = useState<IFetchTopic[]>();
 
     useEffect(() => {
@@ -46,7 +47,7 @@ const ListTopics: FC<IListTopics> = () => {
     const Buttons: FC = () => (
         <div className="space-x-2">
             <Link to="new">
-                <Button type="primary" >New Topic</Button>
+                <Button type="primary">New Topic</Button>
             </Link>
         </div>
     );
@@ -63,7 +64,7 @@ const ListTopics: FC<IListTopics> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title="Help Topics" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
+    return (<PageView title="Help Topics" buttons={<Buttons/>} breadcrumbs={<Breadcrumbs/>}>
         <DataTable columns={columns}>
             {topicList?.map((t) => (
                 <tr className="px-10" key={t.id}>
@@ -71,21 +72,21 @@ const ListTopics: FC<IListTopics> = () => {
                         <Link to={`/admin/helptopic/${t.id}`}>
                             <div className="">{t.topic}</div>
                         </Link>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {t.note}
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{t.type}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {t.status}
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
                         <div className="">{t.createdByName}</div>
-                        <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                        <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {dayjs(t.createdAt).format(dateFormats.longDateFormat)}
                         </div>
                     </td>
@@ -97,7 +98,7 @@ const ListTopics: FC<IListTopics> = () => {
             ))}
         </DataTable>
 
-        <Outlet />
+        <Outlet/>
     </PageView>)
 }
 

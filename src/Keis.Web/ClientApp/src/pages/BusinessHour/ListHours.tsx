@@ -1,19 +1,20 @@
-import { Breadcrumb, Button } from "antd";
+import {Breadcrumb, Button} from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { DataTable, PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchBusinessHour, IListResult } from "../../interfaces";
+import React, {FC, useEffect, useState} from "react";
+import {Link, Outlet} from "react-router-dom";
+import {DataTable, PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchBusinessHour, IListResult} from "../../interfaces";
 
-interface IListHours { }
+interface IListHours {
+}
 
 interface IHourListItem {
     data: IFetchBusinessHour;
 }
 
-const HourListItem = ({ data }: IHourListItem) => {
-    const { dateFormats } = useApp();
+const HourListItem = ({data}: IHourListItem) => {
+    const {dateFormats} = useApp();
 
     return (
         <tr className="px-10" key={data.id}>
@@ -21,20 +22,20 @@ const HourListItem = ({ data }: IHourListItem) => {
                 <Link to={`/admin/businesshour/${data.id}`}>
                     <div className="">{data.name}</div>
                 </Link>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                <div className="text-xs" style={{color: "#9b9b9b"}}>
                     {data.description}
                 </div>
             </td>
 
             <td className="px-3 py-3">
                 <div className="">{data.status}</div>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                <div className="text-xs" style={{color: "#9b9b9b"}}>
                     {data.timezone}
                 </div>
             </td>
             <td className="px-3 py-3">
                 <div className="">{data.createdByName}</div>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                <div className="text-xs" style={{color: "#9b9b9b"}}>
                     {dayjs(data.createdAt).format(dateFormats.longDateFormat)}
                 </div>
             </td>
@@ -46,18 +47,18 @@ const HourListItem = ({ data }: IHourListItem) => {
 };
 
 const columns = [
-    { key: "name", column: [{ title: "Name" }, { title: "Description" }] },
-    { key: "status", column: [{ title: "Status" }, { title: "Timezone" }] },
+    {key: "name", column: [{title: "Name"}, {title: "Description"}]},
+    {key: "status", column: [{title: "Status"}, {title: "Timezone"}]},
     {
         key: "created",
-        column: [{ title: "Created By" }, { title: "Created At" }],
+        column: [{title: "Created By"}, {title: "Created At"}],
     },
-    { key: "extra", column: [{ title: "" }] },
+    {key: "extra", column: [{title: ""}]},
 ];
 
 const ListHours: FC<IListHours> = () => {
-    const { user } = useAuth();
-    const { get } = useApp();
+    const {user} = useAuth();
+    const {get} = useApp();
     const [hourList, setHourList] = useState<IFetchBusinessHour[]>();
 
     useEffect(() => {
@@ -104,16 +105,16 @@ const ListHours: FC<IListHours> = () => {
     return (
         <PageView
             title="Business Hours"
-            buttons={<Buttons />}
-            breadcrumbs={<Breadcrumbs />}
+            buttons={<Buttons/>}
+            breadcrumbs={<Breadcrumbs/>}
         >
             <DataTable columns={columns}>
                 {hourList?.map((h) => (
-                    <HourListItem key={h.id} data={h} />
+                    <HourListItem key={h.id} data={h}/>
                 ))}
             </DataTable>
 
-            <Outlet />
+            <Outlet/>
         </PageView>
     );
 };

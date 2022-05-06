@@ -1,17 +1,18 @@
-import { Breadcrumb } from "antd";
+import {Breadcrumb} from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchDepartment, ISingleResult } from "../../interfaces";
+import React, {FC, useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import {PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchDepartment, ISingleResult} from "../../interfaces";
 
-interface IViewDepartment { }
+interface IViewDepartment {
+}
 
 const ViewDepartment: FC<IViewDepartment> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
-    const { id } = useParams();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
+    const {id} = useParams();
     const [department, setDepartment] = useState<IFetchDepartment>();
 
     useEffect(() => {
@@ -49,9 +50,9 @@ const ViewDepartment: FC<IViewDepartment> = () => {
     );
 
     return (
-        <PageView title={department?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+        <PageView title={department?.name ?? ""} breadcrumbs={<Breadcrumbs/>}>
             <div className="w-full flex flex-row">
-                <div style={{ width: "220px" }} className="">
+                <div style={{width: "220px"}} className="">
                     <div className="pr-2">
                         <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
                     </div>

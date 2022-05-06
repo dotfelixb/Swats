@@ -7,4 +7,3 @@ namespace Keis.Infrastructure.Features.Workflow.ListWorkflowAction;
 public class ListWorkflowActionCommand : IRequest<Result<IEnumerable<WorkflowAction>>>
 {
 }
-

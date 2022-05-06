@@ -12,9 +12,9 @@ tbody tr {
     border-top: 1px solid #ddd;
 }
 
-    tbody tr:nth-of-type(2n) td {
-        background-color: #f7f7f7;
-    }
+tbody tr:nth-of-type(2n) td {
+    background-color: #f7f7f7;
+}
 
 .admin-grid {
     @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10;
@@ -24,17 +24,17 @@ tbody tr {
     @apply text-xs py-1;
 }
 
-    .edit-sidebar li > div {
-        @apply px-2;
-    }
+.edit-sidebar li > div {
+    @apply px-2;
+}
 
-    .edit-sidebar li div:first-child {
-        @apply text-xs font-semibold text-gray-600;
-    }
+.edit-sidebar li div:first-child {
+    @apply text-xs font-semibold text-gray-600;
+}
 
-    .edit-sidebar li div:last-child {
-        @apply text-sm text-gray-500;
-    }
+.edit-sidebar li div:last-child {
+    @apply text-sm text-gray-500;
+}
 
 .edit-plus {
     @apply flex border-2 border-gray-300 border-dashed rounded cursor-pointer;

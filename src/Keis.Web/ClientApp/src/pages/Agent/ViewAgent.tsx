@@ -1,17 +1,18 @@
-import { Breadcrumb } from "antd";
+import {Breadcrumb} from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { PageView } from "../../components";
-import { useApp, useAuth } from "../../context";
-import { IFetchAgent, ISingleResult } from "../../interfaces";
+import React, {FC, useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import {PageView} from "../../components";
+import {useApp, useAuth} from "../../context";
+import {IFetchAgent, ISingleResult} from "../../interfaces";
 
-interface IViewAgent { }
+interface IViewAgent {
+}
 
 const ViewAgent: FC<IViewAgent> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
-    const { id } = useParams();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
+    const {id} = useParams();
     const [agent, setAgent] = useState<IFetchAgent>();
 
     useEffect(() => {
@@ -53,10 +54,10 @@ const ViewAgent: FC<IViewAgent> = () => {
     return (
         <PageView
             title={`${agent?.firstName ?? ""} ${agent?.lastName ?? ""}`}
-            breadcrumbs={<Breadcrumbs />}
+            breadcrumbs={<Breadcrumbs/>}
         >
             <div className="w-full flex flex-row">
-                <div style={{ width: "220px" }} className="">
+                <div style={{width: "220px"}} className="">
                     <div className="pr-2">
                         <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
                     </div>

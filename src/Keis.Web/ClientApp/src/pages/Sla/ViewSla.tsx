@@ -1,17 +1,18 @@
-import { Breadcrumb, Checkbox } from 'antd';
+import {Breadcrumb, Checkbox} from 'antd';
 import dayjs from 'dayjs';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { IFetchSla, ISingleResult } from '../../interfaces';
+import React, {FC, useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
+import {PageView} from '../../components';
+import {useApp, useAuth} from '../../context';
+import {IFetchSla, ISingleResult} from '../../interfaces';
 
-interface IViewSla { }
+interface IViewSla {
+}
 
 const ViewSla: FC<IViewSla> = () => {
-    const { user } = useAuth();
-    const { get, dateFormats } = useApp();
-    const { id } = useParams();
+    const {user} = useAuth();
+    const {get, dateFormats} = useApp();
+    const {id} = useParams();
     const [sla, setSla] = useState<IFetchSla>();
 
     useEffect(() => {
@@ -47,9 +48,9 @@ const ViewSla: FC<IViewSla> = () => {
         </Breadcrumb>
     );
 
-    return (<PageView title={sla?.name ?? "View Sla"} breadcrumbs={<Breadcrumbs />}>
+    return (<PageView title={sla?.name ?? "View Sla"} breadcrumbs={<Breadcrumbs/>}>
         <div className="w-full flex flex-row ">
-            <div style={{ width: "220px" }} className="">
+            <div style={{width: "220px"}} className="">
                 <div className="pr-2">
                     <div className="bg-gray-200 rounded-sm w-28 h-28"></div>
                 </div>
@@ -101,12 +102,12 @@ const ViewSla: FC<IViewSla> = () => {
 
                     <div>
                         <label className="form-label">Inapp Notify</label>
-                        <div className="form-data"><Checkbox checked={sla?.responseNotify} /></div>
+                        <div className="form-data"><Checkbox checked={sla?.responseNotify}/></div>
                     </div>
 
                     <div>
                         <label className="form-label">Escalate Email</label>
-                        <div className="form-data"><Checkbox checked={sla?.responseEmail} /></div>
+                        <div className="form-data"><Checkbox checked={sla?.responseEmail}/></div>
                     </div>
                 </div>
 
@@ -123,12 +124,12 @@ const ViewSla: FC<IViewSla> = () => {
 
                     <div>
                         <label className="form-label">Inapp Notify</label>
-                        <div className="form-data"><Checkbox checked={sla?.resolveNotify} /></div>
+                        <div className="form-data"><Checkbox checked={sla?.resolveNotify}/></div>
                     </div>
 
                     <div>
                         <label className="form-label">Escalate Email</label>
-                        <div className="form-data"><Checkbox checked={sla?.resolveEmail} /></div>
+                        <div className="form-data"><Checkbox checked={sla?.resolveEmail}/></div>
                     </div>
                 </div>
 

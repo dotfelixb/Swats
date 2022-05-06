@@ -26,10 +26,7 @@ public class TicketController : MethodController
         logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(ListTickets)}");
 
         var result = await mediatr.Send(command);
-        if (result.IsFailed)
-        {
-            return NotFound(new ErrorResult { Ok = false });
-        }
+        if (result.IsFailed) return NotFound(new ErrorResult {Ok = false});
 
         return Ok(result.Value);
     }
@@ -43,7 +40,7 @@ public class TicketController : MethodController
         if (result.IsFailed)
         {
             var error = result.Reasons.FirstOrDefault()?.Message;
-            return NotFound(new ErrorResult { Ok = false, Errors = new[] { error } });
+            return NotFound(new ErrorResult {Ok = false, Errors = new[] {error}});
         }
 
         return Ok(result.Value);
@@ -58,7 +55,7 @@ public class TicketController : MethodController
         if (result.IsFailed)
         {
             var error = result.Reasons.FirstOrDefault()?.Message;
-            return BadRequest(new ErrorResult { Ok = false, Errors = new[] { error } });
+            return BadRequest(new ErrorResult {Ok = false, Errors = new[] {error}});
         }
 
         var baseUri = $"{Request.Scheme}://{Request.Host}";

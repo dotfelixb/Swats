@@ -1,13 +1,13 @@
+using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Keis.Data.Repository;
 using Keis.Infrastructure;
 using Keis.Model;
 using Keis.Model.Domain;
-using System.Text.Json.Serialization;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

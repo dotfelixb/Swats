@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Keis.Model.Domain;
+﻿namespace Keis.Model.Domain;
 
 public class WorkflowEvent
 {

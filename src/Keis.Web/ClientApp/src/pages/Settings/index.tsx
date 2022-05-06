@@ -19,10 +19,10 @@ import {
     UserOutlined,
     UserSwitchOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb } from "antd";
-import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import { PageView } from "../../components";
+import {Breadcrumb} from "antd";
+import React, {FC} from "react";
+import {Link} from "react-router-dom";
+import {PageView} from "../../components";
 
 interface ILinkCard {
     title: string;
@@ -30,11 +30,13 @@ interface ILinkCard {
     icon: React.ReactNode;
 }
 
-const LinkCard: FC<ILinkCard> = ({ title, location, icon }) => {
+const LinkCard: FC<ILinkCard> = ({title, location, icon}) => {
     return (
-        <div className="w-full flex flex-col justify-center items-center min-w-fit bg-white border border-gray-200 rounded px-3 py-10">
+        <div
+            className="w-full flex flex-col justify-center items-center min-w-fit bg-white border border-gray-200 rounded px-3 py-10">
             <Link to={location} className="cursor-pointer">
-                <div className="relative flex justify-center border-solid border-4 border-indigo-200 rounded-full w-16 h-16">
+                <div
+                    className="relative flex justify-center border-solid border-4 border-indigo-200 rounded-full w-16 h-16">
                     <span className=" text-lg font-bold text-center text-indigo-500 mt-2">
                         {icon}
                     </span>
@@ -47,7 +49,8 @@ const LinkCard: FC<ILinkCard> = ({ title, location, icon }) => {
     );
 };
 
-interface ISettings { }
+interface ISettings {
+}
 
 const Settings: FC<ISettings> = () => {
     const Breadcrumbs: FC = () => (
@@ -60,7 +63,7 @@ const Settings: FC<ISettings> = () => {
     );
 
     return (
-        <PageView title="Admin Panel" breadcrumbs={<Breadcrumbs />}>
+        <PageView title="Admin Panel" breadcrumbs={<Breadcrumbs/>}>
             <div className="">
                 <section className="title font-semibold text-sm py-5">Staff</section>
 
@@ -69,21 +72,21 @@ const Settings: FC<ISettings> = () => {
                         <LinkCard
                             title="Agents"
                             location="/admin/agent"
-                            icon={<PhoneOutlined />}
+                            icon={<PhoneOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Departments"
                             location="/admin/department"
-                            icon={<UserSwitchOutlined />}
+                            icon={<UserSwitchOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Teams"
                             location="/admin/team"
-                            icon={<TeamOutlined />}
+                            icon={<TeamOutlined/>}
                         />
                     </div>
                 </div>
@@ -95,14 +98,14 @@ const Settings: FC<ISettings> = () => {
                         <LinkCard
                             title="Email Settings"
                             location="/admin/email"
-                            icon={<MailOutlined />}
+                            icon={<MailOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Breaklines"
                             location="/admin/breaklines"
-                            icon={<ClusterOutlined />}
+                            icon={<ClusterOutlined/>}
                         />
                     </div>
                 </div>
@@ -114,42 +117,42 @@ const Settings: FC<ISettings> = () => {
                         <LinkCard
                             title="Help Topic"
                             location="/admin/helptopic"
-                            icon={<InfoCircleOutlined />}
+                            icon={<InfoCircleOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Business Hour"
                             location="/admin/businesshour"
-                            icon={<CalendarOutlined />}
+                            icon={<CalendarOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Sla Plan"
                             location="/admin/sla"
-                            icon={<HourglassOutlined />}
+                            icon={<HourglassOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Workflow"
                             location="/admin/workflow"
-                            icon={<ApartmentOutlined />}
+                            icon={<ApartmentOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Approval Workflow"
                             location="/admin/approval"
-                            icon={<CheckCircleOutlined />}
+                            icon={<CheckCircleOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Tags"
                             location="/admin/tag"
-                            icon={<TagsOutlined />}
+                            icon={<TagsOutlined/>}
                         />
                     </div>
                 </div>
@@ -161,21 +164,21 @@ const Settings: FC<ISettings> = () => {
                         <LinkCard
                             title="Ticket Types"
                             location="/admin/tickettype"
-                            icon={<AimOutlined />}
+                            icon={<AimOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Ratings"
                             location="/admin/ratings"
-                            icon={<StarOutlined />}
+                            icon={<StarOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Recurring"
                             location="/admin/recurring"
-                            icon={<InteractionOutlined />}
+                            icon={<InteractionOutlined/>}
                         />
                     </div>
                 </div>
@@ -187,21 +190,21 @@ const Settings: FC<ISettings> = () => {
                         <LinkCard
                             title="User Imports"
                             location="/admin/userimport"
-                            icon={<ImportOutlined />}
+                            icon={<ImportOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="User Options"
                             location="/admin/useroptions"
-                            icon={<UserOutlined />}
+                            icon={<UserOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Logs"
                             location="/admin/logs"
-                            icon={<PrinterOutlined />}
+                            icon={<PrinterOutlined/>}
                         />
                     </div>
                 </div>
@@ -215,14 +218,14 @@ const Settings: FC<ISettings> = () => {
                         <LinkCard
                             title="Notifications"
                             location="/admin/notification"
-                            icon={<NotificationOutlined />}
+                            icon={<NotificationOutlined/>}
                         />
                     </div>
                     <div>
                         <LinkCard
                             title="Templates"
                             location="/admin/template"
-                            icon={<FormatPainterOutlined />}
+                            icon={<FormatPainterOutlined/>}
                         />
                     </div>
                 </div>
