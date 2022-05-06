@@ -6,6 +6,7 @@ namespace Keis.Model.Domain;
 public class Agent : DbAudit
 {
     public string Id { get; set; } = NewId.NextGuid().ToString();
+    public string Name { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }

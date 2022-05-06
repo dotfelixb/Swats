@@ -9,8 +9,8 @@ namespace Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
 
 public class CreateTicketTypeCommandHandler : IRequestHandler<CreateTicketTypeCommand, Result<string>>
 {
-    private readonly IMapper _mapper;
     private readonly ITicketRepository _ticketRepository;
+    private readonly IMapper _mapper;
 
     public CreateTicketTypeCommandHandler(ITicketRepository ticketRepository, IMapper mapper)
     {

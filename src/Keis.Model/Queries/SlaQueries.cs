@@ -8,4 +8,5 @@ public class FetchSla : Sla
 }
 
 public class FetchWorkflow : Workflow
-{ }
+{
+}

@@ -77,6 +77,17 @@ public interface IManageRepository
         CancellationToken cancellationToken = default);
 
     #endregion Sla
+    
+    #region Workflow
+
+    Task<int> CreateWorkflow(Workflow workflow, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchWorkflow>> ListWorkflow(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
+    
+    Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken);
+
+    #endregion
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -759,7 +770,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
         return WithConnection(async conn =>
         {
-            var cmd = @"
+            const string cmd = @"
                     INSERT INTO public.sla
                         (id
                         , ""name""
@@ -772,7 +783,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , resolveformat
                         , resolvenotify
                         , resolveemail
-                        , description
+                        , note
                         , status
                         , rowversion
                         , createdby
@@ -788,7 +799,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @ResolveFormat
                         , @ResolveNotify
                         , @ResolveEmail
-                        , @Description
+                        , @Note
                         , @Status
                         , @RowVersion
                         , @CreatedBy
@@ -807,14 +818,14 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 sla.ResolveFormat,
                 sla.ResolveNotify,
                 sla.ResolveEmail,
-                sla.Description,
+                sla.Note,
                 sla.Status,
                 sla.RowVersion,
                 sla.CreatedBy,
                 sla.UpdatedBy
             });
 
-            var logCmd = @"
+            const string logCmd = @"
                 INSERT INTO public.slaauditlog
                     (id
                     , target
@@ -892,4 +903,173 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
     }
 
     #endregion Sla
+    
+    #region Workflow
+
+    public Task<int> CreateWorkflow(Workflow workflow, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            const string cmd = @"
+                    INSERT INTO public.workflow
+                        (id
+                        , ""name""
+                        , events
+                        , note
+                        , priority
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(@Id
+                        , @Name
+                        , @Events
+                        , @Note
+                        , @Priority
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy)";
+
+            var eventArray = workflow.Events.Select(s => (int)s).ToArray();
+            var cmdRst = await conn.ExecuteAsync(cmd, new
+            {
+                workflow.Id,
+                workflow.Name,
+                Events = eventArray,
+                workflow.Priority,
+                workflow.Note,
+                workflow.Status,
+                workflow.RowVersion,
+                workflow.CreatedBy,
+                workflow.UpdatedBy
+            });
+
+            const string cmdCrt = @"
+                    INSERT INTO public.workflowcriteria
+                        (id
+                        , workflow
+                        , ""name""
+                        , criteria
+                        , ""condition""
+                        , ""match"")
+                    VALUES(@Id
+                        , @Workflow
+                        , @Name
+                        , @Criteria
+                        , @Condition
+                        , @Match);";
+
+
+            var criteria = workflow.Criteria.Select(s => new
+            {
+                s.Id,
+                Workflow = workflow.Id,
+                s.Name,
+                Criteria =  (int)s.Criteria,
+                Condition = (int)s.Condition,
+                s.Match
+            }).ToArray();
+            var crtRst = await conn.ExecuteAsync(cmdCrt, criteria );
+            
+            const string cmdAct = @"
+                    INSERT INTO public.workflowaction
+                        (id
+                        , workflow
+                        , ""name""
+                        , actionfrom
+                        , actionto)
+                    VALUES(@Id
+                        , @Workflow
+                        , @Name
+                        , @ActionFrom
+                        , @ActionTo);
+                        ";
+
+            var actions = workflow.Actions.Select(s => new
+            {
+                s.Id,
+                Workflow = workflow.Id,
+                s.Name,
+                ActionFrom =(int) s.ActionFrom,
+                s.ActionTo
+            }).ToArray();
+            var actRst = await conn.ExecuteAsync(cmdAct, actions );
+
+            const string logCmd = @"
+                INSERT INTO public.workflowauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + crtRst + actRst + logRst;
+        });
+    }
+
+    public Task<IEnumerable<FetchWorkflow>> ListWorkflow(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND w.deleted = FALSE ";
+            var query = $@"
+                SELECT w.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.updatedby) AS UpdatedByName
+                FROM workflow w
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchWorkflow>(query, new { offset, limit });
+        });
+    }
+        
+    public Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            const string query = @"
+                SELECT w.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.updatedby) AS UpdatedByName
+                FROM workflow w
+                WHERE w.id = @Id";
+            
+            return await conn.QueryFirstOrDefaultAsync<FetchWorkflow>(query, new { Id = id });
+        });
+    }
+    
+    #endregion
 }

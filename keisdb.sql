@@ -442,7 +442,7 @@ CREATE TABLE ticketcomment
 CREATE TABLE sla
 (
     id BPCHAR(36) PRIMARY KEY
-    , name VARCHAR(50)
+    , name VARCHAR(50) NOT NULL
     , businesshour BPCHAR(36)
     , responseperiod INT
     , responseformat INT
@@ -452,7 +452,7 @@ CREATE TABLE sla
     , resolveformat INT
     , resolvenotify BOOLEAN
     , resolveemail BOOLEAN
-    , description  TEXT
+    , note  TEXT
     , status INT
 	, rowversion BPCHAR(36) NOT NULL
 	, deleted BOOLEAN DEFAULT(FALSE)
@@ -475,6 +475,57 @@ CREATE TABLE slaauditlog
     , createdby BPCHAR(36)
 	, createdat TIMESTAMPTZ DEFAULT(now())
 	, FOREIGN KEY (target) REFERENCES sla(id) ON DELETE CASCADE
+);
+
+CREATE TABLE workflow
+(
+    id BPCHAR(36) PRIMARY KEY
+    , name VARCHAR(50) NOT NULL
+    , events INT[]
+    , note TEXT
+    , priority INT
+    , status INT
+	, rowversion BPCHAR(36) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(36)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+CREATE TABLE workflowaction
+(
+    id BPCHAR(36) PRIMARY KEY
+    , workflow BPCHAR(36)
+    , name VARCHAR(50) 
+    , actionfrom INT
+    , actionto VARCHAR(50)
+    , FOREIGN KEY (workflow) REFERENCES workflow(id) ON DELETE CASCADE
+);
+
+CREATE TABLE workflowcriteria 
+(
+    id BPCHAR(36) PRIMARY KEY
+    , workflow BPCHAR(36)
+    , name VARCHAR(50) 
+    , criteria INT
+    , condition INT
+    , match VARCHAR(50)
+    , FOREIGN KEY (workflow) REFERENCES workflow(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE workflowauditlog
+(
+    id BPCHAR(36) PRIMARY KEY
+	, target BPCHAR(36)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES workflow(id) ON DELETE CASCADE
 );
 
 

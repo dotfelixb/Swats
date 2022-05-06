@@ -134,8 +134,8 @@ const ViewSla: FC<IViewSla> = () => {
 
                 <div className="grid grid-cols-1 gap-5 py-4">
                     <div>
-                        <label className="form-label">Description</label>
-                        <div className="form-data">{sla?.description ?? "N/A"}</div>
+                        <label className="form-label">Note</label>
+                        <div className="form-data">{sla?.note ?? "N/A"}</div>
                     </div>
                 </div>
 

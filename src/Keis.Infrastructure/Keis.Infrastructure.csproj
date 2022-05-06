@@ -17,18 +17,4 @@
         <ProjectReference Include="..\Keis.Model\Keis.Model.csproj" />
         <ProjectReference Include="..\Keis.Data\Keis.Data.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Features\BusinessHour\" />
-        <None Remove="Features\BusinessHour\CreateBusinessHour\" />
-        <None Remove="Features\BusinessHour\ListBusinessHour\" />
-        <None Remove="Features\BusinessHour\GetBusinessHour\" />
-        <None Remove="Features\HelpTopic\" />
-        <None Remove="Features\HelpTopic\GetHelpTopic\" />
-        <None Remove="Features\HelpTopic\CreateHelpTopic\" />
-        <None Remove="Features\HelpTopic\ListHelpTopics\" />
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Features\Users\GetUser\" />
-    </ItemGroup>
 </Project>

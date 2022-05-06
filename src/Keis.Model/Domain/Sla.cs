@@ -7,7 +7,7 @@ public class Sla : DbAudit
 {
     public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Name { get; set; }
-    public string Description { get; set; }
+    public string Note { get; set; }
     public string BusinessHour { get; set; }
     public int ResponsePeriod { get; set; }
 

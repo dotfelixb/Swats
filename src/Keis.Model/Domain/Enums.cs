@@ -85,6 +85,14 @@ public enum EventType
     ChangeTicketStatus
 }
 
+public enum WorkflowPriority
+{
+    Normal = 1,
+    Medium,
+    High,
+    Important
+}
+
 public enum CriteriaType
 {
     Subject = 1,
@@ -92,6 +100,13 @@ public enum CriteriaType
     Team,
     Status,
     Priority
+}
+
+public enum ControlType
+{
+    Input =  1,
+    Select,
+    Multiselect
 }
 
 public enum CriteriaCondition
@@ -102,6 +117,10 @@ public enum CriteriaCondition
 
 public enum ActionType
 {
-    Equals = 1,
-    Contains
+    ForwardTo = 1,
+    AssignTo,
+    AssignDepartment,
+    AssignTeam,
+    ApplySla,
+    ChangeStatus
 }

@@ -1,5 +1,3 @@
-import { Descriptions } from "antd";
-
 /// interface use by keis.web
 interface IResult {
     ok: boolean;
@@ -69,16 +67,11 @@ export interface IOpenHour {
 }
 
 export enum ControlType {
-    Input,
+    Input = 1,
     Select,
     Multiselect,
 }
 
-export interface IPickerType {
-    value: string;
-    text: string;
-    control: ControlType;
-}
 
 interface IDataAudit {
     status: string;
@@ -169,7 +162,7 @@ export interface IFetchAgent extends IDataAudit {
 export interface IFetchSla extends IDataAudit {
     id: string;
     name: string;
-    description: string;
+    note: string;
     businessHour: string;
     businessHourName: string;
     responsePeriod: number;
@@ -182,7 +175,42 @@ export interface IFetchSla extends IDataAudit {
     resolveEmail: boolean;
 }
 
+export interface IList {
+    id: string;
+    name: string;
+  }
+
 export interface IWorkflowEvent {
     name:string;
     type:string;
+}
+
+export interface IWorkflowCriteria {
+    key: number;
+    name?:string;
+    criteria?: number;
+    condition?: number;
+    match?:string;
+    control?: ControlType;
+    type?:string;
+    link?:string;
+}
+
+export interface IWorkflowAction {
+    key: number;
+    name?:string;
+    actionFrom?: number;
+    actionTo?:string;
+    control?: ControlType;
+    link?:string;
+}
+
+export interface IFetchWorkflow extends IDataAudit {
+    id: string;
+    name: string;
+    priority: string;
+    note: string;
+    events: IWorkflowEvent[];
+    criteria: IWorkflowCriteria[];
+    actions: IWorkflowAction[];
 }

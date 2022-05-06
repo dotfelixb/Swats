@@ -1,67 +1,122 @@
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Select } from "antd";
 import React, { FC, useState } from "react";
-import { ControlType, IPickerType } from "../interfaces";
+import { useApp } from "../context";
+import { ControlType, IList, IListResult, IWorkflowAction } from "../interfaces";
 
-interface IActionTag {
-    key: string;
-    value: string;
+interface IWorkflowActionPage {
+  id: number;
+  actionTags: IWorkflowAction[];
+  actionList: IWorkflowAction[];
+  setActionList: React.Dispatch<React.SetStateAction<IWorkflowAction[]>>;
+  onClick: (key: number) => void;
 }
 
-interface IWorkflowAction {
-    id: number;
-    onClick: (key: number) => void;
-}
+const WorkflowAction: FC<IWorkflowActionPage> = ({
+  id,
+  actionTags,
+  actionList,
+  setActionList,
+  onClick,
+}) => {
+  const { get } = useApp();
+  const [control, setControl] = useState<ControlType>(ControlType.Input);
+  const [list, setList] = useState<IList[]>([]);
 
-const actionTags: IPickerType[] = [
-    { value: "forwardto", text: "Forward To", control: ControlType.Input },
-    { value: "assignto", text: "Assign To", control: ControlType.Select },
-    {
-        value: "assigndepartment",
-        text: "Assign Department",
-        control: ControlType.Select,
-    },
-    { value: "assignteam", text: "Assign Team", control: ControlType.Select },
-    { value: "changestatus", text: "Change Status", control: ControlType.Select },
-    { value: "applysla", text: "Apply SLA", control: ControlType.Select },
-];
+  const loadList = async (url: string) => {
+    const g: Response = await get(url);
 
-const WorkflowAction: FC<IWorkflowAction> = ({ id, onClick }) => {
-    const [control, setControl] = useState<ControlType>(ControlType.Input);
+    if (g != null) {
+      const d: IListResult<IList[]> = await g.json();
 
-    const onChange = (value: any) => {
-        const controltype = actionTags.find((f) => f.value === value);
+      if (g.status === 200 && d.ok) {
+        setList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  };
 
-        if (controltype !== null && controltype !== undefined) {
-            setControl(controltype.control);
-        }
+  const getActionTuple = (key: number) => {
+    const filteredAction = actionList.filter(f => f.key !== id);
+    const oldAction = actionList.find(f => f.key === id);
+
+    return {filteredAction, oldAction}
+  }
+
+  const onChange = (value: any) => {
+    const controltype = actionTags.find((f) => f.actionFrom === value);
+
+    if (controltype !== null && controltype !== undefined) {
+      setControl(controltype.control ?? 1);
+
+      if (controltype.link != null) {
+        loadList(controltype.link);
+      }
+
+      const {filteredAction, oldAction} = getActionTuple(id);
+
+      const newAction : IWorkflowAction = {
+        ...oldAction,
+        key: id,
+        actionFrom: value
+      };
+
+      setActionList([...filteredAction, newAction]);
+    }
+  };
+
+  const onActionToInputChange = (value: any) => {
+    onActionToChange(value.target.value);
+  };
+
+  const onActionToChange = (value: any) => {
+    const {filteredAction, oldAction} = getActionTuple(id);
+
+    const newAction : IWorkflowAction = {
+        ...oldAction,
+        key: id,
+        actionTo: value
     };
+    
+    setActionList([...filteredAction, newAction]);
+  };
 
-    return (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <Form.Item name={`actionfrom-${id}`}>
-                <Select showSearch onChange={onChange}>
-                    {actionTags.map((s) => (
-                        <Select.Option key={s.value} value={s.value}>
-                            {s.text}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
-            <Form.Item name={`actionto-${id}`}>
-                {control === ControlType.Input ? <Input /> : <Select></Select>}
-            </Form.Item>
-            <Form.Item>
-                <Button
-                    type="link"
-                    danger
-                    size="small"
-                    onClick={() => onClick(id)}
-                    icon={<CloseCircleOutlined />}
-                />
-            </Form.Item>
-        </div>
-    );
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <Form.Item name={`actionfrom-${id}`}>
+        <Select showSearch onChange={onChange}>
+          {actionTags.map((s) => (
+            <Select.Option key={s.name} value={s.actionFrom}>
+              {s.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item name={`actionto-${id}`}>
+        {control === ControlType.Input ? (
+          <Input onBlur={onActionToInputChange} />
+        ) : (
+          <Select onChange={onActionToChange}>
+            {list?.map((l) => (
+              <Select.Option key={l.id} value={l.id}>
+                {l.name}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
+      </Form.Item>
+      <Form.Item>
+        <Button
+          type="link"
+          danger
+          size="small"
+          onClick={() => onClick(id)}
+          icon={<CloseCircleOutlined />}
+        />
+      </Form.Item>
+    </div>
+  );
 };
 
 export default WorkflowAction;
