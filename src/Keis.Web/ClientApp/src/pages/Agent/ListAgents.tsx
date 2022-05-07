@@ -11,7 +11,10 @@ interface IListAgents {}
 const columns = [
   { key: "email", column: [{ title: "Name" }, { title: "" }] },
   { key: "name", column: [{ title: "Email" }, { title: "Mobile" }] },
-  { key: "departmentTeam", column: [{ title: "Department" },{ title: "Team" }] },
+  {
+    key: "departmentTeam",
+    column: [{ title: "Department" }, { title: "Team" }],
+  },
   {
     key: "created",
     column: [{ title: "Created By" }, { title: "Created At" }],
@@ -19,7 +22,7 @@ const columns = [
   { key: "extra", column: [{ title: "" }] },
 ];
 
-const ListAgents : FC<IListAgents> = () => {
+const ListAgents: FC<IListAgents> = () => {
   const { user } = useAuth();
   const { get, dateFormats } = useApp();
   const [agentList, setAgentList] = useState<IFetchAgent[]>();
@@ -64,48 +67,53 @@ const ListAgents : FC<IListAgents> = () => {
     </Breadcrumb>
   );
 
-  return ( <PageView title="Agents" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
-    <DataTable columns={columns}>
-      {agentList?.map(a=>(
-        <tr className="px-10" key={a.id}>
-        <td className="px-3 py-3">
-          <Link to={`/admin/agent/${a.id}`}>
-            <div className="">{`${a.firstName} ${a.lastName}`}</div>
-          </Link>
-          <div className="text-xs" style={{ color: "#9b9b9b" }}>
-          </div>
-        </td>
+  return (
+    <PageView
+      title="Agents"
+      buttons={<Buttons />}
+      breadcrumbs={<Breadcrumbs />}
+    >
+      <DataTable columns={columns}>
+        {agentList?.map((a) => (
+          <tr className="px-10" key={a.id}>
+            <td className="px-3 py-3">
+              <Link to={`/admin/agent/${a.id}`}>
+                <div className="">{`${a.firstName} ${a.lastName}`}</div>
+              </Link>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}></div>
+            </td>
 
-        <td className="px-3 py-3">
-          <div className="">{a.email}</div>
-          <div className="text-xs" style={{ color: "#9b9b9b" }}>
-            {a.mobile}
-          </div>
-        </td>
+            <td className="px-3 py-3">
+              <div className="">{a.email}</div>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                {a.mobile}
+              </div>
+            </td>
 
-        <td className="px-3 py-3">
-          <div className="">{a.departmentName}</div>
-          <div className="text-xs" style={{ color: "#9b9b9b" }}>
-            {a.teamName}
-          </div>
-        </td>
+            <td className="px-3 py-3">
+              <div className="">{a.departmentName}</div>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                {a.teamName}
+              </div>
+            </td>
 
-        <td className="px-3 py-3">
-          <div className="">{a.createdByName}</div>
-          <div className="text-xs" style={{ color: "#9b9b9b" }}>
-            {dayjs(a.createdAt).format(dateFormats.longDateFormat)}
-          </div>
-        </td>
+            <td className="px-3 py-3">
+              <div className="">{a.createdByName}</div>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                {dayjs(a.createdAt).format(dateFormats.longDateFormat)}
+              </div>
+            </td>
 
-        <td>
-          <span className="text-gray-300"></span>
-        </td>
-      </tr>
-      ))}
-    </DataTable>
+            <td>
+              <span className="text-gray-300"></span>
+            </td>
+          </tr>
+        ))}
+      </DataTable>
 
-    <Outlet />
-  </PageView> )
-}
+      <Outlet />
+    </PageView>
+  );
+};
 
 export default ListAgents;

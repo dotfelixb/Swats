@@ -1,54 +1,164 @@
 import {
   ClockCircleOutlined,
   CommentOutlined,
+  FireOutlined,
   FormOutlined,
-  ScheduleOutlined,
 } from "@ant-design/icons";
 import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView, WorkflowAction, WorkflowCriteria } from "../../components";
 import { useApp, useAuth } from "../../context";
+import {
+  IListResult,
+  ISingleResult,
+  IWorkflowAction,
+  IWorkflowCriteria,
+  IWorkflowEvent,
+} from "../../interfaces";
 
 const { TextArea } = Input;
 
-interface ICriteria {
-  key: number;
-}
-
-interface IAction {
-  key: number;
+interface IFormData {
+  name: string;
+  events: string[];
+  priority: number;
+  status: string;
+  note: string;
 }
 
 interface INewWorkflow {}
-
-interface IEventTag {
-  key: string;
-  value: string;
-}
-
-const eventTags: IEventTag[] = [
-  { key: "newticket", value: "New Ticket" },
-  { key: "changetype", value: "Change Ticket Type" },
-  { key: "changedepartment", value: "Change Department" },
-  { key: "changeteam", value: "Change Team" },
-  { key: "changepriority", value: "Change Ticket Priority" },
-  { key: "changestatus", value: "Change Ticket Status" },
-  { key: "ticketreply", value: "Ticket Reply" },
-  { key: "ticketcomment", value: "Ticket Comment" },
-];
 
 const NewWorkflow: FC<INewWorkflow> = () => {
   const { user } = useAuth();
   const { get } = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [criteriaList, setCriteriaList] = useState<ICriteria[]>([]);
-  const [actionList, setActionList] = useState<IAction[]>([]);
+  const [criteriaList, setCriteriaList] = useState<IWorkflowCriteria[]>([]);
+  const [actionList, setActionList] = useState<IWorkflowAction[]>([]);
+  const [workflowEventList, setWorkflowEventList] = useState<IWorkflowEvent[]>(
+    []
+  );
+  const [workflowCriteriaList, setWorkflowCriteriaList] = useState<
+    IWorkflowCriteria[]
+  >([]);
+  const [workflowActionList, setWorkflowActionList] = useState<
+    IWorkflowAction[]
+  >([]);
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
-  const onFinish = (values: any) => {};
+  useEffect(() => {
+    const loadEvent = async () => {
+      const g: Response = await get(`methods/workflow.event`);
+
+      if (g != null) {
+        const d: IListResult<IWorkflowEvent[]> = await g.json();
+
+        if (g.status === 200 && d.ok) {
+          setWorkflowEventList(d.data);
+        } else {
+          // TODO: display error to user
+        }
+      }
+    };
+
+    const loadCriteria = async () => {
+      const g: Response = await get(`methods/workflow.criteria`);
+
+      if (g != null) {
+        const d: IListResult<IWorkflowCriteria[]> = await g.json();
+
+        if (g.status === 200 && d.ok) {
+          setWorkflowCriteriaList(d.data);
+        } else {
+          // TODO: display error to user
+        }
+      }
+    };
+
+    const loadAction = async () => {
+      const g: Response = await get(`methods/workflow.action`);
+
+      if (g != null) {
+        const d: IListResult<IWorkflowAction[]> = await g.json();
+
+        if (g.status === 200 && d.ok) {
+          setWorkflowActionList(d.data);
+        } else {
+          // TODO: display error to user
+        }
+      }
+    };
+
+    if (user != null) {
+      // move to promise.all
+      loadEvent();
+      loadCriteria();
+      loadAction();
+    }
+  }, [user, get]);
+
+  const onFinish = async (values: IFormData) => {
+    const body = new FormData();
+    body.append("name", values.name ?? "");
+    body.append("priority", values.priority.toString() ?? "");
+    body.append("status", values.status ?? "");
+    body.append("note", values.note ?? "");
+
+    for (let index = 0; index < values.events.length; index++) {
+      body.append(`events[${index}]`, values.events[index]);
+    }
+
+    for (let index = 0; index < actionList.length; index++) {
+      body.append(
+        `actions[${index}].name`,
+        actionList[index].name?.toString() ?? ""
+      );
+      body.append(
+        `actions[${index}].actionFrom`,
+        actionList[index].actionFrom?.toString() ?? ""
+      );
+      body.append(
+        `actions[${index}].actionTo`,
+        actionList[index].actionTo ?? ""
+      );
+    }
+
+    for (let index = 0; index < criteriaList.length; index++) {
+      body.append(
+        `criteria[${index}].name`,
+        criteriaList[index].name?.toString() ?? ""
+      );
+      body.append(
+        `criteria[${index}].criteria`,
+        criteriaList[index].criteria?.toString() ?? ""
+      );
+      body.append(
+        `criteria[${index}].condition`,
+        criteriaList[index].condition?.toString() ?? ""
+      );
+      body.append(`criteria[${index}].match`, criteriaList[index].match ?? "");
+    }
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/workflow.create", {
+      method: "POST",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<string> = await f.json();
+
+    if (f.status === 201 && result.ok) {
+      navigate(`/admin/workflow/${result.data}`, { replace: true });
+    }
+
+    setHasFormErrors(true);
+    setFormErrors(result?.errors);
+  };
 
   const onAddCriteria = () => {
     const newKey = +new Date();
@@ -102,13 +212,27 @@ const NewWorkflow: FC<INewWorkflow> = () => {
                 <Form.Item name="name" label="Name" htmlFor="name">
                   <Input />
                 </Form.Item>
-                <Form.Item name="event" label="Events">
+                <Form.Item name="events" label="Events">
                   <Select showSearch mode="multiple">
-                    {eventTags.map((e) => (
-                      <Select.Option key={e.key} value={e.key}>
-                        {e.value}
+                    {workflowEventList.map((e) => (
+                      <Select.Option key={e.type} value={e.type}>
+                        {e.name}
                       </Select.Option>
                     ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item name="priority" label="Priority">
+                  <Select>
+                    <Select.Option value="1">Normal</Select.Option>
+                    <Select.Option value="2">Medium</Select.Option>
+                    <Select.Option value="3">High</Select.Option>
+                    <Select.Option value="4">Important!</Select.Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item name="status" label="Status">
+                  <Select>
+                    <Select.Option value="1">Active</Select.Option>
+                    <Select.Option value="2">Inactive</Select.Option>
                   </Select>
                 </Form.Item>
               </Timeline.Item>
@@ -119,13 +243,18 @@ const NewWorkflow: FC<INewWorkflow> = () => {
                   Workflow Criteria matches and conditions
                 </div>
 
-                {criteriaList?.map((c) => (
-                  <WorkflowCriteria
-                    key={c.key}
-                    id={c.key}
-                    onClick={onRemoveCriterial}
-                  />
-                ))}
+                {criteriaList
+                  ?.sort((l, r) => l.key - r.key)
+                  .map((c) => (
+                    <WorkflowCriteria
+                      key={c.key}
+                      id={c.key}
+                      criteriaTags={workflowCriteriaList}
+                      criteriaList={criteriaList}
+                      setCriteriaList={setCriteriaList}
+                      onClick={onRemoveCriterial}
+                    />
+                  ))}
 
                 <Form.Item>
                   <Button type="default" onClick={onAddCriteria}>
@@ -134,19 +263,24 @@ const NewWorkflow: FC<INewWorkflow> = () => {
                 </Form.Item>
               </Timeline.Item>
               <Timeline.Item
-                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
+                dot={<FireOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">
                   Action to perform base on the events above
                 </div>
 
-                {actionList?.map((c) => (
-                  <WorkflowAction
-                    key={c.key}
-                    id={c.key}
-                    onClick={onRemoveAction}
-                  />
-                ))}
+                {actionList
+                  ?.sort((l, r) => l.key - r.key)
+                  .map((c) => (
+                    <WorkflowAction
+                      key={c.key}
+                      id={c.key}
+                      actionTags={workflowActionList}
+                      actionList={actionList}
+                      setActionList={setActionList}
+                      onClick={onRemoveAction}
+                    />
+                  ))}
 
                 <Form.Item>
                   <Button type="default" onClick={onAddAction}>

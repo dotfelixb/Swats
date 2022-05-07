@@ -16,7 +16,9 @@ const DataTable: FC<IDataTable> = ({ columns, children }) => {
         {columns.map((c) => {
           return (
             <th key={c.key} className="px-3 py-3 font-semibold">
-              {c.column.map(cc => (<div key={cc.title}>{cc.title}</div>))}
+              {c.column.map((cc) => (
+                <div key={cc.title}>{cc.title}</div>
+              ))}
             </th>
           );
         })}
@@ -54,9 +56,7 @@ const DataTable: FC<IDataTable> = ({ columns, children }) => {
       <div className="w-full border-t-2 border-gray-50">
         <table className="w-full table-auto">
           {renderColumn}
-          <tbody>
-            {children}
-          </tbody>
+          <tbody>{children}</tbody>
         </table>
       </div>
     </div>

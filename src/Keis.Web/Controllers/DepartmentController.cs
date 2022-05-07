@@ -1,9 +1,11 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Keis.Infrastructure.Features.Department.CreateDepartment;
+using Keis.Infrastructure.Features.Department.GetDepartment;
+using Keis.Infrastructure.Features.Department.ListDepartment;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -26,13 +28,11 @@ public class DepartmentController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchDepartment>
         {
@@ -40,22 +40,20 @@ public class DepartmentController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("department.get", Name = nameof(GetDepartment))]
     public async Task<IActionResult> GetDepartment([FromQuery] GetDepartmentCommand command)
     {
         var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(GetDepartment)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchDepartment>
         {
@@ -63,9 +61,9 @@ public class DepartmentController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpPost("department.create", Name = nameof(CreateDepartment))]
-    public async Task<IActionResult> CreateDepartment( CreateDepartmentCommand command)
+    public async Task<IActionResult> CreateDepartment(CreateDepartmentCommand command)
     {
         var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(CreateDepartment)}";
         logger.LogInformation(msg);
@@ -74,13 +72,11 @@ public class DepartmentController : MethodController
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         var uri = $"/methods/department.get?id={result.Value}";
         return Created(uri, new SingleResult<string>

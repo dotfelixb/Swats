@@ -1,10 +1,12 @@
 ﻿using FluentResults;
-using MediatR;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Model.Commands;
 
-public class DashboardCommands { }
+public class DashboardCommands
+{
+}
 
 public class AgentTicketsCommand : GetType, IRequest<Result<int>>
 {

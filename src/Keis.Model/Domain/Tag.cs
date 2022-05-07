@@ -8,8 +8,10 @@ public class Tag : DbAudit
     public string Id { get; set; } = NewId.NextGuid().ToString();
     public string Name { get; set; }
     public string Color { get; set; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultType Visibility { get; set; }
+
     public string Note { get; set; }
 }
 

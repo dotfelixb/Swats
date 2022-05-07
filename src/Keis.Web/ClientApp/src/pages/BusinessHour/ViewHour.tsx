@@ -1,4 +1,4 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -89,6 +89,45 @@ const ViewHour: FC<IViewHour> = () => {
             <div>
               <label className="form-label">Timezone</label>
               <div className="form-data">{hour?.timezone ?? "N/A"}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 py-4">
+            <div>
+              <label className="form-label">Open hours</label>
+              {hour?.openHours.map((h) => {
+                return (
+                  <div
+                    key={h.id}
+                    className="grid grid-cols-4 gap-5 py-4 text-xs"
+                  >
+                    <div>
+                      <div>
+                        <Checkbox checked={h.enabled}>
+                          <span className="text-sm">{h.name}</span>
+                        </Checkbox>
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <Checkbox checked={h.fullDay}>
+                          <span className="text-sm">Open 24 Hours</span>
+                        </Checkbox>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm">
+                        From: {dayjs(h.fromTime).format("HH:mm")}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm">
+                        To: {dayjs(h.toTime).format("HH:mm")}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

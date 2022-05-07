@@ -1,10 +1,9 @@
 using System.Text.Json;
 using AutoMapper;
 using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Domain;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Sla.CreateSla;
 

@@ -1,16 +1,16 @@
-import { Breadcrumb, Button } from 'antd';
-import dayjs from 'dayjs';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import { DataTable, PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { IFetchType, IListResult } from '../../interfaces';
+import { Breadcrumb, Button } from "antd";
+import dayjs from "dayjs";
+import React, { FC, useEffect, useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import { DataTable, PageView } from "../../components";
+import { useApp, useAuth } from "../../context";
+import { IFetchType, IListResult } from "../../interfaces";
 
 interface IListTypes {}
 
 const columns = [
   { key: "name", column: [{ title: "Name" }, { title: "" }] },
-  { key: "status", column: [{ title: "Visibility" },{ title: "Status" }] },
+  { key: "status", column: [{ title: "Visibility" }, { title: "Status" }] },
   {
     key: "created",
     column: [{ title: "Created By" }, { title: "Created At" }],
@@ -18,7 +18,7 @@ const columns = [
   { key: "extra", column: [{ title: "" }] },
 ];
 
-const ListTypes : FC<IListTypes> = () => {
+const ListTypes: FC<IListTypes> = () => {
   const { user } = useAuth();
   const { get, dateFormats } = useApp();
   const [typeList, setTypeList] = useState<IFetchType[]>();
@@ -42,11 +42,11 @@ const ListTypes : FC<IListTypes> = () => {
       load();
     }
   }, [user, get]);
-  
+
   const Buttons: FC = () => (
     <div className="space-x-2">
       <Link to="new">
-        <Button type="primary" >New Type</Button>
+        <Button type="primary">New Type</Button>
       </Link>
     </div>
   );
@@ -63,16 +63,20 @@ const ListTypes : FC<IListTypes> = () => {
     </Breadcrumb>
   );
 
-  return (<PageView title="Ticket Types" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
-    <DataTable columns={columns}>
+  return (
+    <PageView
+      title="Ticket Types"
+      buttons={<Buttons />}
+      breadcrumbs={<Breadcrumbs />}
+    >
+      <DataTable columns={columns}>
         {typeList?.map((t) => (
           <tr className="px-10" key={t.id}>
             <td className="px-3 py-3">
               <Link to={`/admin/tickettype/${t.id}`}>
                 <div className="">{t.name}</div>
               </Link>
-              <div className="text-xs" style={{ color: "#9b9b9b" }}>
-              </div>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}></div>
             </td>
 
             <td className="px-3 py-3">
@@ -97,7 +101,8 @@ const ListTypes : FC<IListTypes> = () => {
       </DataTable>
 
       <Outlet />
-  </PageView>)
-}
+    </PageView>
+  );
+};
 
 export default ListTypes;

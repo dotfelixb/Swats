@@ -1,7 +1,13 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Keis.Infrastructure.Features.Tickets.AssignTicket;
+using Keis.Infrastructure.Features.Tickets.CreateTicket;
+using Keis.Infrastructure.Features.Tickets.GetTicket;
+using Keis.Infrastructure.Features.Tickets.ListTicket;
 using Keis.Model;
 using Keis.Model.Commands;
+using Keis.Model.Queries;
+using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -16,66 +22,84 @@ public class TicketController : MethodController
         this.mediatr = mediatr;
     }
 
-    [HttpGet("tickets.list", Name = nameof(ListTickets))]
+    [HttpGet("ticket.list", Name = nameof(ListTickets))]
     public async Task<IActionResult> ListTickets([FromQuery] ListTicketCommand command)
     {
-        logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(ListTickets)}");
+        const string msg = $"GET::{nameof(TicketController)}::{nameof(ListTickets)}";
+        logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
-            return NotFound(new ErrorResult { Ok = false });
-        }
+            return NotFound(new ErrorResult {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
 
-        return Ok(result.Value);
+        return Ok(new ListResult<FetchTicket>
+        {
+            Ok = true,
+            Data = result.Value
+        });
     }
 
-    [HttpGet("tickets.get", Name =nameof(GetTicket))]
+    [HttpGet("ticket.get", Name = nameof(GetTicket))]
     public async Task<IActionResult> GetTicket([FromQuery] GetTicketCommand command)
     {
-        logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(GetTicket)}");
+        const string msg = $"GET::{nameof(TicketController)}::{nameof(GetTicket)}";
+        logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
-            var error = result.Reasons.FirstOrDefault()?.Message;
-            return NotFound(new ErrorResult { Ok = false, Errors = new []{error }});
-        }
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
 
-        return Ok(result.Value);
+        return Ok(new SingleResult<FetchTicket>
+        {
+            Ok = true,
+            Data = result.Value
+        });
     }
 
-    [HttpPost("tickets.create", Name = nameof(CreateTicket))]
-    public async Task<IActionResult> CreateTicket( CreateTicketCommand command)
+    [HttpPost("ticket.create", Name = nameof(CreateTicket))]
+    public async Task<IActionResult> CreateTicket(CreateTicketCommand command)
     {
-        logger.LogInformation($"{Request.Method}::{nameof(TicketController)}::{nameof(CreateTicket)}");
+        const string msg = $"POST::{nameof(TicketController)}::{nameof(CreateTicket)}";
+        logger.LogInformation(msg);
 
+        command.CreatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
+
         if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/ticket.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
         {
-            var error = result.Reasons.FirstOrDefault()?.Message;
-            return BadRequest(new ErrorResult { Ok = false, Errors = new[] { error } });
-        }
-
-        var baseUri = $"{Request.Scheme}://{Request.Host}";
-        var uri = $"{baseUri}/methods/tickets.get?id={result.Value}";
-
-        return Created(uri, result.Value);
+            Ok = true,
+            Data = result.Value
+        });
     }
 
-    [HttpPatch("tickets.assign", Name = nameof(AssignTicket))]
+    [HttpPatch("ticket.assign", Name = nameof(AssignTicket))]
     public Task<IActionResult> AssignTicket(AssignTicketCommand command)
     {
         throw new NotImplementedException();
     }
 
-    [HttpPatch("tickets.department", Name = nameof(AssignDepartmentTicket))]
+    [HttpPatch("ticket.department", Name = nameof(AssignDepartmentTicket))]
     public Task<IActionResult> AssignDepartmentTicket(AssignTicketDepartmentCommand command)
     {
         throw new NotImplementedException();
     }
 
-    [HttpPatch("tickets.team", Name = nameof(AssignTeamTicket))]
+    [HttpPatch("ticket.team", Name = nameof(AssignTeamTicket))]
     public Task<IActionResult> AssignTeamTicket(AssignTicketTeamCommand command)
     {
         throw new NotImplementedException();

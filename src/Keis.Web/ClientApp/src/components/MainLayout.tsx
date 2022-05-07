@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Layout, Menu } from "antd";
 import {
   CustomerServiceOutlined,
-  DashboardOutlined, 
+  DashboardOutlined,
   SettingOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
@@ -20,7 +20,9 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
     <Layout style={{ height: "100vh" }}>
       <Header
         style={{
-          backgroundColor: "white", height: "48px", lineHeight: "48px",
+          backgroundColor: "white",
+          height: "48px",
+          lineHeight: "48px",
           borderBottom: "1px solid rgba(128, 128, 128, 0.3)",
         }}
       >

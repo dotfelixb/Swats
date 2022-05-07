@@ -1,23 +1,25 @@
 using Htmx;
+using Keis.Controllers;
+using Keis.Extensions;
+using Keis.Infrastructure.Features.Department.ListDepartment;
+using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.GetHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.ListHelpTopics;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Keis.Controllers;
-using Keis.Extensions;
-using Keis.Model.Commands;
-using System.Security.Claims;
 
 namespace Keis.Areas.Admin.Controllers;
 
 [Area("admin")]
 public class HelpTopicController : FrontEndController
 {
-    private readonly ILogger<TicketTypeController> _logger;
+    private readonly ILogger<HelpTopicController> _logger;
     private readonly IMediator _mediatr;
 
     public HelpTopicController(IHttpContextAccessor httpAccessor
-        , ILogger<TicketTypeController> logger
-        , IMediator mediatr) :base(httpAccessor)
+        , ILogger<HelpTopicController> logger
+        , IMediator mediatr) : base(httpAccessor)
     {
         _logger = logger;
         _mediatr = mediatr;
@@ -53,7 +55,7 @@ public class HelpTopicController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -77,7 +79,7 @@ public class HelpTopicController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(HelpTopicController)}::{nameof(Edit)}");
 
-        var query = new GetHelpTopicCommand { Id = id };
+        var query = new GetHelpTopicCommand {Id = id};
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
@@ -97,7 +99,7 @@ public class HelpTopicController : FrontEndController
 
         CreateHelpTopicCommand command = new()
         {
-            DepartmentList = departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id })
+            DepartmentList = departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id})
         };
 
         return Request.IsHtmx()

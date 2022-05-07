@@ -1,9 +1,11 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
+using Keis.Infrastructure.Features.TicketTypes.GetTicketType;
+using Keis.Infrastructure.Features.TicketTypes.ListTicketType;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -26,13 +28,11 @@ public class TicketTypeController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchTicketType>
         {
@@ -49,13 +49,11 @@ public class TicketTypeController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchTicketType>
         {
@@ -74,13 +72,11 @@ public class TicketTypeController : MethodController
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         var uri = $"/methods/tickettype.get?id={result.Value}";
         return Created(uri, new SingleResult<string>

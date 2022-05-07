@@ -1,10 +1,11 @@
 using Htmx;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Controllers;
 using Keis.Extensions;
-using Keis.Model.Commands;
-using System.Security.Claims;
+using Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
+using Keis.Infrastructure.Features.BusinessHour.GetBusinessHour;
+using Keis.Infrastructure.Features.BusinessHour.ListBusinessHour;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Areas.Admin.Controllers;
 
@@ -52,7 +53,7 @@ public class BusinessHourController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -76,7 +77,7 @@ public class BusinessHourController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(BusinessHourController)}::{nameof(Edit)}");
 
-        var query = new GetBusinessHourCommand { Id = id };
+        var query = new GetBusinessHourCommand {Id = id};
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);

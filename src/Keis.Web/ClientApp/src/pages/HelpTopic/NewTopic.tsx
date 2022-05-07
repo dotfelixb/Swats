@@ -13,7 +13,7 @@ import { IFetchDepartment, IListResult, ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
 
-interface INewTopic { }
+interface INewTopic {}
 
 interface IFormData {
   topic: string;
@@ -146,9 +146,17 @@ const NewTopic: FC<INewTopic> = () => {
                 <div className="font-bold mb-2">
                   Which department is this topic linked to
                 </div>
-                <Form.Item name="department" label="Department" htmlFor="department">
+                <Form.Item
+                  name="department"
+                  label="Department"
+                  htmlFor="department"
+                >
                   <Select showSearch>
-                    {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                    {departmentList?.map((d) => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.name}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Timeline.Item>

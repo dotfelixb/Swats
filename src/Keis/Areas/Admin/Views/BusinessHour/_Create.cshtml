@@ -1,4 +1,4 @@
-@model CreateBusinessHourCommand
+@model Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour.CreateBusinessHourCommand
 
 @{
     var createError = TempData["CreateError"]?.ToString() ?? "";
@@ -85,14 +85,14 @@
                     </select>
                     <span asp-validation-for="@Model.Status" class="form-input-error"></span>
                 </div>
-                
+
 
                 @* timezone *@
                 <div class="form-control">
                     <label asp-for="@Model.Timezone" class="form-label">
                         Timezone
                     </label>
-                    <select  asp-for="@Model.Timezone" class="dropdown search form-input">
+                    <select asp-for="@Model.Timezone" class="dropdown search form-input">
                         <option></option>
                         @foreach (var item in TimeZoneInfo.GetSystemTimeZones())
                         {

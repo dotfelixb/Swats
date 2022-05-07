@@ -1,4 +1,4 @@
-@model CreateTicketCommand
+@model Keis.Infrastructure.Features.Tickets.CreateTicket.CreateTicketCommand
 
 @{
     var createError = TempData["CreateError"]?.ToString() ?? "";
@@ -18,205 +18,205 @@
 }
 
 <div id="main-swap">
-<section>
-    @await Component.InvokeAsync("Breadcrumbs", new
-    {
-        crumbs = new[]
+    <section>
+        @await Component.InvokeAsync("Breadcrumbs", new
         {
-            new SelectListItem {Text = "Home", Value = "/"},
-            new SelectListItem {Text = "Ticket", Value = "/ticket"}
-        },
-        currentPage = "New Ticket"
-    })
-</section>
-<form asp-controller="Ticket" asp-action="Create" method="post">
-    <section class=" flex w-full font-bold text-2xl pb-5">
-        <div class="flex w-1/2">New Ticket</div>
-        <div class="flex w-1/2 justify-end">
-            <div class="flex flex-row">
-                <button class="btn-default"
-                        hx-get="/ticket"
-                        hx-trigger="click"
-                        hx-target="#main-swap"
-                        hx-swap="outerHTML"
-                        hx-push-url="true">
-                    <div class="flex flex-row ">
-                        <div class="flex">Cancel</div>
-                    </div>
-                </button>
-                <span class="mr-4"></span>
-                <button class="btn-primary"
-                        hx-post="/ticket/create"
-                        hx-trigger="click"
-                        hx-target="#main-swap"
-                        hx-swap="outerHTML"
-                        hx-push-url="true">
-                    <div class="flex flex-row ">
-                        <div class="mr-2 flex items-center ">
-                            <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
-                        </div>
-                        <div class="flex">Save</div>
-                    </div>
-                </button>
-            </div>
-        </div>
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Ticket", Value = "/ticket"}
+            },
+            currentPage = "New Ticket"
+        })
     </section>
-
-    <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            @* requester *@
-            <div class="form-control">
-                <label asp-for="@Model.Requester" class="form-label">
-                    Requester
-                </label>
-                <select asp-for="@Model.Requester" class="dropdown search form-input">
-                    <option></option>
-                    @foreach (var item in Model.RequesterList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.Requester" class="form-input-error"></span>
+    <form asp-controller="Ticket" asp-action="Create" method="post">
+        <section class=" flex w-full font-bold text-2xl pb-5">
+            <div class="flex w-1/2">New Ticket</div>
+            <div class="flex w-1/2 justify-end">
+                <div class="flex flex-row">
+                    <button class="btn-default"
+                            hx-get="/ticket"
+                            hx-trigger="click"
+                            hx-target="#main-swap"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
+                        <div class="flex flex-row ">
+                            <div class="flex">Cancel</div>
+                        </div>
+                    </button>
+                    <span class="mr-4"></span>
+                    <button class="btn-primary"
+                            hx-post="/ticket/create"
+                            hx-trigger="click"
+                            hx-target="#main-swap"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
+                        <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center ">
+                                <ion-icon name="save-outline" style="font-size: 16px;"></ion-icon>
+                            </div>
+                            <div class="flex">Save</div>
+                        </div>
+                    </button>
+                </div>
             </div>
-            <script>  $('#Requester').dropdown(); </script>
+        </section>
 
-            @* subject *@
-            <div class="form-control">
-                <label asp-for="@Model.Subject" class="form-label">
-                    Subject
-                </label>
-                <input asp-for="@Model.Subject" class="form-input"/>
-                <span asp-validation-for="@Model.Subject" class="form-input-error"></span>
+        <div class="w-full bg-white drop-shadow-lg rounded px-10 py-10">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @* requester *@
+                <div class="form-control">
+                    <label asp-for="@Model.Requester" class="form-label">
+                        Requester
+                    </label>
+                    <select asp-for="@Model.Requester" class="dropdown search form-input">
+                        <option></option>
+                        @foreach (var item in Model.RequesterList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.Requester" class="form-input-error"></span>
+                </div>
+                <script>  $('#Requester').dropdown(); </script>
+
+                @* subject *@
+                <div class="form-control">
+                    <label asp-for="@Model.Subject" class="form-label">
+                        Subject
+                    </label>
+                    <input asp-for="@Model.Subject" class="form-input"/>
+                    <span asp-validation-for="@Model.Subject" class="form-input-error"></span>
+                </div>
+
+                @* assignee *@
+                <div class="form-control">
+                    <label asp-for="@Model.AssignedTo" class="form-label">
+                        Assigned To
+                    </label>
+                    <select asp-for="@Model.AssignedTo" class="dropdown search form-input">
+                        <option value=""></option>
+                        @foreach (var item in Model.RequesterList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.AssignedTo" class="form-input-error"></span>
+                </div>
+                <script>  $('#AssignedTo').dropdown(); </script>
+
+                @* source *@
+                <div class="form-control">
+                    <label asp-for="@Model.Source" class="form-label">
+                        Source
+                    </label>
+                    <select asp-for="@Model.Source" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="@Model.Source" class="form-input-error"></span>
+                </div>
+                <script>  $('#Source').dropdown(); </script>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Priority" class="form-label">
+                        Priority
+                    </label>
+                    <select asp-for="@Model.Priority" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
+                </div>
+                <script>  $('#Priority').dropdown(); </script>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Status" class="form-label">
+                        Status
+                    </label>
+                    <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="@Model.Status" class="form-input-error"></span>
+                </div>
+                <script>  $('#Status').dropdown(); </script>
+
+                <div class="form-control">
+                    <label asp-for="@Model.Department" class="form-label">
+                        Department
+                    </label>
+                    <select asp-for="@Model.Department" class="dropdown search form-input">
+                        <option value=""></option>
+                        @foreach (var item in Model.DepartmentList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.Department" class="form-input-error"></span>
+                </div>
+                <script>  $('#Department').dropdown(); </script>
+
+
+                <div class="form-control">
+                    <label asp-for="@Model.Team" class="form-label">
+                        Team
+                    </label>
+                    <select asp-for="@Model.Team" class="dropdown search form-input">
+                        <option value=""></option>
+                        @foreach (var item in Model.TeamList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.Team" class="form-input-error"></span>
+                </div>
+                <script>  $('#Team').dropdown(); </script>
+
+                @* type *@
+                <div class="form-control">
+                    <label asp-for="@Model.TicketType" class="form-label">
+                        Default Ticket Type
+                    </label>
+                    <select asp-for="@Model.TicketType" class="dropdown search form-input">
+                        <option value=""></option>
+                        @foreach (var item in Model.TypeList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
+                </div>
+                <script>  $('#TicketType').dropdown(); </script>
+
+                @* help topic *@
+                <div class="form-control">
+                    <label asp-for="@Model.HelpTopic" class="form-label">
+                        Help Topic
+                    </label>
+                    <select asp-for="@Model.HelpTopic" class="dropdown search form-input">
+                        <option value=""></option>
+                        @foreach (var item in Model.HelpTopicList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.HelpTopic" class="form-input-error"></span>
+                </div>
+                <script>  $('#HelpTopic').dropdown(); </script>
+
             </div>
-
-            @* assignee *@
-            <div class="form-control">
-                <label asp-for="@Model.AssignedTo" class="form-label">
-                    Assigned To
-                </label>
-                <select asp-for="@Model.AssignedTo" class="dropdown search form-input">
-                    <option value=""></option>
-                    @foreach (var item in Model.RequesterList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.AssignedTo" class="form-input-error"></span>
+            <div class="grid grid-cols-1 gap-5 py-4">
+                @* body *@
+                <div class="form-control">
+                    <label asp-for="@Model.Body" class="form-label">
+                        Description
+                    </label>
+                    <input type="hidden" asp-for="@Model.Body" class="form-input"/>
+                    <div id="editor" class="form-input" style="height: 220px;"></div>
+                    <span asp-validation-for="@Model.Body" class="form-input-error"></span>
+                </div>
             </div>
-            <script>  $('#AssignedTo').dropdown(); </script>
-
-            @* source *@
-            <div class="form-control">
-                <label asp-for="@Model.Source" class="form-label">
-                    Source
-                </label>
-                <select asp-for="@Model.Source" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketSource>()">
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="@Model.Source" class="form-input-error"></span>
-            </div>
-            <script>  $('#Source').dropdown(); </script>
-
-            <div class="form-control">
-                <label asp-for="@Model.Priority" class="form-label">
-                    Priority
-                </label>
-                <select asp-for="@Model.Priority" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketPriority>()">
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="@Model.Priority" class="form-input-error"></span>
-            </div>
-            <script>  $('#Priority').dropdown(); </script>
-
-            <div class="form-control">
-                <label asp-for="@Model.Status" class="form-label">
-                    Status
-                </label>
-                <select asp-for="@Model.Status" class="dropdown search form-input" asp-items="@Html.GetEnumSelectList<TicketStatus>()">
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="@Model.Status" class="form-input-error"></span>
-            </div>
-            <script>  $('#Status').dropdown(); </script>
-            
-            <div class="form-control">
-                <label asp-for="@Model.Department" class="form-label">
-                    Department
-                </label>
-                <select asp-for="@Model.Department" class="dropdown search form-input">
-                    <option value=""></option>
-                    @foreach (var item in Model.DepartmentList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.Department" class="form-input-error"></span>
-            </div>
-            <script>  $('#Department').dropdown(); </script>
-
-
-            <div class="form-control">
-                <label asp-for="@Model.Team" class="form-label">
-                    Team
-                </label>
-                <select  asp-for="@Model.Team"  class="dropdown search form-input">
-                    <option value=""></option>
-                    @foreach (var item in Model.TeamList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.Team" class="form-input-error"></span>
-            </div>
-            <script>  $('#Team').dropdown(); </script>
-
-            @* type *@
-            <div class="form-control">
-                <label asp-for="@Model.TicketType" class="form-label">
-                    Default Ticket Type
-                </label>
-                <select asp-for="@Model.TicketType" class="dropdown search form-input">
-                    <option value=""></option>
-                    @foreach (var item in Model.TypeList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.TicketType" class="form-input-error"></span>
-            </div>
-            <script>  $('#TicketType').dropdown(); </script>
-
-            @* help topic *@
-            <div class="form-control">
-                <label asp-for="@Model.HelpTopic" class="form-label">
-                    Help Topic
-                </label>
-                <select asp-for="@Model.HelpTopic" class="dropdown search form-input">
-                    <option value=""></option>
-                    @foreach (var item in Model.HelpTopicList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.HelpTopic" class="form-input-error"></span>
-            </div>
-            <script>  $('#HelpTopic').dropdown(); </script>
-
         </div>
-        <div class="grid grid-cols-1 gap-5 py-4">
-            @* body *@
-            <div class="form-control">
-                <label asp-for="@Model.Body" class="form-label">
-                    Description
-                </label>
-                <input type="hidden" asp-for="@Model.Body" class="form-input"/>
-                <div id="editor" class="form-input" style="height: 220px;"></div>
-                <span asp-validation-for="@Model.Body" class="form-input-error"></span>
-            </div>
-        </div>
-    </div>
-</form>
+    </form>
 </div>
 
 <script>

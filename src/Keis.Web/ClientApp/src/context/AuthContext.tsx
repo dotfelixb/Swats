@@ -23,18 +23,18 @@ export const AuthProvider: FC<IViewProps> = ({ children }) => {
     // load the app from browser state
     const getIsAuth = localStorage.getItem(isAuthKey);
     const getAuthUser = localStorage.getItem(authUserKey);
-    
+
     if (getIsAuth != null && getAuthUser != null) {
       const isAuth = JSON.parse(getIsAuth);
       const authUser = JSON.parse(getAuthUser);
-      
-      if(isAuth){
+
+      if (isAuth) {
         setAuthentication(isAuth);
-        setUser(authUser)
+        setUser(authUser);
       }
     }
 
-    setBrowserLoaded(true)
+    setBrowserLoaded(true);
   }, []);
 
   const signIn = async ({
@@ -44,7 +44,7 @@ export const AuthProvider: FC<IViewProps> = ({ children }) => {
   }: ILogin): Promise<ILoginResult | null> => {
     const result = await login({ username, password, remember });
     if (result !== null && result.ok) {
-      const user : IUser = {
+      const user: IUser = {
         fullname: result.fullname,
         token: result.token,
         permissions: result.permissions,
@@ -55,7 +55,7 @@ export const AuthProvider: FC<IViewProps> = ({ children }) => {
 
       // set set
       localStorage.setItem(isAuthKey, JSON.stringify(true));
-      localStorage.setItem(authUserKey, JSON.stringify(user))
+      localStorage.setItem(authUserKey, JSON.stringify(user));
     }
 
     return result;
@@ -66,7 +66,9 @@ export const AuthProvider: FC<IViewProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ browserLoaded, isAuthenticated, user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ browserLoaded, isAuthenticated, user, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

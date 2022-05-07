@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using Microsoft.Extensions.Options;
 using Keis.Model;
 using Keis.Model.Domain;
 using Keis.Model.Queries;
+using Microsoft.Extensions.Options;
 
 namespace Keis.Data.Repository;
 
@@ -13,6 +13,8 @@ public interface IManageRepository
     Task<int> CreateBusinessHour(BusinessHour businessHour, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<FetchBusinessHour> GetBusinessHour(string id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<OpenHour>> GetBusinessHourOpens(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000,
         bool includeDeleted = false, CancellationToken cancellationToken = default);
@@ -69,6 +71,22 @@ public interface IManageRepository
 
     Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
 
+    Task<FetchSla> GetSla(string id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
+
+    #endregion Sla
+
+    #region Workflow
+
+    Task<int> CreateWorkflow(Workflow workflow, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchWorkflow>> ListWorkflow(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
+
+    Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken);
+
     #endregion
 }
 
@@ -119,6 +137,34 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 businessHour.UpdatedBy
             });
 
+            var hoursCmd = @"INSERT INTO public.businessopenhour
+                    (id
+                    , businesshour
+                    , ""name""
+                    , enabled
+                    , fullday
+                    , fromtime
+                    , totime)
+                VALUES(@Id
+                    , @BusinessHour
+                    , @Name
+                    , @Enabled
+                    , @FullDay
+                    , @FromTime
+                    , @ToTime)";
+
+            var hours = businessHour.OpenHours.Select(h => new
+            {
+                h.Id,
+                BusinessHour = businessHour.Id,
+                h.Name,
+                h.Enabled,
+                h.FullDay,
+                h.FromTime,
+                h.ToTime
+            }).ToArray();
+            var hcrst = await conn.ExecuteAsync(hoursCmd, hours);
+
             var logCmd = @"
                 INSERT INTO public.businesshourauditlog
                     (id
@@ -166,7 +212,22 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businesshour b
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new {Id = id});
+        });
+    }
+
+    public Task<IEnumerable<OpenHour>> GetBusinessHourOpens(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT bo.*
+                FROM businessopenhour bo
+                WHERE bo.businesshour = @Id";
+
+            return await conn.QueryAsync<OpenHour>(query, new {Id = id});
         });
     }
 
@@ -188,7 +249,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchBusinessHour>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchBusinessHour>(query, new {offset, limit});
         });
     }
 
@@ -284,7 +345,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM tags t
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new {Id = id});
         });
     }
 
@@ -306,7 +367,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTag>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTag>(query, new {offset, limit});
         });
     }
 
@@ -424,7 +485,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE d.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new {Id = id});
         });
     }
 
@@ -450,7 +511,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchDepartment>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchDepartment>(query, new {offset, limit});
         });
     }
 
@@ -547,7 +608,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new {Id = id});
         });
     }
 
@@ -573,7 +634,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTeam>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchTeam>(query, new {offset, limit});
         });
     }
 
@@ -671,7 +732,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 LEFT JOIN department d ON d.id = h.department
                 WHERE h.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new {Id = id});
         });
     }
 
@@ -695,7 +756,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchHelpTopic>(query, new { offset, limit });
+            return await conn.QueryAsync<FetchHelpTopic>(query, new {offset, limit});
         });
     }
 
@@ -709,7 +770,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
         return WithConnection(async conn =>
         {
-            var cmd = @"
+            const string cmd = @"
                     INSERT INTO public.sla
                         (id
                         , ""name""
@@ -722,7 +783,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , resolveformat
                         , resolvenotify
                         , resolveemail
-                        , description
+                        , note
                         , status
                         , rowversion
                         , createdby
@@ -738,15 +799,33 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @ResolveFormat
                         , @ResolveNotify
                         , @ResolveEmail
-                        , @Description
+                        , @Note
                         , @Status
                         , @RowVersion
                         , @CreatedBy
                         , @UpdatedBy)";
 
-            var ctt = await conn.ExecuteAsync(cmd, new { });
-            
-            var logCmd = @"
+            var ctt = await conn.ExecuteAsync(cmd, new
+            {
+                sla.Id,
+                sla.Name,
+                sla.BusinessHour,
+                sla.ResponsePeriod,
+                sla.ResponseFormat,
+                sla.ResponseNotify,
+                sla.ResponseEmail,
+                sla.ResolvePeriod,
+                sla.ResolveFormat,
+                sla.ResolveNotify,
+                sla.ResolveEmail,
+                sla.Note,
+                sla.Status,
+                sla.RowVersion,
+                sla.CreatedBy,
+                sla.UpdatedBy
+            });
+
+            const string logCmd = @"
                 INSERT INTO public.slaauditlog
                     (id
                     , target
@@ -775,8 +854,220 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 auditLog.ObjectData,
                 auditLog.CreatedBy
             });
-            
+
             return ctt + cl;
+        });
+    }
+
+    public Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND s.deleted = FALSE ";
+            var query = $@"
+                SELECT s.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.updatedby) AS UpdatedByName
+                    , b.""name"" AS businesshourname
+                FROM sla s
+                LEFT JOIN businesshour b ON b.id = s.businesshour
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchSla>(query, new {offset, limit});
+        });
+    }
+
+    public Task<FetchSla> GetSla(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT s.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.updatedby) AS UpdatedByName
+                    , b.""name"" AS businesshourname
+                FROM sla s
+                LEFT JOIN businesshour b ON b.id = s.businesshour
+                WHERE s.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchSla>(query, new {Id = id});
+        });
+    }
+
+    #endregion Sla
+
+    #region Workflow
+
+    public Task<int> CreateWorkflow(Workflow workflow, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            const string cmd = @"
+                    INSERT INTO public.workflow
+                        (id
+                        , ""name""
+                        , events
+                        , note
+                        , priority
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(@Id
+                        , @Name
+                        , @Events
+                        , @Note
+                        , @Priority
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy)";
+
+            var eventArray = workflow.Events.Select(s => (int) s).ToArray();
+            var cmdRst = await conn.ExecuteAsync(cmd, new
+            {
+                workflow.Id,
+                workflow.Name,
+                Events = eventArray,
+                workflow.Priority,
+                workflow.Note,
+                workflow.Status,
+                workflow.RowVersion,
+                workflow.CreatedBy,
+                workflow.UpdatedBy
+            });
+
+            const string cmdCrt = @"
+                    INSERT INTO public.workflowcriteria
+                        (id
+                        , workflow
+                        , ""name""
+                        , criteria
+                        , ""condition""
+                        , ""match"")
+                    VALUES(@Id
+                        , @Workflow
+                        , @Name
+                        , @Criteria
+                        , @Condition
+                        , @Match);";
+
+
+            var criteria = workflow.Criteria.Select(s => new
+            {
+                s.Id,
+                Workflow = workflow.Id,
+                s.Name,
+                Criteria = (int) s.Criteria,
+                Condition = (int) s.Condition,
+                s.Match
+            }).ToArray();
+            var crtRst = await conn.ExecuteAsync(cmdCrt, criteria);
+
+            const string cmdAct = @"
+                    INSERT INTO public.workflowaction
+                        (id
+                        , workflow
+                        , ""name""
+                        , actionfrom
+                        , actionto)
+                    VALUES(@Id
+                        , @Workflow
+                        , @Name
+                        , @ActionFrom
+                        , @ActionTo);
+                        ";
+
+            var actions = workflow.Actions.Select(s => new
+            {
+                s.Id,
+                Workflow = workflow.Id,
+                s.Name,
+                ActionFrom = (int) s.ActionFrom,
+                s.ActionTo
+            }).ToArray();
+            var actRst = await conn.ExecuteAsync(cmdAct, actions);
+
+            const string logCmd = @"
+                INSERT INTO public.workflowauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + crtRst + actRst + logRst;
+        });
+    }
+
+    public Task<IEnumerable<FetchWorkflow>> ListWorkflow(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND w.deleted = FALSE ";
+            var query = $@"
+                SELECT w.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.updatedby) AS UpdatedByName
+                FROM workflow w
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchWorkflow>(query, new {offset, limit});
+        });
+    }
+
+    public Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            const string query = @"
+                SELECT w.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = w.updatedby) AS UpdatedByName
+                FROM workflow w
+                WHERE w.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchWorkflow>(query, new {Id = id});
         });
     }
 

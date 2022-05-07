@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Keis.Model;
 using Keis.Model.Domain;
 using Keis.Model.Queries;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace Keis.Data.Repository;
 
@@ -37,7 +37,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE normalizedemail = @NormalizedEmail";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedEmail = normalizedEmail });
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new {NormalizedEmail = normalizedEmail});
         });
     }
 
@@ -152,7 +152,7 @@ public class AuthUserRepository : BasePostgresRepository
                 WHERE ur.authuser = @Id
                 ";
 
-            var result = await conn.QueryAsync<string>(query, new { user.Id });
+            var result = await conn.QueryAsync<string>(query, new {user.Id});
             return result.ToList();
         });
     }
@@ -239,7 +239,7 @@ public class AuthUserRepository : BasePostgresRepository
 
             return result > 0
                 ? IdentityResult.Success
-                : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
+                : IdentityResult.Failed(new IdentityError {Description = "User creation failed!"});
         });
     }
 
@@ -251,11 +251,11 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"UPDATE public.authuser SET deleted = TRUE WHERE id = @Id";
 
-            var cmd = await conn.ExecuteAsync(query, new { user.Id });
+            var cmd = await conn.ExecuteAsync(query, new {user.Id});
 
             return cmd > 0
                 ? IdentityResult.Success
-                : IdentityResult.Failed(new IdentityError { Description = "User deletion failed!" });
+                : IdentityResult.Failed(new IdentityError {Description = "User deletion failed!"});
         });
     }
 
@@ -272,7 +272,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { Id = userId });
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new {Id = userId});
         });
     }
 
@@ -284,7 +284,7 @@ public class AuthUserRepository : BasePostgresRepository
         {
             var query = @"SELECT * FROM public.authuser WHERE normalizedusername = @NormalizedUserName";
 
-            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new { NormalizedUserName = normalizedUserName });
+            return await conn.QueryFirstOrDefaultAsync<AuthUser>(query, new {NormalizedUserName = normalizedUserName});
         });
     }
 
@@ -370,7 +370,7 @@ public class AuthUserRepository : BasePostgresRepository
 
             return result > 0
                 ? IdentityResult.Success
-                : IdentityResult.Failed(new IdentityError { Description = "User creation failed!" });
+                : IdentityResult.Failed(new IdentityError {Description = "User creation failed!"});
         });
     }
 
@@ -438,7 +438,7 @@ public class AuthUserRepository : BasePostgresRepository
                 FROM authuser u
                 WHERE u.id =  @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchUser>(query, new { Id = id });
+            return await conn.QueryFirstOrDefaultAsync<FetchUser>(query, new {Id = id});
         });
     }
 

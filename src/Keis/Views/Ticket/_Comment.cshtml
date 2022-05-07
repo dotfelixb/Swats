@@ -1,7 +1,7 @@
 @model FetchTicketComment
 
 @{
-    var id = $"var_{Model.Id.ToString().Replace("-", "")}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+    var id = $"var_{Model.Id.Replace("-", "")}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 }
 
 <div class="grid grid-cols-1 gap-5">
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="flex w-1/2 space-x-2 justify-end">
-                <div class="edit-ticket-button text-xs items-center" 
+                <div class="edit-ticket-button text-xs items-center"
                      hx-get="/ticket/addcomment?comment=@Model.Id&ticket=@Model.Ticket"
                      hx-trigger="click"
                      hx-target="#ticket-reply"
@@ -42,7 +42,7 @@
         </div>
         <div id="@id" class="form-input" style="height: 120px;">
         </div>
-    </div> 
+    </div>
 </div>
 
 <script >

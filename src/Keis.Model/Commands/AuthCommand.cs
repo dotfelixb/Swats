@@ -1,7 +1,7 @@
 ﻿using FluentResults;
+using Keis.Model.Queries;
 using MassTransit;
 using MediatR;
-using Keis.Model.Queries;
 
 namespace Keis.Model.Commands;
 

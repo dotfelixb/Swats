@@ -47,10 +47,7 @@ const ViewTopic: FC<IViewTopic> = () => {
   );
 
   return (
-    <PageView
-      title={topic?.topic ?? ""}
-      breadcrumbs={<Breadcrumbs />}
-    >
+    <PageView title={topic?.topic ?? ""} breadcrumbs={<Breadcrumbs />}>
       <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">

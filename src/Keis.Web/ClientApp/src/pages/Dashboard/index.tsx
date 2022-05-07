@@ -6,7 +6,7 @@ interface IStatCard {
   title: string;
 }
 
-interface IDashboard { }
+interface IDashboard {}
 
 const StatCard: FC<IStatCard> = ({ title, count }) => {
   return (
@@ -21,31 +21,31 @@ const StatCard: FC<IStatCard> = ({ title, count }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const Dashboard: FC<IDashboard> = () => {
-
-  return (<PageView title="Dashboard">
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
-
-      <div>
-        <StatCard title="My Ticket" count={6} />
+  return (
+    <PageView title="Dashboard">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
+        <div>
+          <StatCard title="My Ticket" count={6} />
+        </div>
+        <div>
+          <StatCard title="My Overdue Ticket" count={3} />
+        </div>
+        <div>
+          <StatCard title="My Due today" count={3} />
+        </div>
+        <div>
+          <StatCard title="Open Ticket" count={23} />
+        </div>
+        <div>
+          <StatCard title="Overdue Ticket" count={4} />
+        </div>
       </div>
-      <div>
-        <StatCard title="My Overdue Ticket" count={3} />
-      </div>
-      <div>
-        <StatCard title="My Due today" count={3} />
-      </div>
-      <div>
-        <StatCard title="Open Ticket" count={23} />
-      </div>
-      <div>
-        <StatCard title="Overdue Ticket" count={4} />
-      </div>
-    </div>
-  </PageView>)
-}
+    </PageView>
+  );
+};
 
 export default Dashboard;

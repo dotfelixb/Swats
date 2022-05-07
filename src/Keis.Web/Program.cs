@@ -2,16 +2,15 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Keis.Data.Repository;
 using Keis.Infrastructure;
 using Keis.Model;
-using System.Text.Json.Serialization;
+using Keis.Model.Domain;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Keis.Model.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 var bearerKey = builder.Configuration.GetSection("SecurityKey:Bearer").Value;
@@ -72,10 +71,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-}
 
 app.UseHttpsRedirection();
 app.UseStatusCodePages(async statusCodeContext =>
@@ -88,7 +85,7 @@ app.UseStatusCodePages(async statusCodeContext =>
         401 => "Unauthorized request",
         _ => ""
     };
-    
+
     var unAuth = JsonSerializer.Serialize(new ErrorResult
     {
         Ok = false,
@@ -104,9 +101,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    "default",
+    "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html"); 
+app.MapFallbackToFile("index.html");
 
 app.Run();

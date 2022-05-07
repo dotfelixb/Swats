@@ -17,6 +17,7 @@ public class DbAudit
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultStatus Status { get; set; }
+
     public string RowVersion { get; set; } = Guid.NewGuid().ToString();
     public bool Deleted { get; set; }
     public string CreatedBy { get; set; }

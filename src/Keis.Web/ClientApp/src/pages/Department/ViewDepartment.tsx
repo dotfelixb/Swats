@@ -111,7 +111,9 @@ const ViewDepartment: FC<IViewDepartment> = () => {
             </div>
             <div>
               <label className="form-label">Outgoing Email</label>
-              <div className="form-data">{department?.outgoingEmail ?? "N/A"}</div>
+              <div className="form-data">
+                {department?.outgoingEmail ?? "N/A"}
+              </div>
             </div>
           </div>
 

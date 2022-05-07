@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
 using Htmx;
+using Keis.Controllers;
+using Keis.Extensions;
+using Keis.Infrastructure.Features.Agents.CreateAgent;
+using Keis.Infrastructure.Features.Agents.GetAgent;
+using Keis.Infrastructure.Features.Agents.ListAgent;
+using Keis.Infrastructure.Features.Department.ListDepartment;
+using Keis.Infrastructure.Features.Teams.ListTeams;
+using Keis.Infrastructure.Features.TicketTypes.ListTicketType;
+using Keis.Model.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Keis.Controllers;
-using Keis.Extensions;
-using Keis.Model.Commands;
-using Keis.Model.Domain;
 
 namespace Keis.Areas.Admin.Controllers;
 
@@ -23,7 +28,7 @@ public class AgentsController : FrontEndController
         , ILogger<AgentsController> logger
         , IMediator mediatr
         , IMapper mapper
-        , UserManager<AuthUser> userManager) :  base(httpAccessor)
+        , UserManager<AuthUser> userManager) : base(httpAccessor)
     {
         _logger = logger;
         _mediatr = mediatr;
@@ -85,7 +90,7 @@ public class AgentsController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -109,7 +114,7 @@ public class AgentsController : FrontEndController
     {
         _logger.LogInformation($"{Request.Method}::{nameof(AgentsController)}::{nameof(Index)}");
 
-        var query = new GetAgentCommand { Id = id };
+        var query = new GetAgentCommand {Id = id};
         var result = await _mediatr.Send(query);
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
@@ -136,9 +141,9 @@ public class AgentsController : FrontEndController
         CreateAgentCommand command = new()
         {
             DepartmentList =
-                departmentList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TeamList = teamList.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }),
-            TypeList = ticketypeResult.Value.Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() })
+                departmentList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            TeamList = teamList.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()}),
+            TypeList = ticketypeResult.Value.Select(s => new SelectListItem {Text = s.Name, Value = s.Id.ToString()})
         };
 
         return Request.IsHtmx()

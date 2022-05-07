@@ -9,7 +9,13 @@ import { FC, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchDepartment, IFetchTeam, IFetchType, IListResult, ISingleResult } from "../../interfaces";
+import {
+  IFetchDepartment,
+  IFetchTeam,
+  IFetchType,
+  IListResult,
+  ISingleResult,
+} from "../../interfaces";
 
 const { TextArea } = Input;
 
@@ -26,6 +32,7 @@ interface IFormData {
   team: string;
   type: string;
   mode: string;
+  status: string;
   note: string;
 }
 
@@ -101,6 +108,7 @@ const New: FC<INew> = () => {
     team,
     type,
     mode,
+    status,
     note,
   }: IFormData) => {
     const body = new FormData();
@@ -114,6 +122,7 @@ const New: FC<INew> = () => {
     body.append("team", team ?? "");
     body.append("type", type ?? "");
     body.append("mode", mode ?? "");
+    body.append("status", status ?? "");
     body.append("note", note ?? "");
 
     const headers = new Headers();
@@ -176,6 +185,12 @@ const New: FC<INew> = () => {
                 <Form.Item name="lastname" label="Last Name" htmlFor="lastname">
                   <Input />
                 </Form.Item>
+                <Form.Item name="status" label="Status">
+                  <Select>
+                    <Select.Option value="1">Active</Select.Option>
+                    <Select.Option value="2">Inactive</Select.Option>
+                  </Select>
+                </Form.Item>
               </Timeline.Item>
               <Timeline.Item
                 dot={<PhoneOutlined style={{ fontSize: "16px" }} />}
@@ -208,17 +223,29 @@ const New: FC<INew> = () => {
                 </div>
                 <Form.Item name="department" label="Department">
                   <Select>
-                  {departmentList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                    {departmentList?.map((d) => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.name}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
                 <Form.Item name="team" label="Team">
                   <Select>
-                  {teamList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                    {teamList?.map((d) => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.name}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
                 <Form.Item name="type" label="Default Ticket Type">
                   <Select>
-                  {typeList?.map(d => (<Select.Option key={d.id} value={d.id}>{d.name}</Select.Option>))}
+                    {typeList?.map((d) => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.name}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
                 <Form.Item name="mode" label="Mode">

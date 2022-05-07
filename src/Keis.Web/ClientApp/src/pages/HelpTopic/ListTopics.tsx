@@ -1,12 +1,12 @@
-import { Breadcrumb, Button } from 'antd';
-import dayjs from 'dayjs';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import { DataTable, PageView } from '../../components';
-import { useApp, useAuth } from '../../context';
-import { IFetchTopic, IListResult } from '../../interfaces';
+import { Breadcrumb, Button } from "antd";
+import dayjs from "dayjs";
+import React, { FC, useEffect, useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import { DataTable, PageView } from "../../components";
+import { useApp, useAuth } from "../../context";
+import { IFetchTopic, IListResult } from "../../interfaces";
 
-interface IListTopics { }
+interface IListTopics {}
 
 const columns = [
   { key: "name", column: [{ title: "Name" }, { title: "" }] },
@@ -43,11 +43,10 @@ const ListTopics: FC<IListTopics> = () => {
     }
   }, [user, get]);
 
-
   const Buttons: FC = () => (
     <div className="space-x-2">
       <Link to="new">
-        <Button type="primary" >New Topic</Button>
+        <Button type="primary">New Topic</Button>
       </Link>
     </div>
   );
@@ -64,42 +63,48 @@ const ListTopics: FC<IListTopics> = () => {
     </Breadcrumb>
   );
 
-  return (<PageView title="Help Topics" buttons={<Buttons />} breadcrumbs={<Breadcrumbs />}>
-    <DataTable columns={columns}>
-      {topicList?.map((t) => (
-        <tr className="px-10" key={t.id}>
-          <td className="px-3 py-3">
-            <Link to={`/admin/helptopic/${t.id}`}>
-              <div className="">{t.topic}</div>
-            </Link>
-            <div className="text-xs" style={{ color: "#9b9b9b" }}>
-              {t.note}
-            </div>
-          </td>
+  return (
+    <PageView
+      title="Help Topics"
+      buttons={<Buttons />}
+      breadcrumbs={<Breadcrumbs />}
+    >
+      <DataTable columns={columns}>
+        {topicList?.map((t) => (
+          <tr className="px-10" key={t.id}>
+            <td className="px-3 py-3">
+              <Link to={`/admin/helptopic/${t.id}`}>
+                <div className="">{t.topic}</div>
+              </Link>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                {t.note}
+              </div>
+            </td>
 
-          <td className="px-3 py-3">
-            <div className="">{t.type}</div>
-            <div className="text-xs" style={{ color: "#9b9b9b" }}>
-              {t.status}
-            </div>
-          </td>
+            <td className="px-3 py-3">
+              <div className="">{t.type}</div>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                {t.status}
+              </div>
+            </td>
 
-          <td className="px-3 py-3">
-            <div className="">{t.createdByName}</div>
-            <div className="text-xs" style={{ color: "#9b9b9b" }}>
-              {dayjs(t.createdAt).format(dateFormats.longDateFormat)}
-            </div>
-          </td>
+            <td className="px-3 py-3">
+              <div className="">{t.createdByName}</div>
+              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                {dayjs(t.createdAt).format(dateFormats.longDateFormat)}
+              </div>
+            </td>
 
-          <td>
-            <span className="text-gray-300"></span>
-          </td>
-        </tr>
-      ))}
-    </DataTable>
+            <td>
+              <span className="text-gray-300"></span>
+            </td>
+          </tr>
+        ))}
+      </DataTable>
 
-    <Outlet />
-  </PageView>)
-}
+      <Outlet />
+    </PageView>
+  );
+};
 
 export default ListTopics;

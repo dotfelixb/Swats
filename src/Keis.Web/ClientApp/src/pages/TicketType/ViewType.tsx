@@ -6,7 +6,7 @@ import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import { IFetchType, ISingleResult } from "../../interfaces";
 
-interface IViewType { }
+interface IViewType {}
 
 const ViewType: FC<IViewType> = () => {
   const { user } = useAuth();
@@ -48,7 +48,8 @@ const ViewType: FC<IViewType> = () => {
     </Breadcrumb>
   );
 
-  return (<PageView title={type?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+  return (
+    <PageView title={type?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
       <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">
@@ -106,7 +107,8 @@ const ViewType: FC<IViewType> = () => {
           </div>
         </div>
       </div>
-  </PageView>)
-}
+    </PageView>
+  );
+};
 
 export default ViewType;

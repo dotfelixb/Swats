@@ -1,10 +1,21 @@
 using Htmx;
+using Keis.Extensions;
+using Keis.Infrastructure.Features.Agents.GetAgent;
+using Keis.Infrastructure.Features.Agents.ListAgent;
+using Keis.Infrastructure.Features.Department.ListDepartment;
+using Keis.Infrastructure.Features.HelpTopic.ListHelpTopics;
+using Keis.Infrastructure.Features.Teams.ListTeams;
+using Keis.Infrastructure.Features.Tickets.CreateComment;
+using Keis.Infrastructure.Features.Tickets.CreateTicket;
+using Keis.Infrastructure.Features.Tickets.GetTicket;
+using Keis.Infrastructure.Features.Tickets.ListComments;
+using Keis.Infrastructure.Features.Tickets.ListTicket;
+using Keis.Infrastructure.Features.TicketTypes.ListTicketType;
+using Keis.Model.Commands;
+using Keis.Model.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Keis.Extensions;
-using Keis.Model.Commands;
-using Keis.Model.Queries;
 
 namespace Keis.Controllers.FrontEnd;
 
@@ -47,11 +58,8 @@ public class TicketController : FrontEndController
         result.Value.ImageCode = $"{Request.Scheme}://{Request.Host}/ticket/edit/{id}".GenerateQrCode();
 
         var commentResult = await _mediatr.Send(new ListTicketCommentCommand {TicketId = id});
-        if (commentResult.IsSuccess)
-        {
-            result.Value.TicketComments = commentResult.Value;
-        }
-        
+        if (commentResult.IsSuccess) result.Value.TicketComments = commentResult.Value;
+
         return Request.IsHtmx()
             ? PartialView("~/Views/Ticket/_Edit.cshtml", result.Value)
             : View(result.Value);
@@ -97,25 +105,25 @@ public class TicketController : FrontEndController
             : View(command);
     }
 
-    public IActionResult AddComment([FromQuery]string comment, [FromQuery]string ticket)
+    public IActionResult AddComment([FromQuery] string comment, [FromQuery] string ticket)
     {
         var command = new CreateTicketCommentCommand
         {
             CommentId = comment,
             TicketId = ticket
         };
-        
+
         return PartialView("~/Views/Ticket/_AddComment.cshtml", command);
     }
 
-    public IActionResult AddReply([FromQuery] string comment, [FromQuery]string ticket)
+    public IActionResult AddReply([FromQuery] string comment, [FromQuery] string ticket)
     {
         var command = new CreateTicketReplyCommand
         {
             CommentId = comment,
             TicketId = ticket
         };
-        
+
         return PartialView("~/Views/Ticket/_AddReply.cshtml", command);
     }
 
@@ -125,12 +133,9 @@ public class TicketController : FrontEndController
         _logger.LogInformation(msg);
 
         var ticket = Enumerable.Empty<FetchTicketComment>();
-        
+
         var commentResult = await _mediatr.Send(new ListTicketCommentCommand {TicketId = id});
-        if (commentResult.IsSuccess)
-        {
-            ticket = commentResult.Value;
-        }
+        if (commentResult.IsSuccess) ticket = commentResult.Value;
 
         return PartialView("~/Views/Ticket/_ListComments.cshtml", ticket);
     }
@@ -160,9 +165,9 @@ public class TicketController : FrontEndController
                 ? PartialView("~/Views/Ticket/_Create.cshtml", command)
                 : View(command);
         }
-        
+
         //get requester details
-        var agentResult =await  _mediatr.Send(new GetAgentCommand {Id = command.Requester});
+        var agentResult = await _mediatr.Send(new GetAgentCommand {Id = command.Requester});
         if (agentResult.IsSuccess)
         {
             command.RequesterEmail = agentResult.Value.Email;
@@ -190,12 +195,12 @@ public class TicketController : FrontEndController
     {
         var msg = $"{Request.Method}::{nameof(TicketController)}::{nameof(Create)}";
         _logger.LogInformation(msg);
-        
+
         if (!ModelState.IsValid)
         {
             _logger.LogError($"{msg} - Invalid Model State");
             TempData["CreateError"] = "Please add your comment";
-            
+
             return PartialView("~/Views/Ticket/_AddComment.cshtml", command);
         }
 
@@ -213,11 +218,11 @@ public class TicketController : FrontEndController
             var reason = result.Reasons.FirstOrDefault()?.Message ?? "CreateError";
             _logger.LogError($"{msg} - {reason}");
             TempData["CreateError"] = reason;
-            
+
             return PartialView("~/Views/Ticket/_AddComment.cshtml", command);
         }
-        
-        return RedirectToAction("ListComments", new{ id = command.TicketId });
+
+        return RedirectToAction("ListComments", new {id = command.TicketId});
     }
 
     #endregion POST

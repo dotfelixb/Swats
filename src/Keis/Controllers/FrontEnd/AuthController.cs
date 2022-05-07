@@ -1,29 +1,29 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using Keis.Extensions;
+using Keis.Infrastructure.Features.Users.Register;
+using Keis.Model.Commands;
+using Keis.Model.Domain;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Keis.Extensions;
-using Keis.Infrastructure.Features.Users.Register;
-using Keis.Model.Commands;
-using Keis.Model.Domain;
-using System.Security.Claims;
 
 namespace Keis.Controllers.FrontEnd;
 
 public class AuthController : FrontEndController
 {
-    private readonly SignInManager<AuthUser> _signInManager;
-    private readonly UserManager<AuthUser> _userManager;
     private readonly ILogger<AuthController> _logger;
     private readonly IMediator _mediatr;
+    private readonly SignInManager<AuthUser> _signInManager;
+    private readonly UserManager<AuthUser> _userManager;
 
     public AuthController(IHttpContextAccessor httpAccessor
         , UserManager<AuthUser> userManager
         , SignInManager<AuthUser> signInManager
         , ILogger<AuthController> logger
-        , IMediator mediatr): base(httpAccessor)
+        , IMediator mediatr) : base(httpAccessor)
     {
         _userManager = userManager;
         _signInManager = signInManager;

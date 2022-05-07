@@ -1,9 +1,11 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.GetHelpTopic;
+using Keis.Infrastructure.Features.HelpTopic.ListHelpTopics;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -23,16 +25,14 @@ public class HelpTopicController : MethodController
     {
         const string msg = $"GET::{nameof(HelpTopicController)}::{nameof(ListTopic)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchHelpTopic>
         {
@@ -40,7 +40,7 @@ public class HelpTopicController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("helptopic.get", Name = nameof(GetTopic))]
     public async Task<IActionResult> GetTopic([FromQuery] GetHelpTopicCommand command)
     {
@@ -49,13 +49,11 @@ public class HelpTopicController : MethodController
 
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchHelpTopic>
         {
@@ -63,7 +61,7 @@ public class HelpTopicController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpPost("helptopic.create", Name = nameof(CreateTopic))]
     public async Task<IActionResult> CreateTopic(CreateHelpTopicCommand command)
     {
@@ -74,14 +72,12 @@ public class HelpTopicController : MethodController
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
-        
+
         var uri = $"/methods/helptopic.get?id={result.Value}";
         return Created(uri, new SingleResult<string>
         {

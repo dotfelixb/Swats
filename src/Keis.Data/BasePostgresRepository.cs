@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Options;
-using Npgsql;
+﻿using System.Data;
 using Keis.Model;
-using System.Data;
+using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace Keis.Data;
 

@@ -1,11 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
 using Keis.Infrastructure.Extensions;
-using Keis.Model.Commands;
 using Keis.Model.Domain;
-using System.Text.Json;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.CreateTicket;
 
@@ -50,7 +49,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, R
         };
 
         var rst = await _ticketRepository.CreateTicket(ticket, comment, auditLog, cancellationToken);
-        
+
         // use db transaction
         return rst > 2 ? Result.Ok(ticket.Id) : Result.Fail<string>("Not able to create now!");
     }

@@ -1,9 +1,11 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Keis.Infrastructure.Features.Teams.CreateTeam;
+using Keis.Infrastructure.Features.Teams.GetTeam;
+using Keis.Infrastructure.Features.Teams.ListTeams;
 using Keis.Model;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Web.Controllers;
 
@@ -17,22 +19,20 @@ public class TeamController : MethodController
         this.logger = logger;
         this.mediatr = mediatr;
     }
-    
+
     [HttpGet("team.list", Name = nameof(ListTeam))]
     public async Task<IActionResult> ListTeam([FromQuery] ListTeamsCommand command)
     {
         var msg = $"{Request.Method}::{nameof(TeamController)}::{nameof(ListTeam)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new ListResult<FetchTeam>
         {
@@ -40,22 +40,20 @@ public class TeamController : MethodController
             Data = result.Value
         });
     }
-    
+
     [HttpGet("team.get", Name = nameof(GetTeam))]
     public async Task<IActionResult> GetTeam([FromQuery] GetTeamCommand command)
     {
         var msg = $"{Request.Method}::{nameof(TeamController)}::{nameof(GetTeam)}";
         logger.LogInformation(msg);
-        
+
         var result = await mediatr.Send(command);
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
 
         return Ok(new SingleResult<FetchTeam>
         {
@@ -74,14 +72,12 @@ public class TeamController : MethodController
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)
-        {
             return BadRequest(new ErrorResult
             {
                 Ok = false,
                 Errors = result.Reasons.Select(s => s.Message)
             });
-        }
-        
+
         var uri = $"/methods/team.get?id={result.Value}";
         return Created(uri, new SingleResult<string>
         {

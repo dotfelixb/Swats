@@ -58,7 +58,7 @@ const Settings: FC<ISettings> = () => {
       <Breadcrumb.Item>Settings</Breadcrumb.Item>
     </Breadcrumb>
   );
-  
+
   return (
     <PageView title="Admin Panel" breadcrumbs={<Breadcrumbs />}>
       <div className="">

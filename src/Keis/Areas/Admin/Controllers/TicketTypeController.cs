@@ -1,10 +1,11 @@
 ﻿using Htmx;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Keis.Controllers;
 using Keis.Extensions;
-using Keis.Model.Commands;
-using System.Security.Claims;
+using Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
+using Keis.Infrastructure.Features.TicketTypes.GetTicketType;
+using Keis.Infrastructure.Features.TicketTypes.ListTicketType;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keis.Areas.Admin.Controllers;
 
@@ -48,7 +49,7 @@ public class TicketTypeController : FrontEndController
                 : View(command);
         }
 
-        return RedirectToAction("Edit", new { Id = result.Value });
+        return RedirectToAction("Edit", new {Id = result.Value});
     }
 
     #endregion POST
@@ -69,7 +70,7 @@ public class TicketTypeController : FrontEndController
 
     public async Task<IActionResult> Edit(string id)
     {
-        var query = new GetTicketTypeCommand { Id = id };
+        var query = new GetTicketTypeCommand {Id = id};
         var result = await _mediatr.Send(query);
 
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);

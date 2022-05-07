@@ -1,4 +1,14 @@
 ﻿using AutoMapper;
+using Keis.Infrastructure.Features.Agents.CreateAgent;
+using Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
+using Keis.Infrastructure.Features.Department.CreateDepartment;
+using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
+using Keis.Infrastructure.Features.Sla.CreateSla;
+using Keis.Infrastructure.Features.Tags.CreateTag;
+using Keis.Infrastructure.Features.Teams.CreateTeam;
+using Keis.Infrastructure.Features.Tickets.CreateTicket;
+using Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
+using Keis.Infrastructure.Features.Workflow.CreateWorkflow;
 using Keis.Model.Commands;
 using Keis.Model.Domain;
 
@@ -39,11 +49,9 @@ public class ModelProfiles : Profile
         CreateMap<CreateSlaCommand, Sla>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
+        CreateMap<CreateWorkflowCommand, Workflow>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+
         CreateMap<LoginLogCommand, LoginAudit>();
-        
-        /**
-         *.ForMember(d => d.ParentCustomer,
-         *          opt => opt.MapFrom(s => s.ParentCustomer.ToGuid()))
-         */
     }
 }

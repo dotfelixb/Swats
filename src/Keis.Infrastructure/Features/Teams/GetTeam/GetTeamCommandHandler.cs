@@ -1,8 +1,7 @@
 using FluentResults;
-using MediatR;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Queries;
+using MediatR;
 
 namespace Keis.Infrastructure.Features.Teams.GetTeam;
 

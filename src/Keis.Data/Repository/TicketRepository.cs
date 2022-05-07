@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using Microsoft.Extensions.Options;
 using Keis.Model;
 using Keis.Model.Domain;
 using Keis.Model.Queries;
+using Microsoft.Extensions.Options;
 
 namespace Keis.Data.Repository;
 
@@ -47,8 +47,8 @@ public interface ITicketRepository
     Task<int> CreateTicketComment(TicketComment comment, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken);
-    
-    #endregion
+
+    #endregion Ticket Comment
 }
 
 public class TicketRepository : BasePostgresRepository, ITicketRepository
@@ -245,7 +245,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             return await conn.QueryFirstOrDefaultAsync<FetchTicket>(query, new {Id = id});
         });
     }
-    
+
     public Task<IEnumerable<FetchTicket>> ListTickets(
         string agent = null
         , bool includeDeaprtment = false
@@ -269,7 +269,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 
             var query = $@"
                 WITH user_department AS (
-                    SELECT id 
+                    SELECT id
                 	FROM department
                 	WHERE id = (SELECT ag.department FROM agent ag WHERE ag.id = @Agent)
                 )
@@ -309,7 +309,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             var query = $@"
                 SELECT COUNT(t.Id)
                 FROM ticket t
-                WHERE 1=1 
+                WHERE 1=1
                 {_filter}";
 
             return await conn.ExecuteScalarAsync<int>(query, new {Id = id});
@@ -440,7 +440,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
     public Task<int> CreateTicketComment(TicketComment comment, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         return WithConnection(async conn =>
         {
             var cmdCmt = @"
@@ -510,6 +510,6 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
             return await conn.QueryAsync<FetchTicketComment>(query, new {Id = id});
         });
     }
-    
-    #endregion
+
+    #endregion Ticket Comment
 }

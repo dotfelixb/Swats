@@ -74,3 +74,53 @@ public enum DefaultTimeFormat
     Hour,
     Day
 }
+
+public enum EventType
+{
+    NewTicket = 1,
+    ChangeTicketType,
+    ChangeDepartment,
+    ChangeTeam,
+    ChangeTicketPriority,
+    ChangeTicketStatus
+}
+
+public enum WorkflowPriority
+{
+    Normal = 1,
+    Medium,
+    High,
+    Important
+}
+
+public enum CriteriaType
+{
+    Subject = 1,
+    Department,
+    Team,
+    Status,
+    Priority
+}
+
+public enum ControlType
+{
+    Input = 1,
+    Select,
+    Multiselect
+}
+
+public enum CriteriaCondition
+{
+    Equals = 1,
+    Contains
+}
+
+public enum ActionType
+{
+    ForwardTo = 1,
+    AssignTo,
+    AssignDepartment,
+    AssignTeam,
+    ApplySla,
+    ChangeStatus
+}

@@ -13,32 +13,37 @@
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10">
         <div>
-           <div hx-get="/dashboard/tickets"
-                hx-trigger="load"
-                hx-swap="outerHTML"></div>
+            <div hx-get="/dashboard/tickets"
+                 hx-trigger="load"
+                 hx-swap="outerHTML">
+            </div>
         </div>
         <div>
             <div hx-get="/dashboard/overdue"
-                hx-trigger="load"
-                hx-swap="outerHTML"></div>
+                 hx-trigger="load"
+                 hx-swap="outerHTML">
+            </div>
         </div>
         <div>
-           <div hx-get="/dashboard/duetoday"
-                hx-trigger="load"
-                hx-swap="outerHTML"></div>
+            <div hx-get="/dashboard/duetoday"
+                 hx-trigger="load"
+                 hx-swap="outerHTML">
+            </div>
         </div>
         <div>
-           <div hx-get="/dashboard/opentickets"
-                hx-trigger="load"
-                hx-swap="outerHTML"></div>
+            <div hx-get="/dashboard/opentickets"
+                 hx-trigger="load"
+                 hx-swap="outerHTML">
+            </div>
         </div>
         <div>
             <div hx-get="/dashboard/openoverdue"
-                hx-trigger="load"
-                hx-swap="outerHTML"></div>
+                 hx-trigger="load"
+                 hx-swap="outerHTML">
+            </div>
         </div>
     </div>
-@*
+    @*
     <section class="title font-semibold text-sm pb-5">
         Recent Tickets
     </section>
