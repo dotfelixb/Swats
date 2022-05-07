@@ -1,12 +1,13 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 
-interface INoMatch {
-}
+interface INoMatch {}
 
 const NoMatch: FC<INoMatch> = () => {
-    return (<div>
-        <span>No Match</span>
-    </div>)
-}
+  return (
+    <div>
+      <span>No Match</span>
+    </div>
+  );
+};
 
 export default NoMatch;

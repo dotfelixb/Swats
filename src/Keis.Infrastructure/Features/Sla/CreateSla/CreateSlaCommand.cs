@@ -7,7 +7,7 @@ namespace Keis.Infrastructure.Features.Sla.CreateSla;
 public class CreateSlaCommand : IRequest<Result<string>>
 {
     public string Name { get; set; }
-    public string Description { get; set; }
+    public string Note { get; set; }
     public string BusinessHour { get; set; }
     public int ResponsePeriod { get; set; }
     public DefaultTimeFormat ResponseFormat { get; set; }

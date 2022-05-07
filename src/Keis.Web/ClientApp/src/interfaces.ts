@@ -143,6 +143,7 @@ export interface IFetchType extends IDataAudit {
 
 export interface IFetchAgent extends IDataAudit {
     id: string;
+    name: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -213,4 +214,14 @@ export interface IFetchWorkflow extends IDataAudit {
     events: IWorkflowEvent[];
     criteria: IWorkflowCriteria[];
     actions: IWorkflowAction[];
+}
+
+export interface IFetchTicket extends IDataAudit {
+    id: string;
+    subject: string;
+    code:string;
+    requesterName:string;
+    assignedToName:string;
+    departmentName:string;
+    teamName:string;
 }

@@ -16,7 +16,7 @@ public class CreateTicketCommand : IRequest<Result<string>>
     public string AssignedTo { get; set; }
     public IEnumerable<SelectListItem> AssigneeList { get; set; } = Enumerable.Empty<SelectListItem>();
     public string ExternalAgent { get; set; } // user by api to identify the keis user that created this ticket
-    public TicketSource Source { get; set; }
+    public TicketSource Source { get; set; } = TicketSource.App;
     public string TicketType { get; set; }
     public IEnumerable<SelectListItem> TypeList { get; set; } = Enumerable.Empty<SelectListItem>();
     public string Department { get; set; }

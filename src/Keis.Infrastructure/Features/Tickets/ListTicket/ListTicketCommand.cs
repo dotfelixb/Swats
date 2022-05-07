@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.ListTicket;
 
-public class ListTicketCommand : ListType, IRequest<Result<ListResult<FetchTicket>>>
+public class ListTicketCommand : ListType, IRequest<Result<IEnumerable<FetchTicket>>>
 {
     public string Id { get; set; }
     public bool IncludeDepartment { get; set; }

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.ListTicket;
 
-public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Result<ListResult<FetchTicket>>>
+public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Result<IEnumerable<FetchTicket>>>
 {
     private readonly ITicketRepository _ticketRepository;
 
@@ -15,7 +15,7 @@ public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Resul
         _ticketRepository = ticketRepository;
     }
 
-    public async Task<Result<ListResult<FetchTicket>>> Handle(ListTicketCommand request,
+    public async Task<Result<IEnumerable<FetchTicket>>> Handle(ListTicketCommand request,
         CancellationToken cancellationToken)
     {
         var rst = await _ticketRepository.ListTickets(
@@ -28,12 +28,7 @@ public class ListTicketCommandHandler : IRequestHandler<ListTicketCommand, Resul
             , request.Deleted
             , cancellationToken);
 
-        var listResult = new ListResult<FetchTicket>
-        {
-            Data = rst,
-            Type = "list"
-        };
 
-        return Result.Ok(listResult);
+        return Result.Ok(rst);
     }
 }

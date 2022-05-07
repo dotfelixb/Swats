@@ -137,6 +137,7 @@ public class WorkflowController : MethodController
 
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await _mediatr.Send(command);
+
         if (result.IsFailed)
             return BadRequest(new ErrorResult
             {
