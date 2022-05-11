@@ -1,4 +1,4 @@
-using Htmx;
+﻿using Htmx;
 using Keis.Extensions;
 using Keis.Infrastructure.Features.Agents.GetAgent;
 using Keis.Infrastructure.Features.Agents.ListAgent;
@@ -43,8 +43,8 @@ public class TicketController : FrontEndController
         if (result.IsFailed) return NotFound(result.Reasons.FirstOrDefault()?.Message);
 
         return Request.IsHtmx()
-            ? PartialView("~/Views/Ticket/_Index.cshtml", result.Value.Data)
-            : View(result.Value.Data);
+            ? PartialView("~/Views/Ticket/_Index.cshtml", result.Value)
+            : View(result.Value);
     }
 
     public async Task<IActionResult> Edit(string id)

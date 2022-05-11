@@ -17,6 +17,7 @@ export interface IListResult<T> extends IResult {
 export interface IUser {
     token: string;
     fullname: string;
+    email: string;
     permissions: string[];
 }
 
@@ -28,6 +29,7 @@ export interface ILogin {
 
 export interface ILoginResult {
     fullname: string;
+    email: string;
     token: string;
     permissions: string[];
     errors: string[];
@@ -216,6 +218,15 @@ export interface IFetchWorkflow extends IDataAudit {
     actions: IWorkflowAction[];
 }
 
+interface ITicketComment{
+    id: string;
+    ticket:string;
+    body:string;
+    fromEmail:string;
+    fromName:string;
+    createdAt:string;
+}
+
 export interface IFetchTicket extends IDataAudit {
     id: string;
     subject: string;
@@ -224,4 +235,5 @@ export interface IFetchTicket extends IDataAudit {
     assignedToName:string;
     departmentName:string;
     teamName:string;
+    ticketComments: ITicketComment[]
 }

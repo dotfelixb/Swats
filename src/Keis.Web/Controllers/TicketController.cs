@@ -1,6 +1,9 @@
-﻿using Keis.Infrastructure.Features.Tickets.AssignTicket;
+﻿using Keis.Infrastructure.Features.Agents.GetAgent;
+using Keis.Infrastructure.Features.Tickets.AssignTicket;
+using Keis.Infrastructure.Features.Tickets.CreateComment;
 using Keis.Infrastructure.Features.Tickets.CreateTicket;
 using Keis.Infrastructure.Features.Tickets.GetTicket;
+using Keis.Infrastructure.Features.Tickets.ListComments;
 using Keis.Infrastructure.Features.Tickets.ListTicket;
 using Keis.Model;
 using Keis.Model.Commands;
@@ -56,6 +59,9 @@ public class TicketController : MethodController
                 Errors = result.Reasons.Select(s => s.Message)
             });
 
+        var commentResult = await mediatr.Send(new ListTicketCommentCommand { TicketId = command.Id });
+        if (commentResult.IsSuccess) result.Value.TicketComments = commentResult.Value;
+
         return Ok(new SingleResult<FetchTicket>
         {
             Ok = true,
@@ -69,6 +75,14 @@ public class TicketController : MethodController
         const string msg = $"POST::{nameof(TicketController)}::{nameof(CreateTicket)}";
         logger.LogInformation(msg);
 
+        //get requester details
+        var agentResult = await mediatr.Send(new GetAgentCommand { Id = command.Requester });
+        if (agentResult.IsSuccess)
+        {
+            command.RequesterEmail = agentResult.Value.Email;
+            command.RequesterName = agentResult.Value.Name;
+        }
+
         command.CreatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
 
@@ -80,6 +94,48 @@ public class TicketController : MethodController
             });
 
         var uri = $"/methods/ticket.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
+    [HttpPost("ticket.postcomment", Name = nameof(CreateTicketComment))]
+    public async Task<IActionResult> CreateTicketComment(CreateTicketCommentCommand command)
+    {
+        const string msg = $"POST::{nameof(TicketController)}::{nameof(CreateTicketComment)}";
+        logger.LogInformation(msg);
+
+        var userId = Request.HttpContext.UserId();
+        if(userId != null && userId == "00000000-0000-0000-0000-000000000001")
+            return Unauthorized(new ErrorResult
+            {
+                Ok = false,
+                Errors = new[] {"User can't post a comment"}
+            });
+
+        var agentResult = await mediatr.Send(new GetAgentCommand { Id = userId });
+        if (agentResult.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = agentResult.Reasons.Select(s => s.Message)
+            });
+
+        command.FromEmail = agentResult.Value.Email;
+        command.FromName = agentResult.Value.Name;
+        command.CreatedBy = userId;
+
+        var result = await mediatr.Send(command);
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/ticket.get?id={command.TicketId}";
         return Created(uri, new SingleResult<string>
         {
             Ok = true,
