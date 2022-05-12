@@ -14,6 +14,8 @@ public class Ticket : DbAudit
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketSource Source { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public new TicketStatus Status { get; set; }
 
     public string TicketType { get; set; }
     public string Department { get; set; }
@@ -22,6 +24,8 @@ public class Ticket : DbAudit
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketPriority Priority { get; set; }
+
+    public DateTimeOffset DueAt { get; set; }
 }
 
 public class TicketType : DbAudit

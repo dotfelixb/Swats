@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Keis.Model;
@@ -73,7 +73,8 @@ public class AuthController : MethodController
         {
             Ok = true,
             Token = tokenHandler.WriteToken(token),
-            Fullname = user.NormalizedUserName
+            Fullname = user.NormalizedUserName,
+            Email = user.NormalizedEmail
         });
     }
 }

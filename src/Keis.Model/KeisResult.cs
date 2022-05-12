@@ -30,6 +30,7 @@ public class ListResult<T> : KeisResult
 public class AuthResult : KeisResult
 {
     public string Fullname { get; set; }
+    public string Email { get; set; }
     public string Token { get; set; }
     public string[] Permissions { get; set; }
 }

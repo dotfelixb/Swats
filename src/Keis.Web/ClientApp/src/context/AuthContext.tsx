@@ -46,6 +46,7 @@ export const AuthProvider: FC<IViewProps> = ({ children }) => {
     if (result !== null && result.ok) {
       const user: IUser = {
         fullname: result.fullname,
+        email: result.email,
         token: result.token,
         permissions: result.permissions,
       };

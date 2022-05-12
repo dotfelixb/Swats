@@ -12,7 +12,8 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dateFormats = {
-    longDateFormat: "MMM DD, YYYY @ h:mm a",
+    longDateFormat: "MMM DD, YYYY h:mm a",
+    longDateFormatWithAt: "MMM DD, YYYY @ h:mm a",
     shortDateFormat: "MMM DD, YYYY",
   };
 

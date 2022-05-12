@@ -29,16 +29,12 @@ const ListTickets: FC<IListTickets> = () => {
 
   useEffect(() => {
     const load = async () => {
-      console.log("load!");
-
       const g: Response = await get("methods/ticket.list");
 
       if (g != null) {
         const d: IListResult<IFetchTicket[]> = await g.json();
 
         if (g.status === 200 && d.ok) {
-          console.log("here!");
-
           setTicketList(d.data);
         } else {
           // TODO: display error to user

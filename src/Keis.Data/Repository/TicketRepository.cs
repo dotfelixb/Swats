@@ -29,6 +29,8 @@ public interface ITicketRepository
 
     Task<int> CountByAgentId(string id, CancellationToken cancellationToken);
 
+    Task<DashboardCount> CountTickets(string id, CancellationToken cancellationToken);
+
     #endregion Ticket
 
     #region Ticket Type
@@ -305,7 +307,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
 
         return WithConnection(async conn =>
         {
-            var _filter = !string.IsNullOrWhiteSpace(id) ? " AND t.assignedto = @Id " : "";
+            var _filter = string.IsNullOrWhiteSpace(id) ? " " : " AND t.assignedto = @Id ";
             var query = $@"
                 SELECT COUNT(t.Id)
                 FROM ticket t
@@ -316,6 +318,56 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
+    public Task<DashboardCount> CountTickets(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection( conn=>
+        {
+            var query = @"
+                WITH assignedto AS(
+	                SELECT COUNT(1) AS myticket FROM public.ticket t 
+	                WHERE 1=1
+	                AND t.assignedto = @Id 
+	                AND t.status NOT IN (7, 8)
+	                AND t.deleted = FALSE  
+                ), assignedtodue AS(
+	                SELECT COUNT(1) AS myoverdue FROM public.ticket t 
+	                WHERE 1=1
+	                AND t.assignedto = @Id 
+	                AND COALESCE(t.dueat, now())::DATE > NOW()::DATE 
+	                AND t.status NOT IN (7, 8)
+	                AND t.deleted = FALSE 
+                ), assignedtoduetoday AS(
+	                SELECT COUNT(1) AS myduetoday FROM public.ticket t 
+	                WHERE 1=1
+	                AND t.assignedto = @Id 
+	                AND COALESCE(t.dueat, now())::DATE = NOW()::DATE 
+	                AND t.status NOT IN (7, 8)
+	                AND t.deleted = FALSE 
+                ), openticketsall AS(
+	                SELECT COUNT(1) AS opentickets FROM public.ticket t  
+	                WHERE 1=1
+	                AND t.status NOT IN (7, 8)
+	                AND t.deleted = FALSE 
+                ), ticketsalldue AS(
+	                SELECT COUNT(1) AS openticketsdue FROM public.ticket t 
+	                WHERE 1=1
+	                AND COALESCE(t.dueat, now())::DATE > NOW()::DATE 
+	                AND t.status NOT IN (7, 8)
+	                AND t.deleted = FALSE 
+                )
+                SELECT (SELECT myticket FROM assignedto)
+	                , (SELECT myoverdue FROM assignedtodue)
+	                , (SELECT myduetoday FROM assignedtoduetoday)
+	                , (SELECT opentickets FROM openticketsall)
+	                , (SELECT openticketsdue FROM ticketsalldue)
+            ";
+
+            return conn.QuerySingleOrDefaultAsync<DashboardCount>(query, new { id });
+        });
+    }
+    
     #endregion Ticket
 
     #region Ticket Type

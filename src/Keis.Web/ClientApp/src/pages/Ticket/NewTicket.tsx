@@ -229,7 +229,6 @@ const NewTicket: FC<INewTicket> = () => {
                   <Input />
                 </Form.Item>
                 <Form.Item label="Description">
-                  {/* <TextArea rows={4} /> */}
                   <ReactQuill
                     theme="snow"
                     value={note}

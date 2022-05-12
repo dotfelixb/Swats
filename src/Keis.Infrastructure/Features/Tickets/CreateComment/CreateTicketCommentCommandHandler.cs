@@ -1,17 +1,9 @@
-using FluentResults;
+﻿using FluentResults;
 using Keis.Data.Repository;
-using Keis.Model.Commands;
 using Keis.Model.Domain;
 using MediatR;
 
 namespace Keis.Infrastructure.Features.Tickets.CreateComment;
-
-public class CreateTicketCommentCommand : TicketCommentCommand, IRequest<Result<string>>
-{
-    public string FromEmail { get; set; }
-    public string FromName { get; set; }
-    public string CreatedBy { get; set; }
-}
 
 public class CreateTicketCommentCommandHandler : IRequestHandler<CreateTicketCommentCommand, Result<string>>
 {
@@ -31,7 +23,7 @@ public class CreateTicketCommentCommandHandler : IRequestHandler<CreateTicketCom
             FromName = request.FromName,
             Body = request.Body,
             Type = CommentType.Comment,
-            Source = TicketSource.App,
+            Source = TicketSource.App, // TODO
             Target = request.CommentId,
             CreatedBy = request.CreatedBy
         };
