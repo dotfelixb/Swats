@@ -102,8 +102,20 @@ const ViewTicket: FC<IViewTicket> = () => {
           </div>
           <ul className="edit-sidebar py-5">
             <li>
+              <div>Assigned To</div>
+              <div>{ticket?.assignedToName ?? ""}</div>
+            </li>
+            <li>
+              <div>Priority</div>
+              <div>{ticket?.priority ?? ""}</div>
+            </li>
+            <li>
               <div>Status</div>
               <div>{ticket?.status ?? ""}</div>
+            </li>
+            <li>
+              <div>Source</div>
+              <div>{ticket?.source ?? ""}</div>
             </li>
             <li>
               <div>Created By</div>
@@ -161,7 +173,7 @@ const ViewTicket: FC<IViewTicket> = () => {
                     <Button
                       type="default"
                       size="small"
-                      onClick={()=> setShowComment(false)}
+                      onClick={() => setShowComment(false)}
                     >
                       Cancel
                     </Button>
