@@ -1,8 +1,10 @@
-using System.Net.Mime;
+﻿using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using FluentValidation.AspNetCore;
 using Keis.Data.Repository;
+using Keis.Data.Repository.EmailManager;
+using Keis.Data.Repository.EmailManager.Interfaces;
 using Keis.Infrastructure;
 using Keis.Model;
 using Keis.Model.Domain;
@@ -18,6 +20,7 @@ var bearerKey = builder.Configuration.GetSection("SecurityKey:Bearer").Value;
 // Add services to the container.
 builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<SecurityKeyOptions>(builder.Configuration.GetSection("SecurityKey"));
+builder.Services.Configure<EmailStringOptions>(builder.Configuration.GetSection("EmailConfiguration"));
 builder.Services.AddControllersWithViews(o => o.Filters.Add<ValidationFilter>()).AddJsonOptions(o =>
 {
     //o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -66,6 +69,8 @@ builder.Services.AddSingleton<IAuthUserRepository, AuthUserRepository>();
 builder.Services.AddSingleton<ITicketRepository, TicketRepository>();
 builder.Services.AddSingleton<IManageRepository, ManageRepository>();
 builder.Services.AddSingleton<IAgentRepository, AgentReposiory>();
+builder.Services.AddSingleton<IEmailRepository, EmailRepository>();
+builder.Services.AddSingleton<IEmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
 
 var app = builder.Build();
 
