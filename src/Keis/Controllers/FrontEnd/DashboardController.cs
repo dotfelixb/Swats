@@ -1,4 +1,5 @@
-﻿using Keis.Model.Commands;
+﻿using Keis.Infrastructure.Features.Dashboard.AgentTickets;
+using Keis.Model.Commands;
 using Keis.Model.ViewModel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

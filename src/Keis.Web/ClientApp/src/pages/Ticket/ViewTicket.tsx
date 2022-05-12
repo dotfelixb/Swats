@@ -63,11 +63,6 @@ const ViewTicket: FC<IViewTicket> = () => {
 
   const Buttons: FC = () => (
     <div className="flex flex-row space-x-2">
-      <Link to="new">
-        <Button type="primary" size="small">
-          New SLA
-        </Button>
-      </Link>
       <div>
         <Button
           type="default"
@@ -96,7 +91,7 @@ const ViewTicket: FC<IViewTicket> = () => {
 
   return (
     <PageView
-      title={ticket?.code ?? "View Ticket"}
+      title={ticket?.subject ?? "View Ticket"}
       breadcrumbs={<Breadcrumbs />}
       buttons={<Buttons />}
     >

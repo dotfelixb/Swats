@@ -361,6 +361,7 @@ CREATE TABLE ticket
     helptopic     BPCHAR(36),
     priority      INT,
     status        INT,
+    dueat		  TIMESTAMPTZ,
     rowversion    BPCHAR(36) NOT NULL,
     deleted       BOOLEAN     DEFAULT (FALSE),
     createdby     BPCHAR(36),

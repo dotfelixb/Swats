@@ -6,10 +6,11 @@ interface IDataColumn {
 }
 
 interface IDataTable {
+  showFilter?: boolean;
   columns: IDataColumn[];
 }
 
-const DataTable: FC<IDataTable> = ({ columns, children }) => {
+const DataTable: FC<IDataTable> = ({ showFilter = true, columns, children }) => {
   const renderColumn = (
     <thead className="datatable">
       <tr className="text-left px-3 bg-indigo-50">
@@ -28,32 +29,36 @@ const DataTable: FC<IDataTable> = ({ columns, children }) => {
 
   return (
     <div className="bg-white border border-gray-200 rounded-sm">
-      {/* filter fields */}
-      <div className="grid grid-cols-5 gap-4 px-5 py-5">
-        <div>
-          <div className="w-full">
-            <input className="form-input-search" placeholder="Name" />
+      {showFilter && (
+        <>
+          {/* filter fields */}
+          <div className="grid grid-cols-5 gap-4 px-5 py-5">
+            <div>
+              <div className="w-full">
+                <input className="form-input-search" placeholder="Name" />
+              </div>
+            </div>
+            <div>
+              <div className="w-full">
+                <input className="form-input-search" placeholder="Name" />
+              </div>
+            </div>
           </div>
-        </div>
-        <div>
-          <div className="w-full">
-            <input className="form-input-search" placeholder="Name" />
-          </div>
-        </div>
-      </div>
 
-      {/* filter tags */}
-      <div className="w-full px-5 pb-3">
-        <span className="text-xs rounded bg-indigo-500 text-white px-2 py-1">
-          Filter
-        </span>
-        <span className="text-xs rounded bg-indigo-500 text-white px-2 py-1">
-          Name
-        </span>
-      </div>
+          {/* filter tags */}
+          <div className="w-full px-5 pb-3">
+            <span className="text-xs rounded bg-indigo-500 text-white px-2 py-1">
+              Filter
+            </span>
+            <span className="text-xs rounded bg-indigo-500 text-white px-2 py-1">
+              Name
+            </span>
+          </div>
+        </>
+      )}
 
       {/* table */}
-      <div className="w-full border-t-2 border-gray-50">
+      <div className="w-full  ">
         <table className="w-full table-auto">
           {renderColumn}
           <tbody>{children}</tbody>

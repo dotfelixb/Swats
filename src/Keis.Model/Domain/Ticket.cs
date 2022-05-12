@@ -24,6 +24,8 @@ public class Ticket : DbAudit
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketPriority Priority { get; set; }
+
+    public DateTimeOffset DueAt { get; set; }
 }
 
 public class TicketType : DbAudit

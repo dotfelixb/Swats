@@ -237,3 +237,11 @@ export interface IFetchTicket extends IDataAudit {
     teamName:string;
     ticketComments: ITicketComment[]
 }
+
+export interface IDashboardCount {
+    myTicket :number;
+    myOverDue :number;
+    myDueToday :number;
+    openTickets :number;
+    openTicketsDue :number;
+}

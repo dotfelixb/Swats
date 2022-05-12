@@ -9,6 +9,8 @@ const target = env.ASPNETCORE_HTTPS_PORT
 
 const context = [
   "/methods/auth.login",
+  "/methods/dashboard.count",
+
   "/methods/ticket.list",
   "/methods/ticket.get",
   "/methods/ticket.create",
