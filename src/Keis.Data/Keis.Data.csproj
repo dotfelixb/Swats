@@ -6,13 +6,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.123"/>
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
-        <PackageReference Include="Npgsql" Version="6.0.3"/>
+        <PackageReference Include="Dapper" Version="2.0.123" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+        <PackageReference Include="Npgsql" Version="6.0.3" />
+        <PackageReference Include="MailKit" Version="3.2.0" />
+        <PackageReference Include="MimeKit" Version="3.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Keis.Model\Keis.Model.csproj"/>
+        <ProjectReference Include="..\Keis.Model\Keis.Model.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="MailKit" />
+      <None Remove="MimeKit" />
+      <None Remove="Repository\EmailManager\" />
+      <None Remove="Repository\EmailManager\Interfaces\" />
+      <None Remove="Repository\EmailManager\Services\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Repository\EmailManager\" />
+      <Folder Include="Repository\EmailManager\Interfaces\" />
+      <Folder Include="Repository\EmailManager\Services\" />
+    </ItemGroup>
 </Project>
