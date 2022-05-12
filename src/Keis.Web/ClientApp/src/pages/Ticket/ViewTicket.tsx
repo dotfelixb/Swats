@@ -5,6 +5,8 @@ import {
   Menu,
   MenuProps,
   Dropdown,
+  Modal,
+  Select,
 } from "antd";
 import dayjs from "dayjs";
 import { FC, useEffect, useState } from "react";
@@ -13,7 +15,12 @@ import ReactQuill from "react-quill";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchTicket, ISingleResult } from "../../interfaces";
+import {
+  IFetchAgent,
+  IFetchTicket,
+  IListResult,
+  ISingleResult,
+} from "../../interfaces";
 import {
   CommentOutlined,
   DoubleRightOutlined,
@@ -45,6 +52,41 @@ const ReplyIcon = () => {
   );
 };
 
+const statusItems = [
+  {
+    key: 1,
+    label: "New",
+  },
+  {
+    key: 2,
+    label: "Open",
+  },
+  {
+    key: 3,
+    label: "Approved",
+  },
+  {
+    key: 4,
+    label: "Assigned",
+  },
+  {
+    key: 5,
+    label: "Pending",
+  },
+  {
+    key: 6,
+    label: "Review",
+  },
+  {
+    key: 7,
+    label: "Close",
+  },
+  {
+    key: 8,
+    label: "Deleted",
+  },
+];
+
 const ViewTicket: FC<IViewTicket> = () => {
   const { user } = useAuth();
   const { get, dateFormats, editorFormats, editorModels } = useApp();
@@ -52,12 +94,23 @@ const ViewTicket: FC<IViewTicket> = () => {
   const [note, setNote] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [ticket, setTicket] = useState<IFetchTicket>();
+  const [showChangeStatusModal, setChangeStatusModal] = useState(false);
+  const [showAssignedToModal, setAssignedToModal] = useState(false);
+  const [newStatus, setNewStatus] = useState<string>();
+  const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
+  const [newAssignedTo, setNewAssignedTo] = useState<string>();
 
   useEffect(() => {
     if (user != null && user.token && id) {
       load();
     }
   }, [user, id, get]);
+
+  useEffect(() => {
+    if (showAssignedToModal) {
+      loadAgent();
+    }
+  }, [showAssignedToModal]);
 
   const load = async () => {
     const g: Response = await get(`methods/ticket.get?id=${id}`);
@@ -70,7 +123,74 @@ const ViewTicket: FC<IViewTicket> = () => {
     }
   };
 
-  const onHandleStatusChange: MenuProps["onClick"] = (e) => {};
+  const loadAgent = async () => {
+    const g: Response = await get(`methods/agent.list`);
+    const d: IListResult<IFetchAgent[]> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setAgentList(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  };
+
+  const onHandleStatusChange: MenuProps["onClick"] = (e) => {
+    setNewStatus(e.key);
+    setChangeStatusModal(true);
+  };
+
+  const onSubmitChangeStatus = async () => {
+    const body = new FormData();
+    body.append("status", newStatus ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/ticket.changestatus", {
+      method: "PATCH",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<string> = await f.json();
+
+    if (f.status === 200 && result.ok) {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, status: result.data });
+      }
+      setChangeStatusModal(false);
+    }
+  };
+
+  const onSubmitAssignedTo = async () => {
+    const body = new FormData();
+    body.append("assignedto", newAssignedTo ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/ticket.assign", {
+      method: "PATCH",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<{ name: string; id: string }> = await f.json();
+
+    if (f.status === 200 && result.ok) {
+      if (ticket !== undefined) {
+        setTicket({
+          ...ticket,
+          assignedTo: result.data.id,
+          assignedToName: result.data.name,
+        });
+      }
+      setAssignedToModal(false);
+    }
+  };
+
   const onHandleMoreAction: MenuProps["onClick"] = (e) => {};
 
   const onHandleComment = async () => {
@@ -99,19 +219,7 @@ const ViewTicket: FC<IViewTicket> = () => {
   };
 
   const changeStatusMenu = (
-    <Menu
-      onClick={onHandleStatusChange}
-      items={[
-        {
-          key: 1,
-          label: "New",
-        },
-        {
-          key: 2,
-          label: "Open",
-        },
-      ]}
-    />
+    <Menu onClick={onHandleStatusChange} items={statusItems} />
   );
 
   const moreActionMenu = (
@@ -178,6 +286,7 @@ const ViewTicket: FC<IViewTicket> = () => {
           size="small"
           style={{ display: "flex", alignItems: "center" }}
           icon={<DoubleRightOutlined />}
+          onClick={() => setAssignedToModal(true)}
         >
           Assign To
         </Button>
@@ -372,6 +481,44 @@ const ViewTicket: FC<IViewTicket> = () => {
           </Timeline>
         </div>
       </div>
+
+      {/* change status modal */}
+      <Modal
+        visible={showChangeStatusModal}
+        title="Change Ticket Status"
+        okText="Update"
+        onOk={onSubmitChangeStatus}
+        onCancel={() => setChangeStatusModal(false)}
+      >
+        <div className="text-base">
+          You are about to change ticket status to
+          <span className="font-bold">
+            {" '"}
+            {
+              statusItems.find((f) => f.key === parseInt(newStatus ?? "0"))
+                ?.label
+            }
+            {"' "}
+          </span>
+        </div>
+      </Modal>
+
+      <Modal
+        visible={showAssignedToModal}
+        title="Assign ticket to Agent"
+        okText="Update"
+        onOk={onSubmitAssignedTo}
+        onCancel={() => setAssignedToModal(false)}
+      >
+        <div className="py-2">Assign To</div>
+        <Select showSearch className="w-full" onChange={(e)=> setNewAssignedTo(e)}>
+          {agentList?.map((a) => (
+            <Select.Option key={a.id} value={a.id}>
+              {a.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Modal>
     </PageView>
   );
 };

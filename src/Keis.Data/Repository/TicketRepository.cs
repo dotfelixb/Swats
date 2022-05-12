@@ -50,6 +50,10 @@ public interface ITicketRepository
 
     Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken);
 
+    Task<int> ChangeStatus(string id, TicketStatus status, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<int> AssignTo(string id, string assignTo, DbAuditLog auditLog, CancellationToken cancellationToken);
+
     #endregion Ticket Comment
 }
 
@@ -302,6 +306,100 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 ";
 
             return await conn.QueryAsync<FetchTicket>(query, new {agent, offset, limit});
+        });
+    }
+
+
+   public Task<int> ChangeStatus(string id, TicketStatus status, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET status = @Status
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, status });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
+        });
+    }
+
+    public
+    Task<int> AssignTo(string id, string assignTo, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET assignedto = @AssignTo
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, assignTo });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
         });
     }
 

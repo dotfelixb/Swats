@@ -411,6 +411,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.visible {
+  visibility: visible;
+}
 .relative {
   position: relative;
 }
@@ -425,6 +428,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .mb-9 {
   margin-bottom: 2.25rem;
+}
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+.inline {
+  display: inline;
 }
 .flex {
   display: flex;
@@ -655,11 +664,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
 .font-semibold {
   font-weight: 600;
 }
 .font-bold {
   font-weight: 700;
+}
+.italic {
+  font-style: italic;
 }
 .text-white {
   --tw-text-opacity: 1;
@@ -676,6 +692,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-indigo-500 {
   --tw-text-opacity: 1;
   color: rgb(99 102 241 / var(--tw-text-opacity));
+}
+.underline {
+  text-decoration-line: underline;
 }
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);

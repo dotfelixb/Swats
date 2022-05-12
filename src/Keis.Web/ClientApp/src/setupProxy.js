@@ -14,6 +14,8 @@ const context = [
   "/methods/ticket.list",
   "/methods/ticket.get",
   "/methods/ticket.create",
+  "/methods/ticket.changestatus",
+  "/methods/ticket.assign",
   "/methods/ticket.postcomment",
 
   "/methods/agent.list",

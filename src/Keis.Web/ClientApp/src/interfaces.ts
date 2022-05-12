@@ -234,6 +234,7 @@ export interface IFetchTicket extends IDataAudit {
     subject: string;
     code:string;
     requesterName:string;
+    assignedTo: string;
     assignedToName:string;
     departmentName:string;
     teamName:string;

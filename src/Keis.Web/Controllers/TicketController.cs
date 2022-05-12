@@ -1,5 +1,6 @@
 ﻿using Keis.Infrastructure.Features.Agents.GetAgent;
 using Keis.Infrastructure.Features.Tickets.AssignTicket;
+using Keis.Infrastructure.Features.Tickets.ChangeStatus;
 using Keis.Infrastructure.Features.Tickets.CreateComment;
 using Keis.Infrastructure.Features.Tickets.CreateTicket;
 using Keis.Infrastructure.Features.Tickets.GetTicket;
@@ -144,9 +145,57 @@ public class TicketController : MethodController
     }
 
     [HttpPatch("ticket.assign", Name = nameof(AssignTicket))]
-    public Task<IActionResult> AssignTicket(AssignTicketCommand command)
+    public async Task<IActionResult> AssignTicket(AssignTicketCommand command)
     {
-        throw new NotImplementedException();
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(AssignTicket)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var agentResult = await mediatr.Send(new GetAgentCommand { Id = command.AssignedTo });
+        if (agentResult.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = agentResult.Reasons.Select(s => s.Message)
+            });
+
+        return Ok(new SingleResult<object>
+        {
+            Ok = true,
+            Data = new { agentResult.Value.Id, agentResult.Value.Name }
+        });
+    }
+
+    [HttpPatch("ticket.changestatus", Name = nameof(ChangeStatus))]
+    public async Task<IActionResult> ChangeStatus(ChangeStatusCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeStatus)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if(result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        return Ok(new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
     }
 
     [HttpPatch("ticket.department", Name = nameof(AssignDepartmentTicket))]
