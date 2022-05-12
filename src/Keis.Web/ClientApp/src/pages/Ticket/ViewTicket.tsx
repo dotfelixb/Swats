@@ -1,4 +1,12 @@
-import { Breadcrumb, Timeline, Button } from "antd";
+import {
+  Breadcrumb,
+  Timeline,
+  Button,
+  Menu,
+  MenuProps,
+  Dropdown,
+  Space,
+} from "antd";
 import dayjs from "dayjs";
 import React, { FC, useEffect, useState } from "react";
 import DOMPurify from "dompurify";
@@ -7,9 +15,38 @@ import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import { IFetchTicket, ISingleResult } from "../../interfaces";
-import { CommentOutlined, FormOutlined } from "@ant-design/icons";
+import {
+  CaretRightOutlined,
+  CommentOutlined,
+  DoubleRightOutlined,
+  DownOutlined,
+  FormOutlined,
+  MoreOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
 
 interface IViewTicket {}
+
+const ReplyIcon = () => {
+  return (
+    <div className="pr-1">
+      <svg
+        viewBox="64 64 896 896"
+        focusable="false"
+        data-icon="form"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          d="M896 800c0 0-73.6-416-448-416l0-160L128 512l320 268.8 0-184.6C651.2 596.2 790 614 896 800z"
+          p-id="1354"
+        ></path>
+      </svg>
+    </div>
+  );
+};
 
 const ViewTicket: FC<IViewTicket> = () => {
   const { user } = useAuth();
@@ -36,6 +73,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     }
   };
 
+  const onHandleStatusChange: MenuProps["onClick"] = (e) => {};
+  const onHandleMoreAction: MenuProps["onClick"] = (e) => {};
+
   const onHandleComment = async () => {
     const body = new FormData();
     body.append("ticketId", ticket?.id ?? "");
@@ -61,8 +101,90 @@ const ViewTicket: FC<IViewTicket> = () => {
     }
   };
 
+  const changeStatusMenu = (
+    <Menu
+      onClick={onHandleStatusChange}
+      items={[
+        {
+          key: 1,
+          label: "New",
+        },
+        {
+          key: 2,
+          label: "Open",
+        },
+      ]}
+    />
+  );
+
+  const moreActionMenu = (
+    <Menu
+      onClick={onHandleMoreAction}
+      items={[
+        {
+          key: 101,
+          label: "Merge Tickets",
+        },
+        {
+          key: 102,
+          label: "Duplicate Ticket",
+        },
+        {
+          key: 103,
+          label: "Request Feedback",
+        },
+        {
+          key: 104,
+          label: "Change Due Date",
+        },
+        {
+          key: 105,
+          label: "Change Department",
+        },
+        {
+          key: 106,
+          label: "Change Team",
+        },
+        {
+          key: 107,
+          label: "Change Priority",
+        },
+        {
+          key: 108,
+          label: "Change Help Topic",
+        },
+        {
+          key: 109,
+          label: "Change Ticket Type",
+        },
+      ]}
+    />
+  );
+
   const Buttons: FC = () => (
     <div className="flex flex-row space-x-2">
+      <div>
+        <Dropdown overlay={changeStatusMenu}>
+          <Button
+            type="default"
+            size="small"
+            style={{ display: "flex", alignItems: "center" }}
+            icon={<SwapOutlined />}
+          >
+            Change Status
+          </Button>
+        </Dropdown>
+      </div>
+      <div>
+        <Button
+          type="default"
+          size="small"
+          style={{ display: "flex", alignItems: "center" }}
+          icon={<DoubleRightOutlined />}
+        >
+          Assign To
+        </Button>
+      </div>
       <div>
         <Button
           type="default"
@@ -73,6 +195,19 @@ const ViewTicket: FC<IViewTicket> = () => {
         >
           Add Comment
         </Button>
+      </div>
+      <div>
+        <Dropdown overlay={moreActionMenu}>
+          <Button type="default" size="small">
+            <div
+              className="space-x-2"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <span>Actions</span>
+              <MoreOutlined />
+            </div>
+          </Button>
+        </Dropdown>
       </div>
     </div>
   );
@@ -103,23 +238,35 @@ const ViewTicket: FC<IViewTicket> = () => {
           <ul className="edit-sidebar py-5">
             <li>
               <div>Assigned To</div>
-              <div>{ticket?.assignedToName ?? ""}</div>
+              <div>{ticket?.assignedToName ?? "N/A"}</div>
+            </li>
+            <li>
+              <div>Department</div>
+              <div>{ticket?.departmentName ?? "N/A"}</div>
+            </li>
+            <li>
+              <div>Team</div>
+              <div>{ticket?.teamName ?? "N/A"}</div>
+            </li>
+            <li>
+              <div>Apply SLA</div>
+              <div>{ticket?.slaName ?? "N/A"}</div>
             </li>
             <li>
               <div>Priority</div>
-              <div>{ticket?.priority ?? ""}</div>
+              <div>{ticket?.priority ?? "N/A"}</div>
             </li>
             <li>
               <div>Status</div>
-              <div>{ticket?.status ?? ""}</div>
+              <div>{ticket?.status ?? "N/A"}</div>
             </li>
             <li>
               <div>Source</div>
-              <div>{ticket?.source ?? ""}</div>
+              <div>{ticket?.source ?? "N/A"}</div>
             </li>
             <li>
               <div>Created By</div>
-              <div>{ticket?.createdByName ?? ""}</div>
+              <div>{ticket?.createdByName ?? "N/A"}</div>
             </li>
             <li>
               <div>Created At</div>
@@ -131,7 +278,7 @@ const ViewTicket: FC<IViewTicket> = () => {
             </li>
             <li>
               <div>Updated By</div>
-              <div>{ticket?.updatedByName ?? ""}</div>
+              <div>{ticket?.updatedByName ?? "N/A"}</div>
             </li>
             <li>
               <div>Updated At</div>
@@ -189,14 +336,31 @@ const ViewTicket: FC<IViewTicket> = () => {
                   key={c.id}
                   dot={<CommentOutlined style={{ fontSize: "16px" }} />}
                 >
-                  <div className="mb-2">
-                    <span>{c.fromName}</span>
-                    <span className="px-1 text-xs">
-                      {" - "}
-                      <span>
-                        {dayjs(c.createdAt).format(dateFormats.longDateFormat)}
-                      </span>
-                    </span>
+                  <div className="flex w-full">
+                    {/* commenter name */}
+                    <div className="mb-2 flex w-1/2 flex-row">
+                      <div>{c.fromName}</div>
+                      <div className="px-1 flex flex-row text-xs items-center">
+                        <div>{" - "}</div>
+                        <div>
+                          {dayjs(c.createdAt).format(
+                            dateFormats.longDateFormat
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    {/* reply button */}
+                    <div className="flex w-1/2 justify-end">
+                      <Button
+                        type="default"
+                        size="small"
+                        style={{ display: "flex", alignItems: "center" }}
+                        icon={<ReplyIcon />}
+                        onClick={() => setShowComment(true)}
+                      >
+                        Reply
+                      </Button>
+                    </div>
                   </div>
                   <div
                     className="px-4 py-3 border rounded"
