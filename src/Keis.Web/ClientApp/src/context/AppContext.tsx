@@ -16,6 +16,41 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
     longDateFormatWithAt: "MMM DD, YYYY @ h:mm a",
     shortDateFormat: "MMM DD, YYYY",
   };
+  const editorFormats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "video",
+  ];
+  const editorModels = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link", "image", "video"],
+      ["clean"],
+    ],
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    },
+  };
 
   const post = async (endPoint: string, body: FormData): Promise<any> => {
     const headers = new Headers();
@@ -47,7 +82,7 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ post, get, dateFormats }}>
+    <AppContext.Provider value={{ post, get, dateFormats, editorFormats, editorModels }}>
       {children}
     </AppContext.Provider>
   );

@@ -5,10 +5,9 @@ import {
   Menu,
   MenuProps,
   Dropdown,
-  Space,
 } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import ReactQuill from "react-quill";
 import { Link, useParams } from "react-router-dom";
@@ -16,10 +15,8 @@ import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import { IFetchTicket, ISingleResult } from "../../interfaces";
 import {
-  CaretRightOutlined,
   CommentOutlined,
   DoubleRightOutlined,
-  DownOutlined,
   FormOutlined,
   MoreOutlined,
   SwapOutlined,
@@ -50,7 +47,7 @@ const ReplyIcon = () => {
 
 const ViewTicket: FC<IViewTicket> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, dateFormats, editorFormats, editorModels } = useApp();
   const { id } = useParams();
   const [note, setNote] = useState("");
   const [showComment, setShowComment] = useState(false);
@@ -304,6 +301,8 @@ const ViewTicket: FC<IViewTicket> = () => {
                     theme="snow"
                     value={note}
                     onChange={setNote}
+                    formats={editorFormats}
+                    modules={editorModels}
                     style={{ height: "140px" }}
                   />
                   <div className="mb-9"></div>
@@ -325,6 +324,7 @@ const ViewTicket: FC<IViewTicket> = () => {
                       Cancel
                     </Button>
                   </div>
+                  <div className="mb-5"></div>
                 </Timeline.Item>
               </>
             )}

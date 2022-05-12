@@ -29,7 +29,7 @@ interface IFormData {
 
 const NewTicket: FC<INewTicket> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get, editorFormats, editorModels } = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [note, setNote] = useState("");
@@ -168,14 +168,6 @@ const NewTicket: FC<INewTicket> = () => {
                     <Select.Option value="4">Important!</Select.Option>
                   </Select>
                 </Form.Item>
-                {/* <Form.Item name="source" label="Source">
-                                    <Select defaultValue="1" showSearch>
-                                        <Select.Option value="1">App</Select.Option>
-                                        <Select.Option value="2">Web</Select.Option>
-                                        <Select.Option value="3">Call</Select.Option>
-                                        <Select.Option value="4">API</Select.Option>
-                                    </Select>
-                                </Form.Item> */}
                 <Form.Item name="status" label="Status">
                   <Select showSearch>
                     <Select.Option value="1">New</Select.Option>
@@ -233,6 +225,8 @@ const NewTicket: FC<INewTicket> = () => {
                     theme="snow"
                     value={note}
                     onChange={setNote}
+                    formats={editorFormats}
+                    modules={editorModels}
                     style={{ height: "240px" }}
                   />
                   <div className="mb-9"></div>

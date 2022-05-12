@@ -53,6 +53,8 @@ export interface IAppContext {
     post: (endPoint: string, body: FormData) => Promise<any>;
     get: (endPoint: string) => Promise<any>;
     dateFormats: { longDateFormat: string; shortDateFormat: string };
+    editorFormats: string[];
+    editorModels: any;
 }
 
 export interface IViewProps {
