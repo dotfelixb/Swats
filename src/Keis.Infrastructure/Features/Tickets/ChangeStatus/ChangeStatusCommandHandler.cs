@@ -27,7 +27,7 @@ public class ChangeStatusCommandHandler : IRequestHandler<ChangeStatusCommand, R
             CreatedBy = request.CreatedBy
         };
 
-        var rst = await _ticketRepository.ChangeStatus(request.Id, request.Status, auditLog, cancellationToken);
+        var rst = await _ticketRepository.ChangeStatus(request.Id, request.Status, request.CreatedBy, auditLog, cancellationToken);
 
         return rst > 0
             ? Result.Ok(request.Status.ToText())

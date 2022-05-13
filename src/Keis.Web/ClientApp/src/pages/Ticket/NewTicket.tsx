@@ -185,7 +185,7 @@ const NewTicket: FC<INewTicket> = () => {
                 dot={<UserOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Who should work on it</div>
-                <Form.Item name="assignedto" label="Assigned To">
+                <Form.Item name="assignedto" label="Assign To">
                   <Select showSearch>
                     {agentList?.map((a) => (
                       <Select.Option key={a.id} value={a.id}>

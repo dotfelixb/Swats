@@ -81,8 +81,23 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
       : f;
   };
 
+  const patch = async (endPoint: string, body: FormData): Promise<any> => {
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch(endPoint, {
+      method: "PATCH",
+      headers,
+      body,
+    });
+
+    return f.status === 401
+      ? navigate("/login", { replace: true, state: { from: location } })
+      : f;
+  };
+
   return (
-    <AppContext.Provider value={{ post, get, dateFormats, editorFormats, editorModels }}>
+    <AppContext.Provider value={{ post, get, patch, dateFormats, editorFormats, editorModels }}>
       {children}
     </AppContext.Provider>
   );

@@ -1,7 +1,0 @@
-﻿@model FetchAgent
-
-@{
-    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
-}
-
-@await Html.PartialAsync("~/Areas/Admin/Views/Agents/_Edit.cshtml", Model)

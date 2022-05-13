@@ -27,7 +27,7 @@ public class AssignTicketCommandHandler : IRequestHandler<AssignTicketCommand, R
             CreatedBy = request.CreatedBy
         };
 
-        var rst = await _ticketRepository.AssignTo(request.Id, request.AssignedTo, auditLog, cancellationToken);
+        var rst = await _ticketRepository.AssignTo(request.Id, request.AssignedTo, request.CreatedBy, auditLog, cancellationToken);
 
         return rst > 0
             ? Result.Ok("Assigned to updated successfully")

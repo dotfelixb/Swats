@@ -6,10 +6,10 @@ import {
   MenuProps,
   Dropdown,
   Modal,
-  Select,
+  message,
 } from "antd";
 import dayjs from "dayjs";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import ReactQuill from "react-quill";
 import { Link, useParams } from "react-router-dom";
@@ -17,6 +17,8 @@ import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import {
   IFetchAgent,
+  IFetchDepartment,
+  IFetchTeam,
   IFetchTicket,
   IListResult,
   ISingleResult,
@@ -28,29 +30,10 @@ import {
   MoreOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
+import { ChangeAgent, ChangeDepartment, ChangeTeam } from "./actions";
+import { ReplyIcon } from "../../components/Icons";
 
 interface IViewTicket {}
-
-const ReplyIcon = () => {
-  return (
-    <div className="pr-1">
-      <svg
-        viewBox="64 64 896 896"
-        focusable="false"
-        data-icon="form"
-        width="1em"
-        height="1em"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          d="M896 800c0 0-73.6-416-448-416l0-160L128 512l320 268.8 0-184.6C651.2 596.2 790 614 896 800z"
-          p-id="1354"
-        ></path>
-      </svg>
-    </div>
-  );
-};
 
 const statusItems = [
   {
@@ -89,16 +72,19 @@ const statusItems = [
 
 const ViewTicket: FC<IViewTicket> = () => {
   const { user } = useAuth();
-  const { get, dateFormats, editorFormats, editorModels } = useApp();
+  const { get, patch, dateFormats, editorFormats, editorModels } = useApp();
   const { id } = useParams();
   const [note, setNote] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [ticket, setTicket] = useState<IFetchTicket>();
   const [showChangeStatusModal, setChangeStatusModal] = useState(false);
   const [showAssignedToModal, setAssignedToModal] = useState(false);
+  const [showDepartmentModal, setDepartmentModal] = useState(false);
+  const [showTeamModal, setTeamModal] = useState(false);
   const [newStatus, setNewStatus] = useState<string>();
   const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
-  const [newAssignedTo, setNewAssignedTo] = useState<string>();
+  const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
+  const [teamList, setTeamList] = useState<IFetchTeam[]>([]);
 
   useEffect(() => {
     if (user != null && user.token && id) {
@@ -111,6 +97,18 @@ const ViewTicket: FC<IViewTicket> = () => {
       loadAgent();
     }
   }, [showAssignedToModal]);
+
+  useEffect(() => {
+    if (showDepartmentModal) {
+      loadDepartment();
+    }
+  }, [showDepartmentModal]);
+
+  useEffect(() => {
+    if (showTeamModal) {
+      loadTeam();
+    }
+  }, [showTeamModal]);
 
   const load = async () => {
     const g: Response = await get(`methods/ticket.get?id=${id}`);
@@ -134,6 +132,28 @@ const ViewTicket: FC<IViewTicket> = () => {
     }
   };
 
+  const loadDepartment = async () => {
+    const g: Response = await get(`methods/department.list`);
+    const d: IListResult<IFetchDepartment[]> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setDepartmentList(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  };
+
+  const loadTeam = async () => {
+    const g: Response = await get(`methods/team.list`);
+    const d: IListResult<IFetchTeam[]> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setTeamList(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  };
+
   const onHandleStatusChange: MenuProps["onClick"] = (e) => {
     setNewStatus(e.key);
     setChangeStatusModal(true);
@@ -144,54 +164,98 @@ const ViewTicket: FC<IViewTicket> = () => {
     body.append("status", newStatus ?? "");
     body.append("id", ticket?.id ?? "");
 
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
-
-    const f = await fetch("methods/ticket.changestatus", {
-      method: "PATCH",
-      body,
-      headers,
-    });
-
-    const result: ISingleResult<string> = await f.json();
-
-    if (f.status === 200 && result.ok) {
+    const onSuccess = (id: string, name: string) => {
       if (ticket !== undefined) {
-        setTicket({ ...ticket, status: result.data });
+        setTicket({ ...ticket, status: id });
       }
-      setChangeStatusModal(false);
-    }
+
+      message.success(`Ticket status successfully set to ${id}`);
+    };
+
+    onPatch(body, "methods/ticket.status", onSuccess, setChangeStatusModal);
   };
 
-  const onSubmitAssignedTo = async () => {
+  const onSubmitAssignedTo = async (values: any) => {
     const body = new FormData();
-    body.append("assignedto", newAssignedTo ?? "");
+    body.append("assignedto", values.assignedto ?? "");
     body.append("id", ticket?.id ?? "");
 
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
-
-    const f = await fetch("methods/ticket.assign", {
-      method: "PATCH",
-      body,
-      headers,
-    });
-
-    const result: ISingleResult<{ name: string; id: string }> = await f.json();
-
-    if (f.status === 200 && result.ok) {
+    const onSuccess = (id: string, name: string) => {
       if (ticket !== undefined) {
         setTicket({
           ...ticket,
-          assignedTo: result.data.id,
-          assignedToName: result.data.name,
+          assignedTo: id,
+          assignedToName: name,
         });
       }
-      setAssignedToModal(false);
+
+      message.success(`Ticket successfully assigned to ${name}`);
+    };
+
+    onPatch(body, "methods/ticket.assign", onSuccess, setAssignedToModal);
+  };
+
+  const onSubmitChangeDepartment = async (values: any) => {
+    const body = new FormData();
+    body.append("department", values.department ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const onSuccess = (id: string, name: string) => {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, department: id, departmentName: name });
+      }
+
+      message.success(`Ticket department successfully changed to ${name}`);
+    };
+
+    onPatch(body, "methods/ticket.department", onSuccess, setDepartmentModal);
+  };
+
+  const onSubmitChangeTeam = async (values: any) => {
+    const body = new FormData();
+    body.append("team", values.team ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const onSuccess = (id: string, name: string) => {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, team: id, teamName: name });
+      }
+
+      message.success(`Ticket team successfully changed to ${name}`);
+    };
+
+    onPatch(body, "methods/ticket.team", onSuccess, setTeamModal);
+  };
+
+  const onPatch = async (
+    body: FormData,
+    uri: string,
+    onSuccess: (id: string, name: string) => void,
+    onHideModal: (value: boolean) => void
+  ) => {
+    const f: Response = await patch(uri, body);
+    const result: ISingleResult<{ name: string; id: string }> = await f.json();
+
+    if (f.status === 200 && result.ok) {
+      onSuccess(result.data?.id ?? result.data, result.data?.name ?? "");
+      onHideModal(false);
     }
   };
 
-  const onHandleMoreAction: MenuProps["onClick"] = (e) => {};
+  const onHandleMoreAction: MenuProps["onClick"] = (e) => {
+    switch (parseInt(e.key)) {
+      case 105: {
+        setDepartmentModal(true);
+        break;
+      }
+      case 106: {
+        setTeamModal(true);
+        break;
+      }
+      default:
+        break;
+    }
+  };
 
   const onHandleComment = async () => {
     const body = new FormData();
@@ -243,7 +307,7 @@ const ViewTicket: FC<IViewTicket> = () => {
           label: "Change Due Date",
         },
         {
-          key: 105,
+          key: "105",
           label: "Change Department",
         },
         {
@@ -503,22 +567,26 @@ const ViewTicket: FC<IViewTicket> = () => {
         </div>
       </Modal>
 
-      <Modal
-        visible={showAssignedToModal}
-        title="Assign ticket to Agent"
-        okText="Update"
-        onOk={onSubmitAssignedTo}
-        onCancel={() => setAssignedToModal(false)}
-      >
-        <div className="py-2">Assign To</div>
-        <Select showSearch className="w-full" onChange={(e)=> setNewAssignedTo(e)}>
-          {agentList?.map((a) => (
-            <Select.Option key={a.id} value={a.id}>
-              {a.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Modal>
+      <ChangeAgent
+        showModal={showAssignedToModal}
+        agentList={agentList}
+        onHideModal={setAssignedToModal}
+        onSubmit={onSubmitAssignedTo}
+      />
+
+      <ChangeDepartment
+        showModal={showDepartmentModal}
+        departmentList={departmentList}
+        onHideModal={setDepartmentModal}
+        onSubmit={onSubmitChangeDepartment}
+      />
+
+      <ChangeTeam
+        showModal={showTeamModal}
+        teamList={teamList}
+        onHideModal={setTeamModal}
+        onSubmit={onSubmitChangeTeam}
+      />
     </PageView>
   );
 };

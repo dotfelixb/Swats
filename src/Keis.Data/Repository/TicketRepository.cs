@@ -31,6 +31,14 @@ public interface ITicketRepository
 
     Task<DashboardCount> CountTickets(string id, CancellationToken cancellationToken);
 
+    Task<int> ChangeStatus(string id, TicketStatus status, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<int> AssignTo(string id, string assignTo, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<int> ChangeDepartment(string id, string department, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<int> ChangeTeam(string id, string team, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+
     #endregion Ticket
 
     #region Ticket Type
@@ -49,10 +57,6 @@ public interface ITicketRepository
     Task<int> CreateTicketComment(TicketComment comment, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchTicketComment>> ListTicketComments(string id, CancellationToken cancellationToken);
-
-    Task<int> ChangeStatus(string id, TicketStatus status, DbAuditLog auditLog, CancellationToken cancellationToken);
-
-    Task<int> AssignTo(string id, string assignTo, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     #endregion Ticket Comment
 }
@@ -310,17 +314,19 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
     }
 
 
-   public Task<int> ChangeStatus(string id, TicketStatus status, DbAuditLog auditLog, CancellationToken cancellationToken)
+   public Task<int> ChangeStatus(string id, TicketStatus status, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         return WithConnection(async conn =>
         {
             var cmd = @"UPDATE ticket 
-                SET status = @Status
+                SET status = @Status,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
                 WHERE id = @Id";
 
-            var cmdRst = await conn.ExecuteAsync(cmd, new { id, status });
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, status, updatedBy });
 
             var logCmd = @"
                 INSERT INTO public.ticketauditlog
@@ -356,18 +362,115 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
         });
     }
 
-    public
-    Task<int> AssignTo(string id, string assignTo, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> AssignTo(string id, string assignTo, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         return WithConnection(async conn =>
         {
             var cmd = @"UPDATE ticket 
-                SET assignedto = @AssignTo
+                SET assignedto = @AssignTo,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
                 WHERE id = @Id";
 
-            var cmdRst = await conn.ExecuteAsync(cmd, new { id, assignTo });
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, assignTo, updatedBy });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
+        });
+    }
+
+    public Task<int> ChangeDepartment(string id, string department, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET department = @Department,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, department, updatedBy });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
+        });
+    }
+
+    public Task<int> ChangeTeam(string id, string team, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET team = @Team,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, team, updatedBy });
 
             var logCmd = @"
                 INSERT INTO public.ticketauditlog

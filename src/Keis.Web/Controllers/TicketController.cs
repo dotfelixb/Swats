@@ -1,6 +1,10 @@
 ﻿using Keis.Infrastructure.Features.Agents.GetAgent;
+using Keis.Infrastructure.Features.Department.GetDepartment;
+using Keis.Infrastructure.Features.Teams.GetTeam;
 using Keis.Infrastructure.Features.Tickets.AssignTicket;
+using Keis.Infrastructure.Features.Tickets.ChangeDepartment;
 using Keis.Infrastructure.Features.Tickets.ChangeStatus;
+using Keis.Infrastructure.Features.Tickets.ChangeTeam;
 using Keis.Infrastructure.Features.Tickets.CreateComment;
 using Keis.Infrastructure.Features.Tickets.CreateTicket;
 using Keis.Infrastructure.Features.Tickets.GetTicket;
@@ -175,7 +179,7 @@ public class TicketController : MethodController
         });
     }
 
-    [HttpPatch("ticket.changestatus", Name = nameof(ChangeStatus))]
+    [HttpPatch("ticket.status", Name = nameof(ChangeStatus))]
     public async Task<IActionResult> ChangeStatus(ChangeStatusCommand command)
     {
         const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeStatus)}";
@@ -198,15 +202,65 @@ public class TicketController : MethodController
         });
     }
 
-    [HttpPatch("ticket.department", Name = nameof(AssignDepartmentTicket))]
-    public Task<IActionResult> AssignDepartmentTicket(AssignTicketDepartmentCommand command)
+    [HttpPatch("ticket.department", Name = nameof(ChangeTicketDepartment))]
+    public async Task<IActionResult> ChangeTicketDepartment(ChangeDepartmentCommand command)
     {
-        throw new NotImplementedException();
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeTicketDepartment)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var departmentResult = await mediatr.Send(new GetDepartmentCommand { Id = command.Department });
+        if (departmentResult.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = departmentResult.Reasons.Select(s => s.Message)
+            });
+
+        return Ok(new SingleResult<object>
+        {
+            Ok = true,
+            Data = new { departmentResult.Value.Id, departmentResult.Value.Name }
+        });
     }
 
-    [HttpPatch("ticket.team", Name = nameof(AssignTeamTicket))]
-    public Task<IActionResult> AssignTeamTicket(AssignTicketTeamCommand command)
+    [HttpPatch("ticket.team", Name = nameof(ChangeTicketTeam))]
+    public async Task<IActionResult> ChangeTicketTeam(ChangeTeamCommand command)
     {
-        throw new NotImplementedException();
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeTicketTeam)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var teamResult = await mediatr.Send(new GetTeamCommand { Id = command.Team });
+        if (teamResult.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = teamResult.Reasons.Select(s => s.Message)
+            });
+
+        return Ok(new SingleResult<object>
+        {
+            Ok = true,
+            Data = new { teamResult.Value.Id, teamResult.Value.Name }
+        });
     }
 }

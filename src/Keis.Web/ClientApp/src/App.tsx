@@ -47,12 +47,13 @@ const Ready: FC = () => {
 
   if (!browserLoaded) {
     return (
-      <div>
-        <LoadingOutlined />
+      <div className="w-full h-screen flex flex-col justify-center items-center ">
+        <div><LoadingOutlined className="text-4xl font-bold" /></div>
+        <div className="py-2 font-bold">Responding to the World ☏</div>
       </div>
     );
   }
-
+  
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
