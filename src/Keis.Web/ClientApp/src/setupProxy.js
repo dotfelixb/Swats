@@ -22,6 +22,7 @@ const context = [
   "/methods/ticket.department",
   "/methods/ticket.team",
   "/methods/ticket.sla",
+  "/methods/ticket.duedate",
   "/methods/ticket.tickettype",
   "/methods/ticket.helptopic",
 

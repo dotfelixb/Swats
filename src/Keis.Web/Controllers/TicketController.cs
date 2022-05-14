@@ -3,6 +3,7 @@ using Keis.Infrastructure.Features.Department.GetDepartment;
 using Keis.Infrastructure.Features.Teams.GetTeam;
 using Keis.Infrastructure.Features.Tickets.AssignTicket;
 using Keis.Infrastructure.Features.Tickets.ChangeDepartment;
+using Keis.Infrastructure.Features.Tickets.ChangeDue;
 using Keis.Infrastructure.Features.Tickets.ChangeStatus;
 using Keis.Infrastructure.Features.Tickets.ChangeTeam;
 using Keis.Infrastructure.Features.Tickets.CreateComment;
@@ -261,6 +262,30 @@ public class TicketController : MethodController
         {
             Ok = true,
             Data = new { teamResult.Value.Id, teamResult.Value.Name }
+        });
+    }
+
+
+    [HttpPatch("ticket.duedate", Name = nameof(ChangeDueDate))]
+    public async Task<IActionResult> ChangeDueDate(ChangeDueCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeDueDate)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        return Ok(new SingleResult<DateTimeOffset>
+        {
+            Ok = true,
+            Data = result.Value
         });
     }
 }

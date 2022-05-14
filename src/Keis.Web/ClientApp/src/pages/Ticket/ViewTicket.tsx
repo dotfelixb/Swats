@@ -32,6 +32,7 @@ import {
 } from "@ant-design/icons";
 import { ChangeAgent, ChangeDepartment, ChangeTeam } from "./actions";
 import { ReplyIcon } from "../../components/Icons";
+import ChangeDue from "./actions/ChangeDue";
 
 interface IViewTicket {}
 
@@ -81,6 +82,7 @@ const ViewTicket: FC<IViewTicket> = () => {
   const [showAssignedToModal, setAssignedToModal] = useState(false);
   const [showDepartmentModal, setDepartmentModal] = useState(false);
   const [showTeamModal, setTeamModal] = useState(false);
+  const [showDueModal, setDueModal] = useState(false);
   const [newStatus, setNewStatus] = useState<string>();
   const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
@@ -227,6 +229,25 @@ const ViewTicket: FC<IViewTicket> = () => {
     onPatch(body, "methods/ticket.team", onSuccess, setTeamModal);
   };
 
+  const onSubmitChangeDueDate = async (values: any) => {
+    console.log(dayjs(values.dueAt ?? "").format());
+    
+    const body = new FormData();
+    body.append("dueAt", dayjs(values.dueAt ?? "").format() ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const onSuccess = (id: string, name: string) => {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, dueAt: id });
+      }
+
+      const due = dayjs(values.dueAt).format(dateFormats.shortDateFormat);
+      message.success(`Ticket Due Date successfully changed to ${due}`);
+    };
+
+    onPatch(body, "methods/ticket.duedate", onSuccess, setDueModal);
+  };
+
   const onPatch = async (
     body: FormData,
     uri: string,
@@ -244,6 +265,10 @@ const ViewTicket: FC<IViewTicket> = () => {
 
   const onHandleMoreAction: MenuProps["onClick"] = (e) => {
     switch (parseInt(e.key)) {
+      case 104: {
+        setDueModal(true);
+        break;
+      }
       case 105: {
         setDepartmentModal(true);
         break;
@@ -435,15 +460,21 @@ const ViewTicket: FC<IViewTicket> = () => {
               <div>{ticket?.source ?? "N/A"}</div>
             </li>
             <li>
+              <div>Due Date</div>
+              <div>
+                {ticket?.dueAt
+                  ? dayjs(ticket?.dueAt).format(dateFormats.shortDateFormat)
+                  : "N/A"}
+              </div>
+            </li>
+            <li>
               <div>Created By</div>
               <div>{ticket?.createdByName ?? "N/A"}</div>
             </li>
             <li>
               <div>Created At</div>
               <div>
-                {dayjs(ticket?.createdAt ?? new Date()).format(
-                  dateFormats.shortDateFormat
-                )}
+                {dayjs(ticket?.createdAt).format(dateFormats.shortDateFormat)}
               </div>
             </li>
             <li>
@@ -453,9 +484,7 @@ const ViewTicket: FC<IViewTicket> = () => {
             <li>
               <div>Updated At</div>
               <div>
-                {dayjs(ticket?.updatedAt ?? new Date()).format(
-                  dateFormats.shortDateFormat
-                )}
+                {dayjs(ticket?.updatedAt).format(dateFormats.shortDateFormat)}
               </div>
             </li>
           </ul>
@@ -586,6 +615,12 @@ const ViewTicket: FC<IViewTicket> = () => {
         teamList={teamList}
         onHideModal={setTeamModal}
         onSubmit={onSubmitChangeTeam}
+      />
+
+      <ChangeDue
+        showModal={showDueModal}
+        onHideModal={setDueModal}
+        onSubmit={onSubmitChangeDueDate}
       />
     </PageView>
   );

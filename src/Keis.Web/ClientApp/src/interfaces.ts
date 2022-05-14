@@ -245,6 +245,7 @@ export interface IFetchTicket extends IDataAudit {
   slaName: string;
   source: string;
   priority: string;
+  dueAt: string;
   ticketComments: ITicketComment[];
 }
 
