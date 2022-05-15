@@ -584,7 +584,7 @@ const ViewTicket: FC<IViewTicket> = () => {
               <div>{ticket?.teamName ?? "N/A"}</div>
             </li>
             <li>
-              <div>Apply SLA</div>
+              <div>Applied SLA</div>
               <div>{ticket?.slaName ?? "N/A"}</div>
             </li>
             <li>
