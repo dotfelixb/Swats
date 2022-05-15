@@ -6,7 +6,7 @@ public class CreateHelpTopicCommandValidator : AbstractValidator<CreateHelpTopic
 {
     public CreateHelpTopicCommandValidator()
     {
-        RuleFor(r => r.Topic).NotEmpty();
+        RuleFor(r => r.Name).NotEmpty();
         RuleFor(r => r.Department).NotEmpty();
     }
 }

@@ -19,4 +19,16 @@ public static class TypeEx
             _ => "Unassigned"
         };
     }
+
+    public static string ToText(this TicketPriority value)
+    {
+        return value switch
+        {
+            TicketPriority.Low => "Low",
+            TicketPriority.Normal=>"Normal",
+            TicketPriority.High=> "High",
+            TicketPriority.Important=>"Important!",
+            _ => "Unassigned"
+        };
+    }
 }

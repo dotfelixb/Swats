@@ -20,17 +20,26 @@ import {
   IFetchDepartment,
   IFetchTeam,
   IFetchTicket,
+  IFetchTopic,
+  IFetchType,
   IListResult,
   ISingleResult,
 } from "../../interfaces";
 import {
+  ColumnHeightOutlined,
   CommentOutlined,
   DoubleRightOutlined,
   FormOutlined,
   MoreOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { ChangeAgent, ChangeDepartment, ChangeTeam } from "./actions";
+import {
+  ChangeAgent,
+  ChangeDepartment,
+  ChangeTeam,
+  ChangeTicketType,
+  ChangeTopic,
+} from "./actions";
 import { ReplyIcon } from "../../components/Icons";
 import ChangeDue from "./actions/ChangeDue";
 
@@ -71,6 +80,25 @@ const statusItems = [
   },
 ];
 
+const priorityItems = [
+  {
+    key: 1,
+    label: "Low",
+  },
+  {
+    key: 2,
+    label: "Normal",
+  },
+  {
+    key: 3,
+    label: "High",
+  },
+  {
+    key: 4,
+    label: "Important!",
+  },
+];
+
 const ViewTicket: FC<IViewTicket> = () => {
   const { user } = useAuth();
   const { get, patch, dateFormats, editorFormats, editorModels } = useApp();
@@ -79,14 +107,20 @@ const ViewTicket: FC<IViewTicket> = () => {
   const [showComment, setShowComment] = useState(false);
   const [ticket, setTicket] = useState<IFetchTicket>();
   const [showChangeStatusModal, setChangeStatusModal] = useState(false);
+  const [showChangePriorityModal, setChangePriorityModal] = useState(false);
   const [showAssignedToModal, setAssignedToModal] = useState(false);
   const [showDepartmentModal, setDepartmentModal] = useState(false);
   const [showTeamModal, setTeamModal] = useState(false);
   const [showDueModal, setDueModal] = useState(false);
+  const [showTicketTypeModal, setTicketTypeModal] = useState(false);
+  const [showHelpTopicModal, setHelpTopicModal] = useState(false);
   const [newStatus, setNewStatus] = useState<string>();
+  const [newPriority, setNewPriority] = useState<string>();
   const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
   const [teamList, setTeamList] = useState<IFetchTeam[]>([]);
+  const [typeList, setTypeList] = useState<IFetchType[]>([]);
+  const [topicList, setTopicList] = useState<IFetchTopic[]>([]);
 
   useEffect(() => {
     if (user != null && user.token && id) {
@@ -111,6 +145,18 @@ const ViewTicket: FC<IViewTicket> = () => {
       loadTeam();
     }
   }, [showTeamModal]);
+
+  useEffect(() => {
+    if (showTicketTypeModal) {
+      loadType();
+    }
+  }, [showTicketTypeModal]);
+
+  useEffect(() => {
+    if (showHelpTopicModal) {
+      loadTopic();
+    }
+  }, [showHelpTopicModal]);
 
   const load = async () => {
     const g: Response = await get(`methods/ticket.get?id=${id}`);
@@ -156,9 +202,36 @@ const ViewTicket: FC<IViewTicket> = () => {
     }
   };
 
+  const loadType = async () => {
+    const g: Response = await get(`methods/tickettype.list`);
+    const d: IListResult<IFetchType[]> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setTypeList(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  };
+
+  const loadTopic = async () => {
+    const g: Response = await get(`methods/helptopic.list`);
+    const d: IListResult<IFetchTopic[]> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setTopicList(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  };
+
   const onHandleStatusChange: MenuProps["onClick"] = (e) => {
     setNewStatus(e.key);
     setChangeStatusModal(true);
+  };
+
+  const onHandlePriorityChange: MenuProps["onClick"] = (e) => {
+    setNewPriority(e.key);
+    setChangePriorityModal(true);
   };
 
   const onSubmitChangeStatus = async () => {
@@ -175,6 +248,22 @@ const ViewTicket: FC<IViewTicket> = () => {
     };
 
     onPatch(body, "methods/ticket.status", onSuccess, setChangeStatusModal);
+  };
+
+  const onSubmitChangePriority = async () => {
+    const body = new FormData();
+    body.append("priority", newPriority ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const onSuccess = (id: string, name: string) => {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, priority: id });
+      }
+
+      message.success(`Ticket priority successfully set to ${id}`);
+    };
+
+    onPatch(body, "methods/ticket.priority", onSuccess, setChangePriorityModal);
   };
 
   const onSubmitAssignedTo = async (values: any) => {
@@ -230,8 +319,6 @@ const ViewTicket: FC<IViewTicket> = () => {
   };
 
   const onSubmitChangeDueDate = async (values: any) => {
-    console.log(dayjs(values.dueAt ?? "").format());
-    
     const body = new FormData();
     body.append("dueAt", dayjs(values.dueAt ?? "").format() ?? "");
     body.append("id", ticket?.id ?? "");
@@ -246,6 +333,38 @@ const ViewTicket: FC<IViewTicket> = () => {
     };
 
     onPatch(body, "methods/ticket.duedate", onSuccess, setDueModal);
+  };
+
+  const onSubmitChangeTicketType = async (values: any) => {
+    const body = new FormData();
+    body.append("ticketType", values.ticketType ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const onSuccess = (id: string, name: string) => {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, ticketType: id, ticketTypeName: name });
+      }
+
+      message.success(`Ticket Type successfully changed to ${name}`);
+    };
+
+    onPatch(body, "methods/ticket.tickettype", onSuccess, setTicketTypeModal);
+  };
+
+  const onSubmitChangeHelpTopic = async (values: any) => {
+    const body = new FormData();
+    body.append("helpTopic", values.helpTopic ?? "");
+    body.append("id", ticket?.id ?? "");
+
+    const onSuccess = (id: string, name: string) => {
+      if (ticket !== undefined) {
+        setTicket({ ...ticket, helpTopic: id, helpTopicName: name });
+      }
+
+      message.success(`Ticket Help Topic successfully changed to ${name}`);
+    };
+
+    onPatch(body, "methods/ticket.helptopic", onSuccess, setHelpTopicModal);
   };
 
   const onPatch = async (
@@ -275,6 +394,14 @@ const ViewTicket: FC<IViewTicket> = () => {
       }
       case 106: {
         setTeamModal(true);
+        break;
+      }
+      case 108: {
+        setHelpTopicModal(true);
+        break;
+      }
+      case 109: {
+        setTicketTypeModal(true);
         break;
       }
       default:
@@ -311,6 +438,11 @@ const ViewTicket: FC<IViewTicket> = () => {
     <Menu onClick={onHandleStatusChange} items={statusItems} />
   );
 
+  const changePriorityMenu = (
+    <Menu onClick={onHandlePriorityChange} items={priorityItems} />
+  );
+
+
   const moreActionMenu = (
     <Menu
       onClick={onHandleMoreAction}
@@ -340,10 +472,6 @@ const ViewTicket: FC<IViewTicket> = () => {
           label: "Change Team",
         },
         {
-          key: 107,
-          label: "Change Priority",
-        },
-        {
           key: 108,
           label: "Change Help Topic",
         },
@@ -366,6 +494,18 @@ const ViewTicket: FC<IViewTicket> = () => {
             icon={<SwapOutlined />}
           >
             Change Status
+          </Button>
+        </Dropdown>
+      </div>
+      <div>
+        <Dropdown overlay={changePriorityMenu}>
+          <Button
+            type="default"
+            size="small"
+            style={{ display: "flex", alignItems: "center" }}
+            icon={<ColumnHeightOutlined />}
+          >
+            Change Priority
           </Button>
         </Dropdown>
       </div>
@@ -466,6 +606,14 @@ const ViewTicket: FC<IViewTicket> = () => {
                   ? dayjs(ticket?.dueAt).format(dateFormats.shortDateFormat)
                   : "N/A"}
               </div>
+            </li>
+            <li>
+              <div>Default Ticket Type</div>
+              <div>{ticket?.ticketTypeName ?? "N/A"}</div>
+            </li>
+            <li>
+              <div>Help Topic</div>
+              <div>{ticket?.helpTopicName ?? "N/A"}</div>
             </li>
             <li>
               <div>Created By</div>
@@ -584,11 +732,31 @@ const ViewTicket: FC<IViewTicket> = () => {
         onCancel={() => setChangeStatusModal(false)}
       >
         <div className="text-base">
-          You are about to change ticket status to
+          You are about to change ticket Status to
           <span className="font-bold">
             {" '"}
             {
               statusItems.find((f) => f.key === parseInt(newStatus ?? "0"))
+                ?.label
+            }
+            {"' "}
+          </span>
+        </div>
+      </Modal>
+
+      <Modal
+        visible={showChangePriorityModal}
+        title="Change Ticket Priority"
+        okText="Update"
+        onOk={onSubmitChangePriority}
+        onCancel={() => setChangePriorityModal(false)}
+      >
+        <div className="text-base">
+          You are about to change ticket Priority to
+          <span className="font-bold">
+            {" '"}
+            {
+              priorityItems.find((f) => f.key === parseInt(newPriority ?? "0"))
                 ?.label
             }
             {"' "}
@@ -621,6 +789,20 @@ const ViewTicket: FC<IViewTicket> = () => {
         showModal={showDueModal}
         onHideModal={setDueModal}
         onSubmit={onSubmitChangeDueDate}
+      />
+
+      <ChangeTicketType
+        showModal={showTicketTypeModal}
+        typeList={typeList}
+        onHideModal={setTicketTypeModal}
+        onSubmit={onSubmitChangeTicketType}
+      />
+
+      <ChangeTopic
+        showModal={showHelpTopicModal}
+        topicList={topicList}
+        onHideModal={setHelpTopicModal}
+        onSubmit={onSubmitChangeHelpTopic}
       />
     </PageView>
   );

@@ -42,12 +42,12 @@ const ViewTopic: FC<IViewTopic> = () => {
       <Breadcrumb.Item>
         <Link to="/admin/helptopic">Help Topics</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>{topic?.topic ?? ""}</Breadcrumb.Item>
+      <Breadcrumb.Item>{topic?.name ?? ""}</Breadcrumb.Item>
     </Breadcrumb>
   );
 
   return (
-    <PageView title={topic?.topic ?? ""} breadcrumbs={<Breadcrumbs />}>
+    <PageView title={topic?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
       <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">

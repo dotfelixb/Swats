@@ -107,7 +107,7 @@ export interface IFetchTag extends IDataAudit {
 
 export interface IFetchTopic extends IDataAudit {
   id: string;
-  topic: string;
+  name: string;
   department: string;
   departmentName: string;
   type: string;
@@ -243,6 +243,10 @@ export interface IFetchTicket extends IDataAudit {
   teamName: string;
   sla: string;
   slaName: string;
+  ticketType: string;
+  ticketTypeName: string;
+  helpTopic: string;
+  helpTopicName: string;
   source: string;
   priority: string;
   dueAt: string;

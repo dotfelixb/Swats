@@ -1,16 +1,21 @@
 ﻿using Keis.Infrastructure.Features.Agents.GetAgent;
 using Keis.Infrastructure.Features.Department.GetDepartment;
+using Keis.Infrastructure.Features.HelpTopic.GetHelpTopic;
 using Keis.Infrastructure.Features.Teams.GetTeam;
 using Keis.Infrastructure.Features.Tickets.AssignTicket;
 using Keis.Infrastructure.Features.Tickets.ChangeDepartment;
 using Keis.Infrastructure.Features.Tickets.ChangeDue;
+using Keis.Infrastructure.Features.Tickets.ChangePriority;
 using Keis.Infrastructure.Features.Tickets.ChangeStatus;
 using Keis.Infrastructure.Features.Tickets.ChangeTeam;
+using Keis.Infrastructure.Features.Tickets.ChangeTopic;
+using Keis.Infrastructure.Features.Tickets.ChangeType;
 using Keis.Infrastructure.Features.Tickets.CreateComment;
 using Keis.Infrastructure.Features.Tickets.CreateTicket;
 using Keis.Infrastructure.Features.Tickets.GetTicket;
 using Keis.Infrastructure.Features.Tickets.ListComments;
 using Keis.Infrastructure.Features.Tickets.ListTicket;
+using Keis.Infrastructure.Features.TicketTypes.GetTicketType;
 using Keis.Model;
 using Keis.Model.Commands;
 using Keis.Model.Queries;
@@ -203,6 +208,29 @@ public class TicketController : MethodController
         });
     }
 
+    [HttpPatch("ticket.priority", Name = nameof(ChangePriority))]
+    public async Task<IActionResult> ChangePriority(ChangePriorityCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangePriority)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if(result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        return Ok(new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
     [HttpPatch("ticket.department", Name = nameof(ChangeTicketDepartment))]
     public async Task<IActionResult> ChangeTicketDepartment(ChangeDepartmentCommand command)
     {
@@ -221,7 +249,7 @@ public class TicketController : MethodController
 
         var departmentResult = await mediatr.Send(new GetDepartmentCommand { Id = command.Department });
         if (departmentResult.IsFailed)
-            return BadRequest(new ErrorResult
+            return NotFound(new ErrorResult
             {
                 Ok = false,
                 Errors = departmentResult.Reasons.Select(s => s.Message)
@@ -252,7 +280,7 @@ public class TicketController : MethodController
 
         var teamResult = await mediatr.Send(new GetTeamCommand { Id = command.Team });
         if (teamResult.IsFailed)
-            return BadRequest(new ErrorResult
+            return NotFound(new ErrorResult
             {
                 Ok = false,
                 Errors = teamResult.Reasons.Select(s => s.Message)
@@ -286,6 +314,68 @@ public class TicketController : MethodController
         {
             Ok = true,
             Data = result.Value
+        });
+    }
+
+     [HttpPatch("ticket.tickettype", Name = nameof(ChangeTicketType))]
+    public async Task<IActionResult> ChangeTicketType(ChangeTicketTypeCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeTicketType)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var typeResult = await mediatr.Send(new GetTicketTypeCommand{Id = command.TicketType});
+        if (typeResult.IsFailed)
+            return   NotFound(new ErrorResult
+            {
+                Ok = false,
+                Errors = typeResult.Reasons.Select(s=> s.Message)
+            });
+
+        return Ok(new SingleResult<object>
+        {
+            Ok = true,
+            Data = new {typeResult.Value.Id, typeResult.Value.Name}
+        });
+    }
+
+     [HttpPatch("ticket.helptopic", Name = nameof(ChangeHelpTopic))]
+    public async Task<IActionResult> ChangeHelpTopic(ChangeHelpTopicCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TicketController)}::{nameof(ChangeHelpTopic)}";
+        logger.LogInformation(msg);
+
+        command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var topicResult = await mediatr.Send(new GetHelpTopicCommand{Id = command.HelpTopic});
+        if (topicResult.IsFailed)
+            return   NotFound(new ErrorResult
+            {
+                Ok = false,
+                Errors = topicResult.Reasons.Select(s=> s.Message)
+            });    
+
+        return Ok(new SingleResult<object>
+        {
+            Ok = true,
+            Data = new {topicResult.Value.Id, topicResult.Value.Name}
         });
     }
 }

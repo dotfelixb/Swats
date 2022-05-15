@@ -32,6 +32,8 @@ public interface ITicketRepository
     Task<DashboardCount> CountTickets(string id, CancellationToken cancellationToken);
 
     Task<int> ChangeStatus(string id, TicketStatus status, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+    
+    Task<int> ChangePriority(string id, TicketPriority priority, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     Task<int> AssignTo(string id, string assignTo, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
 
@@ -40,6 +42,10 @@ public interface ITicketRepository
     Task<int> ChangeTeam(string id, string team, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
  
     Task<int> ChangeDueDate(string id, DateTimeOffset dueAt, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+
+    Task<int> ChangeTicketType(string id, string ticketType, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
+   
+    Task<int> ChangeHelpTopic(string id, string helpTopic, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken);
 
     #endregion Ticket
 
@@ -243,7 +249,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                     , m.""name"" as teamname
                     , s.""name"" as slaname
                     , tt.""name"" as tickettypename
-                    , h.topic as helptopicname
+                    , h.""name"" as helptopicname
                     , CONCAT(r.firstname, ' ', r.lastname) as requestername
                     , CONCAT(g.firstname, ' ', g.lastname) as assignedtoname
                 FROM ticket t
@@ -294,7 +300,7 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                     , m.""name"" as teamname
                     , s.""name"" as slaname
                     , tt.""name"" as tickettypename
-                    , h.topic as helptopicname
+                    , h.""name"" as helptopicname
                     , CONCAT(r.firstname, ' ', r.lastname) as requestername
                     , CONCAT(g.firstname, ' ', g.lastname) as assignedtoname
                 FROM ticket t
@@ -329,6 +335,54 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 WHERE id = @Id";
 
             var cmdRst = await conn.ExecuteAsync(cmd, new { id, status, updatedBy });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
+        });
+    }
+
+     public Task<int> ChangePriority(string id, TicketPriority priority, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET priority = @Priority,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, priority, updatedBy });
 
             var logCmd = @"
                 INSERT INTO public.ticketauditlog
@@ -521,6 +575,102 @@ public class TicketRepository : BasePostgresRepository, ITicketRepository
                 WHERE id = @Id";
 
             var cmdRst = await conn.ExecuteAsync(cmd, new { id, dueAt, updatedBy });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
+        });
+    }
+
+     public Task<int> ChangeTicketType(string id, string ticketType, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET tickettype = @TicketType,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, ticketType, updatedBy });
+
+            var logCmd = @"
+                INSERT INTO public.ticketauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                VALUES
+                    (@Id
+                    , @Target
+                    , @ActionName
+                    , @Description
+                    , @ObjectName
+                    , @ObjectData::jsonb
+                    , @CreatedBy);
+                ";
+
+            var logRst = await conn.ExecuteAsync(logCmd, new
+            {
+                auditLog.Id,
+                auditLog.Target,
+                auditLog.ActionName,
+                auditLog.Description,
+                auditLog.ObjectName,
+                auditLog.ObjectData,
+                auditLog.CreatedBy
+            });
+
+            return cmdRst + logRst;
+        });
+    }
+
+     public Task<int> ChangeHelpTopic(string id, string helpTopic, string updatedBy, DbAuditLog auditLog, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var cmd = @"UPDATE ticket 
+                SET helptopic = @HelpTopic,
+                    updatedby = @UpdatedBy,
+                    updatedat = now()
+                WHERE id = @Id";
+
+            var cmdRst = await conn.ExecuteAsync(cmd, new { id, helpTopic, updatedBy });
 
             var logCmd = @"
                 INSERT INTO public.ticketauditlog

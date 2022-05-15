@@ -7,7 +7,7 @@ public class ChangeStatusCommandValidator : AbstractValidator<ChangeStatusComman
     public ChangeStatusCommandValidator()
     {
         RuleFor(r => r.Id).NotEmpty();
-        RuleFor(r => r.Status).NotNull();
+        RuleFor(r => r.Status).NotNull().IsInEnum();
     }
 }
 
