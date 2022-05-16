@@ -66,7 +66,7 @@ tbody tr:nth-of-type(2n) td {
 }
 
 .edit-sidebar li div:last-child {
-  @apply text-sm text-gray-500;
+  @apply text-xs text-gray-500;
 }
 
 .edit-plus {

@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input.input-validation-error,
+select.input-validation-error,
+textarea.input-validation-error {
+    border: 2px solid rgb(252, 165, 165);
+}
+
+tbody tr {
+    border-top: 1px solid #ddd;
+}
+
+tbody tr:nth-of-type(2n) td {
+    background-color: #f7f7f7;
+}
+
+.admin-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-10;
+}
+
+.edit-sidebar li {
+    @apply text-xs py-1;
+}
+
+.edit-sidebar li > div {
+    @apply px-2;
+}
+
+.edit-sidebar li div:first-child {
+    @apply text-xs font-semibold text-gray-600;
+}
+
+.edit-sidebar li div:last-child {
+    @apply text-sm text-gray-500;
+}
+
+.edit-plus {
+    @apply flex border-2 border-gray-300 border-dashed rounded cursor-pointer;
+}
+
+.edit-ticket-button {
+    @apply flex border-2 text-gray-500 border-gray-300 border-dashed rounded cursor-pointer px-2 py-1 hover:text-gray-800 hover:border-solid
+}
+
+.btn-primary {
+    @apply text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-800;
+}
+
+.btn-default {
+    @apply text-sm rounded px-3 py-1 focus:outline-none cursor-pointer drop-shadow-md bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-400;
+}
+
+.form-control {
+    @apply w-full px-3;
+}
+
+.form-label {
+    @apply block text-gray-600 text-xs py-1;
+}
+
+.form-input {
+    @apply block text-sm py-2 w-full rounded-sm bg-gray-50 border-gray-300 focus:border-indigo-300 focus:ring-indigo-300;
+}
+
+.form-input-search {
+    @apply w-full text-xs px-2 py-1 rounded bg-gray-50 border-2 border-gray-300 focus:border-indigo-300 focus:ring-indigo-300;
+}
+
+.form-input-error {
+    @apply text-xs text-red-400;
+}
+
+.noop {
+    @apply border-l-4 border-indigo-500;
+}
+
+textarea {
+    resize: none;
+}
