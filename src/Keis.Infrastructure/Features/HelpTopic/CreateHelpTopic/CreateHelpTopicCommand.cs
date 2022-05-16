@@ -7,7 +7,7 @@ namespace Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
 
 public class CreateHelpTopicCommand : IRequest<Result<string>>
 {
-    public string Topic { get; set; }
+    public string Name { get; set; }
     public DefaultType Type { get; set; }
     public DefaultStatus Status { get; set; }
     public string Department { get; set; }

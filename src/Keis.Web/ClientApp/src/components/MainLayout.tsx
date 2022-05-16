@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, MenuProps } from "antd";
 import {
   CustomerServiceOutlined,
   DashboardOutlined,
@@ -11,7 +11,40 @@ import { RequireAuth } from ".";
 
 const { Header, Sider, Content } = Layout;
 
-const navStyle = { display: "flex", justifyContent: "center" };
+const items: MenuProps["items"] = [
+  {
+    key: "dashboard",
+    label: (
+      <Link to="/">
+        <DashboardOutlined />
+      </Link>
+    ),
+  },
+  {
+    key: "ticket",
+    label: (
+      <Link to="/ticket">
+        <TagsOutlined />
+      </Link>
+    ),
+  },
+  {
+    key: "agent",
+    label: (
+      <Link to="/agent">
+        <CustomerServiceOutlined />
+      </Link>
+    ),
+  },
+  {
+    key: "admin",
+    label: (
+      <Link to="/admin">
+        <SettingOutlined />
+      </Link>
+    ),
+  },
+];
 
 interface IMainLayout {}
 
@@ -35,31 +68,7 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
           theme="light"
           style={{ borderRight: "1px solid rgba(128, 128, 128, 0.3)" }}
         >
-          <Menu style={{ borderRight: "none" }}>
-            <Menu.Item key={"Dashboard"} style={navStyle}>
-              <Link to="/">
-                <DashboardOutlined />
-              </Link>
-            </Menu.Item>
-
-            <Menu.Item key={"Ticket"} style={navStyle}>
-              <Link to="/ticket">
-                <TagsOutlined />
-              </Link>
-            </Menu.Item>
-
-            <Menu.Item key={"Agent"} style={navStyle}>
-              <Link to="/agent">
-                <CustomerServiceOutlined />
-              </Link>
-            </Menu.Item>
-
-            <Menu.Item key={"Settings"} style={navStyle}>
-              <Link to="/admin">
-                <SettingOutlined />
-              </Link>
-            </Menu.Item>
-          </Menu>
+          <Menu mode="inline" items={items} />
         </Sider>
 
         <Content style={{ backgroundColor: "white", overflowY: "scroll" }}>

@@ -1,23 +1,10 @@
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 
 namespace Keis.Model.Commands;
 
 #region Ticket
 
-public class AssignTicketDepartmentCommand : IRequest<Result<SingleResult<string>>>
-{
-    public string Id { get; set; }
-    public string Department { get; set; }
-    public string CreatedBy { get; set; }
-}
-
-public class AssignTicketTeamCommand : IRequest<Result<SingleResult<string>>>
-{
-    public string Id { get; set; }
-    public string Team { get; set; }
-    public string CreatedBy { get; set; }
-}
 
 public class TicketCommentCommand
 {

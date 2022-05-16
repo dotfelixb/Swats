@@ -34,6 +34,6 @@ public class CreateWorkflowCommandHandler : IRequestHandler<CreateWorkflowComman
 
         // TODO: v2 move to transaction
         var rst = await _manageRepository.CreateWorkflow(workflow, auditLog, cancellationToken);
-        return rst > 3 ? Result.Ok(workflow.Id) : Result.Fail<string>("Not able to create now!");
+        return rst > 2 ? Result.Ok(workflow.Id) : Result.Fail<string>("Not able to create now!");
     }
 }
