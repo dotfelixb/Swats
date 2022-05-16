@@ -1,0 +1,55 @@
+@model Keis.Infrastructure.Features.Tickets.CreateComment.CreateTicketCommentCommand
+
+@{
+    var id = $"var_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+}
+
+<div id="ticket-reply" class="grid grid-cols-1 gap-5 py-3">
+    <form id="@id" asp-controller="Ticket" asp-action="AddComment" method="post">
+        <div class="form-control">
+            <div class="w-full flex py-2">
+                <div class="flex w-1/2"></div>
+                <div class="flex w-1/2 justify-end">
+                    <div class="edit-ticket-button text-xs items-center"
+                         hx-get="/ticket/cancel"
+                         hx-trigger="click"
+                         hx-target="#ticket-reply"
+                         hx-swap="outerHTML">
+                        <ion-icon style="font-size: 14px;" name="close-circle"></ion-icon>
+                        <span class="">Cancel</span>
+                    </div>
+                    <span class="mr-4"></span>
+                    <button class="btn-primary"
+                            hx-post="/ticket/addcomment"
+                            hx-trigger="click"
+                            hx-target="#list-ticket"
+                            hx-swap="outerHTML">
+                        <div class="flex flex-row ">
+                            <div class="mr-2 flex items-center">
+                                <ion-icon name="chatbox-outline" style="font-size: 14px;"></ion-icon>
+                            </div>
+                            <div class="flex">Add Comment</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <input type="hidden" name="body"/>
+            <input type="hidden" asp-for="@Model.TicketId"/>
+            <input type="hidden" asp-for="@Model.CommentId"/>
+
+            <div id="replyEditor" class="form-input" style="height: 120px;"></div>
+        </div>
+    </form>
+</div>
+
+<script>
+    var @id = new Quill('#replyEditor', { theme: 'snow'  });
+
+    var form_@id = document.querySelector('@id');
+    
+    @id .on('text-change', function() {
+        let comment = document.querySelector('input[name=body]');
+        comment.value = JSON.stringify(@id .getContents());
+    });
+</script>

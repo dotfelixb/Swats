@@ -1,0 +1,7 @@
+@model Keis.Infrastructure.Features.Tags.CreateTag.CreateTagCommand
+
+@{
+    ViewData["Title"] = "New Tag - Unsave";
+}
+
+@await Html.PartialAsync("~/Areas/Admin/Views/Tags/_Create.cshtml", Model)

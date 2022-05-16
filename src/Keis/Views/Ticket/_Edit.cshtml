@@ -1,0 +1,157 @@
+﻿@model FetchTicket
+
+@{
+    var name = $"{Model.Code} - {Model.Subject}";
+    var requesterName = Guid.TryParse(Model.Requester, out var rst) ? Model.RequesterName : Model.Requester;
+}
+
+<div id="main-swap">
+    <section>
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Ticket", Value = "/ticket"}
+            },
+            currentPage = Model.Code
+        })
+    </section>
+    <section class="flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">@name</div>
+        <div class="flex w-1/2 justify-end">
+            <div class="">
+                @* <button class="btn-primary"
+                      hx-get="/admin/tickettype/create" hx-trigger="click" hx-target="#main-swap" hx-swap="outerHTML"
+                      hx-push-url="true">
+                      New Ticket Type
+                    </button> *@
+            </div>
+        </div>
+    </section>
+
+    <div class="w-full flex flex-row pb-5">
+        <div style="width: 220px" class="">
+            <div class=" pr-2">
+                <img class="bg-gray-200 rounded-lg" src="data:image/png;base64, @Model.ImageCode" alt="@Model.Subject"/>
+            </div>
+            <ul class="edit-sidebar pr-3 py-5 ">
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Requester</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@requesterName</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Assigned To</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.AssignedToName</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Department</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.DepartmentName</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Team</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.TeamName</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Help Topic</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.HelpTopicName</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Ticket Type</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.TicketTypeName</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Source</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.Source</div>
+                </li>
+                <li class="mb-2">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Priority</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.Priority</div>
+                </li>
+                <li class="mb-3">
+                    <div class="flex flex-row items-center hover:bg-gray-200 hover:rounded">
+                        <div class="w-full flex cursor-default">Status</div>
+                        <div class="edit-plus">
+                            <ion-icon style="font-size: 14px;" name="add"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="text-sm">@Model.Status</div>
+                </li>
+
+                <li>
+                    <div class="">Created By</div>
+                    <div class="">@Model.CreatedByName</div>
+                </li>
+                <li>
+                    <div>
+                        <div>Created At</div>
+                        <div>@Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Updated By</div>
+                        <div>@Model.UpdatedByName</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Updated At</div>
+                        <div>@Model.UpdatedAt.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        @await Html.PartialAsync("~/Views/Ticket/_ListComments.cshtml", Model.TicketComments)
+    </div>
+</div>
+
+<script >
+    // var quill = new Quill('#editor_body', {
+    // })
+    // quill.enable(false);  
+    //
+    // var body = JSON.stringify(@@Html.Raw(Model.Body));
+    // var {ops} = JSON.parse(body)
+    // quill.setContents(ops);
+</script>

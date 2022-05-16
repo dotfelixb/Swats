@@ -1,0 +1,7 @@
+@model IEnumerable<FetchTag>
+
+@{
+    ViewData["Title"] = "Tags";
+}
+
+@await Html.PartialAsync("~/Areas/Admin/Views/Tags/_Index.cshtml", Model)

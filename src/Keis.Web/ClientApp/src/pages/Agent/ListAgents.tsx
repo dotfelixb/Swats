@@ -49,7 +49,7 @@ const ListAgents: FC<IListAgents> = () => {
 
   const Buttons: FC = () => (
     <div className="space-x-2">
-      <Link to="/admin/agent/new">
+      <Link to="new">
         <Button type="primary">New Agent</Button>
       </Link>
     </div>
