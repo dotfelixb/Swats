@@ -9,7 +9,7 @@ import {
   message,
 } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import ReactQuill from "react-quill";
 import { Link, useParams } from "react-router-dom";
@@ -122,43 +122,7 @@ const ViewTicket: FC<IViewTicket> = () => {
   const [typeList, setTypeList] = useState<IFetchType[]>([]);
   const [topicList, setTopicList] = useState<IFetchTopic[]>([]);
 
-  useEffect(() => {
-    if (user != null && user.token && id) {
-      load();
-    }
-  }, [user, id, get]);
-
-  useEffect(() => {
-    if (showAssignedToModal) {
-      loadAgent();
-    }
-  }, [showAssignedToModal]);
-
-  useEffect(() => {
-    if (showDepartmentModal) {
-      loadDepartment();
-    }
-  }, [showDepartmentModal]);
-
-  useEffect(() => {
-    if (showTeamModal) {
-      loadTeam();
-    }
-  }, [showTeamModal]);
-
-  useEffect(() => {
-    if (showTicketTypeModal) {
-      loadType();
-    }
-  }, [showTicketTypeModal]);
-
-  useEffect(() => {
-    if (showHelpTopicModal) {
-      loadTopic();
-    }
-  }, [showHelpTopicModal]);
-
-  const load = async () => {
+  const load = useCallback(async () => {
     const g: Response = await get(`methods/ticket.get?id=${id}`);
     const d: ISingleResult<IFetchTicket> = await g.json();
 
@@ -167,9 +131,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     } else {
       // TODO: display error to user
     }
-  };
+  }, [get, id]);
 
-  const loadAgent = async () => {
+  const loadAgent = useCallback(async () => {
     const g: Response = await get(`methods/agent.list`);
     const d: IListResult<IFetchAgent[]> = await g.json();
 
@@ -178,9 +142,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     } else {
       // TODO: display error to user
     }
-  };
+  }, [get]);
 
-  const loadDepartment = async () => {
+  const loadDepartment = useCallback(async () => {
     const g: Response = await get(`methods/department.list`);
     const d: IListResult<IFetchDepartment[]> = await g.json();
 
@@ -189,9 +153,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     } else {
       // TODO: display error to user
     }
-  };
+  }, [get]);
 
-  const loadTeam = async () => {
+  const loadTeam = useCallback(async () => {
     const g: Response = await get(`methods/team.list`);
     const d: IListResult<IFetchTeam[]> = await g.json();
 
@@ -200,9 +164,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     } else {
       // TODO: display error to user
     }
-  };
+  }, [get]);
 
-  const loadType = async () => {
+  const loadType = useCallback(async () => {
     const g: Response = await get(`methods/tickettype.list`);
     const d: IListResult<IFetchType[]> = await g.json();
 
@@ -211,9 +175,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     } else {
       // TODO: display error to user
     }
-  };
+  }, [get]);
 
-  const loadTopic = async () => {
+  const loadTopic = useCallback(async () => {
     const g: Response = await get(`methods/helptopic.list`);
     const d: IListResult<IFetchTopic[]> = await g.json();
 
@@ -222,7 +186,47 @@ const ViewTicket: FC<IViewTicket> = () => {
     } else {
       // TODO: display error to user
     }
-  };
+  }, [get]);
+
+  useEffect(() => {
+    if (user != null && user.token && id) {
+      load();
+    }
+  }, [user, id, get, load]);
+
+  useEffect(() => {
+    if (showAssignedToModal) {
+      loadAgent();
+    }
+
+    if (showDepartmentModal) {
+      loadDepartment();
+    }
+
+    if (showTeamModal) {
+      loadTeam();
+    }
+
+    if (showTicketTypeModal) {
+      loadType();
+    }
+
+    if (showHelpTopicModal) {
+      loadTopic();
+    }
+  }, [
+    showAssignedToModal,
+    showDepartmentModal,
+    showTeamModal,
+    showTicketTypeModal,
+    showHelpTopicModal,
+
+    loadAgent,
+    loadDepartment,
+    loadTeam,
+    loadType,
+    loadTopic,
+  ]);
 
   const onHandleStatusChange: MenuProps["onClick"] = (e) => {
     setNewStatus(e.key);
@@ -441,7 +445,6 @@ const ViewTicket: FC<IViewTicket> = () => {
   const changePriorityMenu = (
     <Menu onClick={onHandlePriorityChange} items={priorityItems} />
   );
-
 
   const moreActionMenu = (
     <Menu
