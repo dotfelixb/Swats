@@ -1,4 +1,4 @@
-namespace Keis.Web.Extensions;
+﻿namespace Keis.Web.Extensions;
 
 public static class HttpEx
 {

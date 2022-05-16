@@ -22,6 +22,7 @@ public class CreateAgentCommand : IRequest<Result<string>>
     public IEnumerable<SelectListItem> TeamList { get; set; } = Enumerable.Empty<SelectListItem>();
     public string Type { get; set; }
     public IEnumerable<SelectListItem> TypeList { get; set; } = Enumerable.Empty<SelectListItem>();
+    public DefaultStatus Status { get; set; }
     public AgentMode Mode { get; set; }
     public string CreatedBy { get; set; }
     public string Note { get; set; }

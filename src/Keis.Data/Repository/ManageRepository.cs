@@ -651,7 +651,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             var cmd = @"
                 INSERT INTO public.helptopic
                     (id
-                    , topic
+                    , ""name""
                     , ""type""
                     , department
                     , note
@@ -660,7 +660,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     , createdby
                     , updatedby)
                 VALUES(@Id
-                    , @Topic
+                    , @Name
                     , @Type
                     , @Department
                     , @Note
@@ -673,7 +673,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             var crst = await conn.ExecuteAsync(cmd, new
             {
                 helpTopic.Id,
-                helpTopic.Topic,
+                helpTopic.Name,
                 helpTopic.Type,
                 helpTopic.Department,
                 helpTopic.Note,

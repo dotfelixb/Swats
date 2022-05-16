@@ -11,5 +11,6 @@ public class CreateAgentCommandValidator : AbstractValidator<CreateAgentCommand>
         RuleFor(r => r.FirstName).NotEmpty();
         RuleFor(r => r.LastName).NotEmpty();
         RuleFor(r => r.Mode).NotNull();
+        RuleFor(r => r.Status).NotNull();
     }
 }

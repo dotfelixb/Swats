@@ -16,7 +16,7 @@ const { TextArea } = Input;
 interface INewTopic {}
 
 interface IFormData {
-  topic: string;
+  name: string;
   department: string;
   type: string;
   status: string;
@@ -54,7 +54,7 @@ const NewTopic: FC<INewTopic> = () => {
   }, [user, get]);
 
   const onFinish = async ({
-    topic,
+    name,
     department,
     type,
     status,
@@ -62,7 +62,7 @@ const NewTopic: FC<INewTopic> = () => {
     note,
   }: IFormData) => {
     const body = new FormData();
-    body.append("topic", topic ?? "");
+    body.append("name", name ?? "");
     body.append("department", department ?? "");
     body.append("type", type ?? 1);
     body.append("status", status ?? 1);
@@ -119,7 +119,7 @@ const NewTopic: FC<INewTopic> = () => {
                 dot={<FormOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Help topic name</div>
-                <Form.Item name="topic" label="Topic" htmlFor="topic">
+                <Form.Item name="name" label="Name">
                   <Input />
                 </Form.Item>
               </Timeline.Item>
