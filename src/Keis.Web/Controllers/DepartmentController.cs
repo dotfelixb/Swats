@@ -1,6 +1,7 @@
 using Keis.Infrastructure.Features.Department.CreateDepartment;
 using Keis.Infrastructure.Features.Department.GetDepartment;
 using Keis.Infrastructure.Features.Department.ListDepartment;
+using Keis.Infrastructure.Features.Department.UpdateDepartment;
 using Keis.Model;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
@@ -23,7 +24,7 @@ public class DepartmentController : MethodController
     [HttpGet("department.list", Name = nameof(ListDepartments))]
     public async Task<IActionResult> ListDepartments([FromQuery] ListDepartmentCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(ListDepartments)}";
+        const string msg = $"GET::{nameof(DepartmentController)}::{nameof(ListDepartments)}";
         logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);
@@ -44,7 +45,7 @@ public class DepartmentController : MethodController
     [HttpGet("department.get", Name = nameof(GetDepartment))]
     public async Task<IActionResult> GetDepartment([FromQuery] GetDepartmentCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(GetDepartment)}";
+        const string msg = $"GET::{nameof(DepartmentController)}::{nameof(GetDepartment)}";
         logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);
@@ -65,10 +66,34 @@ public class DepartmentController : MethodController
     [HttpPost("department.create", Name = nameof(CreateDepartment))]
     public async Task<IActionResult> CreateDepartment(CreateDepartmentCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(DepartmentController)}::{nameof(CreateDepartment)}";
+        const string msg = $"POST::{nameof(DepartmentController)}::{nameof(CreateDepartment)}";
         logger.LogInformation(msg);
 
         command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/department.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
+    [HttpPatch("department.update", Name = nameof(UpdateDepartment))]
+    public async Task<IActionResult> UpdateDepartment(UpdateDepartmentCommand command)
+    {
+        const string msg = $"PATCH::{nameof(DepartmentController)}::{nameof(UpdateDepartment)}";
+        logger.LogInformation(msg);
+
+        command.UpdatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)

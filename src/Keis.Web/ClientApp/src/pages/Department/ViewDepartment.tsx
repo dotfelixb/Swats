@@ -1,37 +1,136 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button, Drawer } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchDepartment, ISingleResult } from "../../interfaces";
+import {
+  IFetchAgent,
+  IFetchBusinessHour,
+  IFetchDepartment,
+  IListResult,
+  ISingleResult,
+} from "../../interfaces";
+import DepartmentForm from "./DepartmentForm";
 
 interface IViewDepartment {}
+
+interface IFormData {
+  name: string;
+  type: string;
+  manager: string;
+  businessHour: string;
+  outgoingEmail: string;
+  status: string;
+  response: string;
+}
 
 const ViewDepartment: FC<IViewDepartment> = () => {
   const { user } = useAuth();
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [department, setDepartment] = useState<IFetchDepartment>();
+  const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
+  const [hourList, setHourList] = useState<IFetchBusinessHour[]>([]);
+  const [showEditForm, setEditForm] = useState(false);
+  const [hasFormErrors, setHasFormErrors] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+
+  const load = useCallback(async () => {
+    const g: Response = await get(`methods/department.get?id=${id}`);
+    const d: ISingleResult<IFetchDepartment> = await g.json();
+
+    if (g != null) {
+      if (g.status === 200 && d.ok) {
+        setDepartment(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+
+  const loadAgent = useCallback(async () => {
+    const g: Response = await get(`methods/agent.list`);
+
+    if (g != null) {
+      const d: IListResult<IFetchAgent[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setAgentList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+
+  const loadHour = useCallback(async () => {
+    const g: Response = await get(`methods/businesshour.list`);
+
+    if (g != null) {
+      const d: IListResult<IFetchBusinessHour[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setHourList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
 
   useEffect(() => {
-    const load = async () => {
-      const g: Response = await get(`methods/department.get?id=${id}`);
-      const d: ISingleResult<IFetchDepartment> = await g.json();
-
-      if (g != null) {
-        if (g.status === 200 && d.ok) {
-          setDepartment(d.data);
-        } else {
-          // TODO: display error to user
-        }
-      }
-    };
-
     if (user != null && user.token && id) {
       load();
+      loadAgent();
+      loadHour();
     }
   }, [user, id, get]);
+
+  const onFinish = async ({
+    name,
+    type,
+    manager,
+    businessHour,
+    outgoingEmail,
+    status,
+    response,
+  }: IFormData) => {
+    const body = new FormData();
+    body.append("id", department?.id ?? "");
+    body.append("name", name ?? "");
+    body.append("type", type ?? "");
+    body.append("manager", manager ?? "");
+    body.append("businessHour", businessHour ?? "");
+    body.append("outgoingEmail", outgoingEmail ?? "");
+    body.append("status", status ?? 1);
+    body.append("response", response ?? "");
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/department.update", {
+      method: "PATCH",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<string> = await f.json();
+
+    if (f.status === 201 && result.ok) {
+      load();
+      setEditForm(false);
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
+    }
+  };
+
+  const Buttons: FC = () => (
+    <div className="space-x-2">
+      <Button type="primary" onClick={() => setEditForm(true)}>
+        Edit
+      </Button>
+    </div>
+  );
 
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
@@ -49,7 +148,11 @@ const ViewDepartment: FC<IViewDepartment> = () => {
   );
 
   return (
-    <PageView title={department?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+    <PageView
+      title={department?.name ?? ""}
+      buttons={<Buttons />}
+      breadcrumbs={<Breadcrumbs />}
+    >
       <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">
@@ -125,6 +228,24 @@ const ViewDepartment: FC<IViewDepartment> = () => {
           </div>
         </div>
       </div>
+
+      <Drawer
+        visible={showEditForm}
+        title="Editing Department"
+        placement="right"
+        width={640}
+        destroyOnClose={true}
+        onClose={() => setEditForm(false)}
+      >
+        <DepartmentForm
+          hasFormErrors={hasFormErrors}
+          formErrors={formErrors}
+          department={department}
+          agentList={agentList}
+          hourList={hourList}
+          onFinish={onFinish}
+        />
+      </Drawer>
     </PageView>
   );
 };

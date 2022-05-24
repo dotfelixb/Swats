@@ -1,6 +1,7 @@
 using Keis.Infrastructure.Features.Tags.CreateTag;
 using Keis.Infrastructure.Features.Tags.GetTag;
 using Keis.Infrastructure.Features.Tags.ListTag;
+using Keis.Infrastructure.Features.Tags.UpdateTag;
 using Keis.Model;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
@@ -69,6 +70,29 @@ public class TagController : MethodController
         logger.LogInformation(msg);
 
         command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/tag.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
+    [HttpPatch("tag.update", Name = nameof(UpdateTag))]
+    public async Task<IActionResult> UpdateTag(UpdateTagCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TagController)}::{nameof(UpdateTag)}";
+        logger.LogInformation(msg);
+
+        command.UpdatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
         if (result.IsFailed)
             return BadRequest(new ErrorResult

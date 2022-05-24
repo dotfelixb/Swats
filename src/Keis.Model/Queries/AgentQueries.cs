@@ -6,5 +6,5 @@ public class FetchAgent : Agent
 {
     public string DepartmentName { get; set; }
     public string TeamName { get; set; }
-    public string TypeName { get; set; }
+    public string TicketTypeName { get; set; }
 }

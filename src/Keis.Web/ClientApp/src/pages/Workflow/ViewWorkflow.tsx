@@ -1,4 +1,4 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button } from "antd";
 import dayjs from "dayjs";
 import React, { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -13,6 +13,9 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [workflow, setWorkflow] = useState<IFetchWorkflow>();
+  const [showEditForm, setEditForm] = useState(false);
+  const [hasFormErrors, setHasFormErrors] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async () => {
@@ -30,6 +33,15 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
       load();
     }
   }, [user, id, get]);
+
+
+  const Buttons: FC = () => (
+    <div className="space-x-2">
+      <Button type="primary" onClick={() => setEditForm(true)}>
+        Edit
+      </Button>
+    </div>
+  );
 
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
@@ -50,6 +62,7 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
     <PageView
       title={workflow?.name ?? "View Workflow"}
       breadcrumbs={<Breadcrumbs />}
+      buttons={<Buttons />}
     >
       <div className="w-full flex flex-row ">
         <div style={{ width: "220px" }} className="">

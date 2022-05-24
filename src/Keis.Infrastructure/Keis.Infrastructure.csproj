@@ -17,12 +17,4 @@
         <ProjectReference Include="..\Keis.Model\Keis.Model.csproj" />
         <ProjectReference Include="..\Keis.Data\Keis.Data.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <None Remove="Features\Tickets\ChangeDepartment\" />
-      <None Remove="Features\Tickets\ChangeTeam\" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Features\Tickets\ChangeDepartment\" />
-      <Folder Include="Features\Tickets\ChangeTeam\" />
-    </ItemGroup>
 </Project>

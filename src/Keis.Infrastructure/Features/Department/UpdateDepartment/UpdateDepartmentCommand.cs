@@ -1,12 +1,12 @@
-﻿using FluentResults;
+using FluentResults;
 using Keis.Model.Domain;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Keis.Infrastructure.Features.Department.CreateDepartment;
+namespace Keis.Infrastructure.Features.Department.UpdateDepartment;
 
-public class CreateDepartmentCommand : IRequest<Result<string>>
+public class UpdateDepartmentCommand : IRequest<Result<string>>
 {
+    public string Id { get; set; }
     public string Name { get; set; }
     public string Manager { get; set; }
     public string BusinessHour { get; set; }
@@ -14,5 +14,5 @@ public class CreateDepartmentCommand : IRequest<Result<string>>
     public DefaultType Type { get; set; }
     public DefaultStatus Status { get; set; }
     public string Response { get; set; }
-    public string CreatedBy { get; set; }
+    public string UpdatedBy { get; set; }
 }

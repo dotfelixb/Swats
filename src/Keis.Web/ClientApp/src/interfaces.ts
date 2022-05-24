@@ -132,9 +132,9 @@ export interface IFetchTeam extends IDataAudit {
   name: string;
   department: string;
   departmentName: string;
-  lead: string;
-  leadName: string;
-  note: string;
+  manager: string;
+  managerName: string;
+  response: string;
 }
 
 export interface IFetchType extends IDataAudit {
@@ -158,8 +158,8 @@ export interface IFetchAgent extends IDataAudit {
   departmentName: string;
   team: string;
   teamName: string;
-  type: string;
-  typeName: string;
+  ticketType: string;
+  ticketTypeName: string;
   mode: string;
   note: string;
 }

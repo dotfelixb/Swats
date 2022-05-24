@@ -22,17 +22,7 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
     {
         var agent = _mapper.Map<CreateAgentCommand, Agent>(request);
 
-        var auditLog = new DbAuditLog
-        {
-            Target = agent.Id,
-            ActionName = "agent.create",
-            Description = "added agent",
-            ObjectName = "agent",
-            ObjectData = JsonSerializer.Serialize(agent),
-            CreatedBy = request.CreatedBy
-        };
-
-        var rst = await _agentRepository.CreateAgent(agent, auditLog, cancellationToken);
+        var rst = await _agentRepository.CreateAgent(agent, cancellationToken);
         return rst > 0 ? Result.Ok(agent.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

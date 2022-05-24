@@ -8,12 +8,14 @@ namespace Keis.Data.Repository;
 
 public interface IAgentRepository
 {
-    Task<int> CreateAgent(Agent agent, DbAuditLog auditLog, CancellationToken cancellationToken);
+    Task<int> CreateAgent(Agent agent, CancellationToken cancellationToken);
 
     Task<FetchAgent> GetAgent(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchAgent>> ListAgent(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
+
+    Task<int> UpdateAgent(Agent agent, CancellationToken cancellationToken);
 }
 
 public class AgentReposiory : BasePostgresRepository, IAgentRepository
@@ -22,11 +24,12 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
     {
     }
 
-    public Task<int> CreateAgent(Agent agent, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> CreateAgent(Agent agent, CancellationToken cancellationToken)
     {
-        return WithConnection(async conn =>
+        return WithConnection(conn =>
         {
             var cmd = @"
+                WITH inserted_agent AS(
                 INSERT INTO public.agent
                     (id
                     , email
@@ -39,7 +42,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                     , team
                     , tickettype
                     , status
-                    , ""mode""
+                    , mode
                     , rowversion
                     , createdby
                     , updatedby)
@@ -52,15 +55,32 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                     , @Timezone
                     , @Department
                     , @Team
-                    , @Type
+                    , @TicketType
                     , @Status
                     , @Mode
                     , @RowVersion
                     , @CreatedBy
-                    , @UpdatedBy);
-                ";
+                    , @UpdatedBy)
+                RETURNING *
+                )
+                INSERT INTO public.agentauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'agent.create'
+                    , 'added an agent'
+                    , 'agent'
+                    , row_to_json(inserted_agent)
+                    , createdby
+                FROM inserted_agent";
 
-            var ctt = await conn.ExecuteAsync(cmd, new
+            return conn.ExecuteAsync(cmd, new
             {
                 agent.Id,
                 agent.Email,
@@ -71,45 +91,13 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 agent.Timezone,
                 agent.Department,
                 agent.Team,
-                agent.Type,
+                agent.TicketType,
                 agent.Status,
                 agent.Mode,
                 agent.RowVersion,
                 agent.CreatedBy,
                 agent.UpdatedBy
             });
-
-            var logCmd = @"
-                INSERT INTO public.agentauditlog
-                    (id
-                    , target
-                    , actionname
-                    , description
-                    , objectname
-                    , objectdata
-                    , createdby)
-                VALUES
-                    (@Id
-                    , @Target
-                    , @ActionName
-                    , @Description
-                    , @ObjectName
-                    , @ObjectData::jsonb
-                    , @CreatedBy);
-                ";
-
-            var cl = await conn.ExecuteAsync(logCmd, new
-            {
-                auditLog.Id,
-                auditLog.Target,
-                auditLog.ActionName,
-                auditLog.Description,
-                auditLog.ObjectName,
-                auditLog.ObjectData,
-                auditLog.CreatedBy
-            });
-
-            return ctt + cl;
         });
     }
 
@@ -126,14 +114,14 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
 	                , d.""name"" AS departmentname
 	                , t.""name"" AS teamname
-                    , tt.""name"" AS typename
+                    , tt.""name"" AS tickettypename
                 FROM agent g
                 LEFT JOIN department d ON d.id = g.department
                 LEFT JOIN team t ON t.id = g.team
                 LEFT JOIN tickettype tt ON tt.id = g.tickettype
                 WHERE g.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchAgent>(query, new { Id = id });
         });
     }
 
@@ -152,7 +140,7 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = g.updatedby) AS UpdatedByName
 	                , d.""name"" AS departmentname
 	                , t.""name"" AS teamname
-                    , tt.""name"" AS typename
+                    , tt.""name"" AS tickettypename
                 FROM agent g
                 LEFT JOIN department d ON d.id = g.department
                 LEFT JOIN team t ON t.id = g.team
@@ -162,7 +150,71 @@ public class AgentReposiory : BasePostgresRepository, IAgentRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchAgent>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchAgent>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> UpdateAgent(Agent agent, CancellationToken cancellationToken)
+    {
+        return WithConnection( conn =>
+        {
+            var cmd = @"
+                WITH changed_agent AS (
+                    UPDATE public.agent
+                    SET email = @Email
+                        , firstname = @FirstName
+                        , lastname =  @LastName
+                        , mobile = @Mobile
+                        , telephone = @Telephone
+                        , timezone = @Timezone
+                        , department = @Department
+                        , team = @Team
+                        , tickettype = @TicketType
+                        , status = @Status
+                        , mode = @Mode
+                        , note = @Note
+                        , rowversion = @RowVersion
+                        , updatedby = @UpdatedBy
+                        , updatedat = now()
+                    WHERE id = @Id
+                    RETURNING *
+                )
+                INSERT INTO public.agentauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'agent.update'
+                    , 'updated agent'
+                    , 'agent'
+                    , row_to_json(changed_agent)
+                    , updatedby
+                FROM changed_agent
+                ";
+
+            return conn.ExecuteAsync(cmd, new
+            {
+                agent.Id,
+                agent.Email,
+                agent.FirstName,
+                agent.LastName,
+                agent.Mobile,
+                agent.Telephone,
+                agent.Timezone,
+                agent.Department,
+                agent.Team,
+                agent.TicketType,
+                agent.Status,
+                agent.Mode,
+                agent.Note,
+                agent.RowVersion,
+                agent.UpdatedBy
+            });
         });
     }
 }

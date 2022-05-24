@@ -1,10 +1,33 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button, Drawer } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchAgent, ISingleResult } from "../../interfaces";
+import {
+  IFetchAgent,
+  IFetchDepartment,
+  IFetchTeam,
+  IFetchType,
+  IListResult,
+  ISingleResult,
+} from "../../interfaces";
+import NewForm from "./AgentForm";
+
+interface IFormData {
+  firstname: string;
+  lastname: string;
+  email: string;
+  mobile: string;
+  telephone: string;
+  timezone: string;
+  department: string;
+  team: string;
+  type: string;
+  mode: string;
+  status: string;
+  note: string;
+}
 
 interface IViewAgent {}
 
@@ -13,25 +36,120 @@ const ViewAgent: FC<IViewAgent> = () => {
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [agent, setAgent] = useState<IFetchAgent>();
+  const [showEditForm, setEditForm] = useState(false);
+  const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
+  const [teamList, setTeamList] = useState<IFetchTeam[]>([]);
+  const [typeList, setTypeList] = useState<IFetchType[]>([]);
+  const [hasFormErrors, setHasFormErrors] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+
+  const loadAgent = useCallback(async () => {
+    const g: Response = await get(`methods/agent.get?id=${id}`);
+    const d: ISingleResult<IFetchAgent> = await g.json();
+
+    if (g != null) {
+      if (g.status === 200 && d.ok) {
+        setAgent(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+
+  const loadDepartment = useCallback(async () => {
+    const g: Response = await get(`methods/department.list`);
+
+    if (g != null) {
+      const d: IListResult<IFetchDepartment[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setDepartmentList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+
+  const loadTeam = useCallback(async () => {
+    const g: Response = await get(`methods/team.list`);
+
+    if (g != null) {
+      const d: IListResult<IFetchTeam[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setTeamList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+
+  const loadType = useCallback(async () => {
+    const g: Response = await get(`methods/tickettype.list`);
+
+    if (g != null) {
+      const d: IListResult<IFetchType[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setTypeList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
 
   useEffect(() => {
-    const load = async () => {
-      const g: Response = await get(`methods/agent.get?id=${id}`);
-      const d: ISingleResult<IFetchAgent> = await g.json();
-
-      if (g != null) {
-        if (g.status === 200 && d.ok) {
-          setAgent(d.data);
-        } else {
-          // TODO: display error to user
-        }
-      }
-    };
-
     if (user != null && user.token && id) {
-      load();
+      loadAgent();
+      loadDepartment();
+      loadTeam();
+      loadType();
     }
   }, [user, id, get]);
+
+  const onFinish = async (values: IFormData) => {
+    const body = new FormData();
+    body.append("id", agent?.id ?? "");
+    body.append("firstname", values.firstname ?? "");
+    body.append("lastname", values.lastname ?? "");
+    body.append("email", values.email ?? "");
+    body.append("mobile", values.mobile ?? "");
+    body.append("telephone", values.telephone ?? "");
+    body.append("timezone", values.timezone ?? "");
+    body.append("department", values.department ?? "");
+    body.append("team", values.team ?? "");
+    body.append("tickettype", values.type ?? "");
+    body.append("mode", values.mode ?? "");
+    body.append("status", values.status ?? "");
+    body.append("note", values.note ?? "");
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/agent.update", {
+      method: "PATCH",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<string> = await f.json();
+
+    if (f.status === 201 && result.ok) {
+      loadAgent();
+      setEditForm(false);
+    }else{
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
+    }
+  };
+
+  const Buttons: FC = () => (
+    <div className="space-x-2">
+      <Button type="primary" onClick={() => setEditForm(true)}>
+        Edit
+      </Button>
+    </div>
+  );
 
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
@@ -54,6 +172,7 @@ const ViewAgent: FC<IViewAgent> = () => {
     <PageView
       title={`${agent?.firstName ?? ""} ${agent?.lastName ?? ""}`}
       breadcrumbs={<Breadcrumbs />}
+      buttons={<Buttons />}
     >
       <div className="w-full flex flex-row">
         <div style={{ width: "220px" }} className="">
@@ -116,7 +235,7 @@ const ViewAgent: FC<IViewAgent> = () => {
             </div>
             <div>
               <label className="form-label">Default Ticket Type</label>
-              <div className="form-data">{agent?.typeName ?? "N/A"}</div>
+              <div className="form-data">{agent?.ticketTypeName ?? "N/A"}</div>
             </div>
             <div>
               <label className="form-label">Timezone</label>
@@ -136,6 +255,26 @@ const ViewAgent: FC<IViewAgent> = () => {
           </div>
         </div>
       </div>
+
+      <Drawer
+        visible={showEditForm}
+        title="Editing Agent"
+        placement="right"
+        width={640}
+        destroyOnClose={true}
+        onClose={() => setEditForm(false)}
+      >
+        <NewForm
+          hasFormErrors={hasFormErrors}
+          formErrors={formErrors}
+          agent={agent}
+          departmentList={departmentList}
+          teamList={teamList}
+          typeList={typeList}
+          onFinish={onFinish}
+        />
+      </Drawer>
+
     </PageView>
   );
 };
