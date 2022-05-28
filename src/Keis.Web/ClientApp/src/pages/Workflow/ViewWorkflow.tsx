@@ -1,10 +1,10 @@
 import { Breadcrumb, Button } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchWorkflow, ISingleResult } from "../../interfaces";
+import { IFetchWorkflow, IListResult, ISingleResult, IWorkflowEvent } from "../../interfaces";
 
 interface IViewWorkflow {}
 
@@ -13,35 +13,48 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [workflow, setWorkflow] = useState<IFetchWorkflow>();
-  const [showEditForm, setEditForm] = useState(false);
-  const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [workflowEventList, setWorkflowEventList] = useState<IWorkflowEvent[]>(
+    []
+  );
+  const [eventList , setEventList] = useState<IWorkflowEvent[]>([]);
 
-  useEffect(() => {
-    const load = async () => {
-      const g: Response = await get(`methods/workflow.get?id=${id}`);
-      const d: ISingleResult<IFetchWorkflow> = await g.json();
+  const loadEvent = useCallback(async () => {
+    const g: Response = await get(`methods/workflow.event`);
+
+    if (g != null) {
+      const d: IListResult<IWorkflowEvent[]> = await g.json();
 
       if (g.status === 200 && d.ok) {
-        setWorkflow(d.data);
+        setWorkflowEventList(d.data);
       } else {
         // TODO: display error to user
       }
-    };
+    }
+  }, [get]);
 
+  const load = useCallback(async () => {
+    const g: Response = await get(`methods/workflow.get?id=${id}`);
+    const d: ISingleResult<IFetchWorkflow> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setWorkflow(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  }, [get, id]);
+
+  useEffect(() => {
     if (user != null && user.token && id) {
       load();
+      loadEvent();
     }
-  }, [user, id, get]);
+  }, [user, id, get, load, loadEvent]);
 
+  useEffect (()=>{
+    const els = workflowEventList.filter(e => workflow?.events.includes(e.type));
+    setEventList(els);
+  }, [workflow, workflowEventList])
 
-  const Buttons: FC = () => (
-    <div className="space-x-2">
-      <Button type="primary" onClick={() => setEditForm(true)}>
-        Edit
-      </Button>
-    </div>
-  );
 
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
@@ -62,7 +75,6 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
     <PageView
       title={workflow?.name ?? "View Workflow"}
       breadcrumbs={<Breadcrumbs />}
-      buttons={<Buttons />}
     >
       <div className="w-full flex flex-row ">
         <div style={{ width: "220px" }} className="">
@@ -97,6 +109,13 @@ const ViewWorkflow: FC<IViewWorkflow> = () => {
           </ul>
         </div>
         <div className="w-full bg-white border border-gray-200 rounded-sm px-10 py-10">
+        <div className="grid grid-cols-1 gap-5 py-4">
+            <div>
+              <label className="form-label">Events</label>
+              <div className="form-data">{eventList?.map(e => <span key={e.type}>{e.name} {" "}</span>)}</div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="form-label">Priority</label>

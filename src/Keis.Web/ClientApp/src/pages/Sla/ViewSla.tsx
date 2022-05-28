@@ -4,7 +4,12 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchBusinessHour, IFetchSla, IListResult, ISingleResult } from "../../interfaces";
+import {
+  IFetchBusinessHour,
+  IFetchSla,
+  IListResult,
+  ISingleResult,
+} from "../../interfaces";
 import SlaForm from "./SlaForm";
 
 interface IViewSla {}
@@ -50,7 +55,7 @@ const ViewSla: FC<IViewSla> = () => {
       }
     }
   }, [get]);
-  
+
   const load = useCallback(async () => {
     const g: Response = await get(`methods/sla.get?id=${id}`);
     const d: ISingleResult<IFetchSla> = await g.json();
@@ -63,7 +68,6 @@ const ViewSla: FC<IViewSla> = () => {
   }, [get, id]);
 
   useEffect(() => {
-
     if (user != null && user.token && id) {
       load();
       loadHour();
@@ -105,7 +109,6 @@ const ViewSla: FC<IViewSla> = () => {
       setFormErrors(result?.errors);
     }
   };
-
 
   const Buttons: FC = () => (
     <div className="space-x-2">
@@ -244,12 +247,14 @@ const ViewSla: FC<IViewSla> = () => {
         width={640}
         destroyOnClose={true}
         onClose={() => setEditForm(false)}
-          >
-              <SlaForm hasFormErrors={hasFormErrors}
-                  formErrors={formErrors}
-                  sla={sla}
-                  hourList={hourList}
-                  onFinish={onFinish} />
+      >
+        <SlaForm
+          hasFormErrors={hasFormErrors}
+          formErrors={formErrors}
+          sla={sla}
+          hourList={hourList}
+          onFinish={onFinish}
+        />
       </Drawer>
     </PageView>
   );

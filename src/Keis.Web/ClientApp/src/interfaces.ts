@@ -215,7 +215,7 @@ export interface IFetchWorkflow extends IDataAudit {
   name: string;
   priority: string;
   note: string;
-  events: IWorkflowEvent[];
+  events: string[];
   criteria: IWorkflowCriteria[];
   actions: IWorkflowAction[];
 }
