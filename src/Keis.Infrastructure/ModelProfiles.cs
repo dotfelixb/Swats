@@ -6,6 +6,7 @@ using Keis.Infrastructure.Features.Department.CreateDepartment;
 using Keis.Infrastructure.Features.Department.UpdateDepartment;
 using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
 using Keis.Infrastructure.Features.Sla.CreateSla;
+using Keis.Infrastructure.Features.Sla.UpdateSla;
 using Keis.Infrastructure.Features.Tags.CreateTag;
 using Keis.Infrastructure.Features.Tags.UpdateTag;
 using Keis.Infrastructure.Features.Teams.CreateTeam;
@@ -60,6 +61,7 @@ public class ModelProfiles : Profile
         CreateMap<UpdateAgentCommand, Agent>();
         CreateMap<UpdateDepartmentCommand, Department>();
         CreateMap<UpdateTeamCommand, Team>();
+        CreateMap<UpdateSlaCommand, Sla>();
 
 
         CreateMap<LoginLogCommand, LoginAudit>();

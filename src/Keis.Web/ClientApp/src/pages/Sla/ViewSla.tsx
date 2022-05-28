@@ -1,38 +1,111 @@
-import { Breadcrumb, Button, Checkbox } from "antd";
+import { Breadcrumb, Button, Checkbox, Drawer } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
-import { IFetchSla, ISingleResult } from "../../interfaces";
+import { IFetchBusinessHour, IFetchSla, IListResult, ISingleResult } from "../../interfaces";
+import SlaForm from "./SlaForm";
 
 interface IViewSla {}
+
+interface IFormData {
+  name: string;
+  hour: string;
+
+  responseperiod: string;
+  responseformat: string;
+  responsenotify: string;
+  responseemail: string;
+
+  resolveperiod: string;
+  resolveformat: string;
+  resolvenotify: string;
+  resolveemail: string;
+
+  status: string;
+  note: string;
+}
 
 const ViewSla: FC<IViewSla> = () => {
   const { user } = useAuth();
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [sla, setSla] = useState<IFetchSla>();
+  const [hourList, setHourList] = useState<IFetchBusinessHour[]>([]);
   const [showEditForm, setEditForm] = useState(false);
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
-  useEffect(() => {
-    const load = async () => {
-      const g: Response = await get(`methods/sla.get?id=${id}`);
-      const d: ISingleResult<IFetchSla> = await g.json();
+  const loadHour = useCallback(async () => {
+    const g: Response = await get(`methods/businesshour.list`);
+
+    if (g != null) {
+      const d: IListResult<IFetchBusinessHour[]> = await g.json();
 
       if (g.status === 200 && d.ok) {
-        setSla(d.data);
+        setHourList(d.data);
       } else {
         // TODO: display error to user
       }
-    };
+    }
+  }, [get]);
+  
+  const load = useCallback(async () => {
+    const g: Response = await get(`methods/sla.get?id=${id}`);
+    const d: ISingleResult<IFetchSla> = await g.json();
+
+    if (g.status === 200 && d.ok) {
+      setSla(d.data);
+    } else {
+      // TODO: display error to user
+    }
+  }, [get, id]);
+
+  useEffect(() => {
 
     if (user != null && user.token && id) {
       load();
+      loadHour();
     }
-  }, [user, id, get]);
+  }, [user, id, get, load, loadHour]);
+
+  const onFinish = async (values: IFormData) => {
+    const body = new FormData();
+    body.append("id", sla?.id ?? "");
+    body.append("name", values.name ?? "");
+    body.append("businesshour", values.hour ?? "");
+    body.append("responseperiod", values.responseperiod ?? "");
+    body.append("responseformat", values.responseformat ?? "");
+    body.append("responsenotify", values.responsenotify ?? false);
+    body.append("responseemail", values.responseemail ?? false);
+    body.append("resolveperiod", values.resolveperiod ?? "");
+    body.append("resolveformat", values.resolveformat ?? "");
+    body.append("resolvenotify", values.resolvenotify ?? false);
+    body.append("resolveemail", values.resolveemail ?? false);
+    body.append("status", values.status ?? "");
+    body.append("note", values.note ?? "");
+
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+
+    const f = await fetch("methods/sla.update", {
+      method: "PATCH",
+      body,
+      headers,
+    });
+
+    const result: ISingleResult<string> = await f.json();
+
+    if (f.status === 201 && result.ok) {
+      load();
+      setEditForm(false);
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
+    }
+  };
+
 
   const Buttons: FC = () => (
     <div className="space-x-2">
@@ -163,6 +236,21 @@ const ViewSla: FC<IViewSla> = () => {
           </div>
         </div>
       </div>
+
+      <Drawer
+        visible={showEditForm}
+        title="Editing Sla"
+        placement="right"
+        width={640}
+        destroyOnClose={true}
+        onClose={() => setEditForm(false)}
+          >
+              <SlaForm hasFormErrors={hasFormErrors}
+                  formErrors={formErrors}
+                  sla={sla}
+                  hourList={hourList}
+                  onFinish={onFinish} />
+      </Drawer>
     </PageView>
   );
 };

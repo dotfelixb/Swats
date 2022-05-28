@@ -75,12 +75,14 @@ public interface IManageRepository
 
     #region Sla
 
-    Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
+    Task<int> CreateSla(Sla sla, CancellationToken cancellationToken);
 
     Task<FetchSla> GetSla(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
+
+    Task<int> UpdateSla(Sla sla, CancellationToken cancellationToken);
 
     #endregion Sla
 
@@ -906,13 +908,14 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     #region Sla
 
-    public Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> CreateSla(Sla sla, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return WithConnection(async conn =>
+        return WithConnection(conn =>
         {
             const string cmd = @"
+                    WITH inserted_sla AS (
                     INSERT INTO public.sla
                         (id
                         , name
@@ -945,9 +948,27 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @Status
                         , @RowVersion
                         , @CreatedBy
-                        , @UpdatedBy)";
+                        , @UpdatedBy)
+                    RETURNING *
+                    )
+                    INSERT INTO public.slaauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'sla.create'
+                        , 'added sla'
+                        , 'sla'
+                        , row_to_json(inserted_sla)
+                        , createdby
+                    FROM inserted_sla";
 
-            var ctt = await conn.ExecuteAsync(cmd, new
+            return conn.ExecuteAsync(cmd, new
             {
                 sla.Id,
                 sla.Name,
@@ -966,38 +987,6 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 sla.CreatedBy,
                 sla.UpdatedBy
             });
-
-            const string logCmd = @"
-                INSERT INTO public.slaauditlog
-                    (id
-                    , target
-                    , actionname
-                    , description
-                    , objectname
-                    , objectdata
-                    , createdby)
-                VALUES
-                    (@Id
-                    , @Target
-                    , @ActionName
-                    , @Description
-                    , @ObjectName
-                    , @ObjectData::jsonb
-                    , @CreatedBy);
-                ";
-
-            var cl = await conn.ExecuteAsync(logCmd, new
-            {
-                auditLog.Id,
-                auditLog.Target,
-                auditLog.ActionName,
-                auditLog.Description,
-                auditLog.ObjectName,
-                auditLog.ObjectData,
-                auditLog.CreatedBy
-            });
-
-            return ctt + cl;
         });
     }
 
@@ -1044,6 +1033,71 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
+    public Task<int> UpdateSla(Sla sla, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            const string cmd = @"
+                    WITH updated_sla AS (
+                        UPDATE public.sla
+                        SET name = @Name
+                            , businesshour = @BusinessHour
+                            , responseperiod = @ResponsePeriod
+                            , responseformat = @ResponseFormat
+                            , responsenotify = @ResponseNotify
+                            , responseemail = @ResponseEmail
+                            , resolveperiod = @ResolvePeriod
+                            , resolveformat = @ResolveFormat
+                            , resolvenotify = @ResolveNotify
+                            , resolveemail = @ResolveEmail
+                            , note = @Note
+                            , status = @Status
+                            , rowversion = @RowVersion
+                            , updatedby = @UpdatedBy
+                            , updatedat = now()
+                        WHERE ID = @Id
+                        RETURNING *
+                    )
+                    INSERT INTO public.slaauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'sla.create'
+                        , 'added sla'
+                        , 'sla'
+                        , row_to_json(updated_sla)
+                        , updatedby
+                    FROM updated_sla";
+
+            return conn.ExecuteAsync(cmd, new
+            {
+                sla.Id,
+                sla.Name,
+                sla.BusinessHour,
+                sla.ResponsePeriod,
+                sla.ResponseFormat,
+                sla.ResponseNotify,
+                sla.ResponseEmail,
+                sla.ResolvePeriod,
+                sla.ResolveFormat,
+                sla.ResolveNotify,
+                sla.ResolveEmail,
+                sla.Note,
+                sla.Status,
+                sla.RowVersion,
+                sla.CreatedBy,
+                sla.UpdatedBy
+            });
+        });
+    }
     #endregion Sla
 
     #region Workflow
