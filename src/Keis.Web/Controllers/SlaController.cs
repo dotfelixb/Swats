@@ -1,6 +1,7 @@
 using Keis.Infrastructure.Features.Sla.CreateSla;
 using Keis.Infrastructure.Features.Sla.GetSla;
 using Keis.Infrastructure.Features.Sla.ListSla;
+using Keis.Infrastructure.Features.Sla.UpdateSla;
 using Keis.Model;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
@@ -69,6 +70,30 @@ public class SlaController : MethodController
         logger.LogInformation(msg);
 
         command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/sla.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
+    [HttpPatch("sla.update", Name = nameof(UpdateSla))]
+    public async Task<IActionResult> UpdateSla(UpdateSlaCommand command)
+    {
+        const string msg = $"PATCH::{nameof(SlaController)}::{nameof(UpdateSla)}";
+        logger.LogInformation(msg);
+
+        command.UpdatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)

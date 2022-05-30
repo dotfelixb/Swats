@@ -22,17 +22,9 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
     {
         var department = _mapper.Map<CreateDepartmentCommand, Model.Domain.Department>(request);
 
-        var auditLog = new DbAuditLog
-        {
-            Target = department.Id,
-            ActionName = "department.create",
-            Description = "added department",
-            ObjectName = "department",
-            ObjectData = JsonSerializer.Serialize(department),
-            CreatedBy = request.CreatedBy
-        };
-
-        var rst = await _manageRepository.CreateDepartment(department, auditLog, cancellationToken);
-        return rst > 0 ? Result.Ok(department.Id) : Result.Fail<string>("Not able to create now!");
+        var rst = await _manageRepository.CreateDepartment(department, cancellationToken);
+        return rst > 0 
+            ? Result.Ok(department.Id) 
+            : Result.Fail<string>("Not able to create now!");
     }
 }

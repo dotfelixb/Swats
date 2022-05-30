@@ -32,6 +32,7 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
     "image",
     "video",
   ];
+  
   const editorModels = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],

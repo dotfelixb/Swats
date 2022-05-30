@@ -5,7 +5,7 @@ import {
   FormOutlined,
 } from "@ant-design/icons";
 import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView, WorkflowAction, WorkflowCriteria } from "../../components";
 import { useApp, useAuth } from "../../context";
@@ -48,56 +48,56 @@ const NewWorkflow: FC<INewWorkflow> = () => {
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>();
 
+  const loadEvent = useCallback(async () => {
+    const g: Response = await get(`methods/workflow.event`);
+
+    if (g != null) {
+      const d: IListResult<IWorkflowEvent[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setWorkflowEventList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+ 
+  const loadCriteria = useCallback(async () => {
+    const g: Response = await get(`methods/workflow.criteria`);
+
+    if (g != null) {
+      const d: IListResult<IWorkflowCriteria[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setWorkflowCriteriaList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+ 
+  const loadAction = useCallback(async () => {
+    const g: Response = await get(`methods/workflow.action`);
+
+    if (g != null) {
+      const d: IListResult<IWorkflowAction[]> = await g.json();
+
+      if (g.status === 200 && d.ok) {
+        setWorkflowActionList(d.data);
+      } else {
+        // TODO: display error to user
+      }
+    }
+  }, [get]);
+
   useEffect(() => {
-    const loadEvent = async () => {
-      const g: Response = await get(`methods/workflow.event`);
-
-      if (g != null) {
-        const d: IListResult<IWorkflowEvent[]> = await g.json();
-
-        if (g.status === 200 && d.ok) {
-          setWorkflowEventList(d.data);
-        } else {
-          // TODO: display error to user
-        }
-      }
-    };
-
-    const loadCriteria = async () => {
-      const g: Response = await get(`methods/workflow.criteria`);
-
-      if (g != null) {
-        const d: IListResult<IWorkflowCriteria[]> = await g.json();
-
-        if (g.status === 200 && d.ok) {
-          setWorkflowCriteriaList(d.data);
-        } else {
-          // TODO: display error to user
-        }
-      }
-    };
-
-    const loadAction = async () => {
-      const g: Response = await get(`methods/workflow.action`);
-
-      if (g != null) {
-        const d: IListResult<IWorkflowAction[]> = await g.json();
-
-        if (g.status === 200 && d.ok) {
-          setWorkflowActionList(d.data);
-        } else {
-          // TODO: display error to user
-        }
-      }
-    };
-
     if (user != null) {
       // move to promise.all
       loadEvent();
       loadCriteria();
       loadAction();
     }
-  }, [user, get]);
+  }, [user, get, loadEvent, loadCriteria, loadAction]);
 
   const onFinish = async (values: IFormData) => {
     const body = new FormData();
@@ -154,10 +154,10 @@ const NewWorkflow: FC<INewWorkflow> = () => {
 
     if (f.status === 201 && result.ok) {
       navigate(`/admin/workflow/${result.data}`, { replace: true });
+    }else{
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
     }
-
-    setHasFormErrors(true);
-    setFormErrors(result?.errors);
   };
 
   const onAddCriteria = () => {

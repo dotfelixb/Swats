@@ -32,7 +32,7 @@ public class CreateSlaCommandHandler : IRequestHandler<CreateSlaCommand, Result<
             CreatedBy = request.CreatedBy
         };
 
-        var rst = await _manageRepository.CreateSla(sla, auditLog, cancellationToken);
+        var rst = await _manageRepository.CreateSla(sla, cancellationToken);
         return rst > 0 ? Result.Ok(sla.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

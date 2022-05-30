@@ -1,10 +1,4 @@
-import {
-  CommentOutlined,
-  CustomerServiceOutlined,
-  PhoneOutlined,
-  UserSwitchOutlined,
-} from "@ant-design/icons";
-import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
+import {  Breadcrumb } from "antd";
 import { FC, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
@@ -16,8 +10,7 @@ import {
   IListResult,
   ISingleResult,
 } from "../../interfaces";
-
-const { TextArea } = Input;
+import AgentForm from "./AgentForm";
 
 interface INew {}
 
@@ -38,14 +31,13 @@ interface IFormData {
 
 const New: FC<INew> = () => {
   const { user } = useAuth();
-  const [form] = Form.useForm();
   const { get } = useApp();
   const navigate = useNavigate();
-  const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
-  const [teamList, setTeamList] = useState<IFetchTeam[]>();
-  const [typeList, setTypeList] = useState<IFetchType[]>();
+  const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
+  const [teamList, setTeamList] = useState<IFetchTeam[]>([]);
+  const [typeList, setTypeList] = useState<IFetchType[]>([]);
   const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>();
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const loadDepartment = async () => {
@@ -97,33 +89,20 @@ const New: FC<INew> = () => {
     }
   }, [user, get]);
 
-  const onFinish = async ({
-    firstname,
-    lastname,
-    email,
-    mobile,
-    telephone,
-    timezone,
-    department,
-    team,
-    type,
-    mode,
-    status,
-    note,
-  }: IFormData) => {
+  const onFinish = async (values: IFormData) => {
     const body = new FormData();
-    body.append("firstname", firstname ?? "");
-    body.append("lastname", lastname ?? "");
-    body.append("email", email ?? "");
-    body.append("mobile", mobile ?? "");
-    body.append("telephone", telephone ?? "");
-    body.append("timezone", timezone ?? "");
-    body.append("department", department ?? "");
-    body.append("team", team ?? "");
-    body.append("type", type ?? "");
-    body.append("mode", mode ?? "");
-    body.append("status", status ?? "");
-    body.append("note", note ?? "");
+    body.append("firstname", values.firstname ?? "");
+    body.append("lastname", values.lastname ?? "");
+    body.append("email", values.email ?? "");
+    body.append("mobile", values.mobile ?? "");
+    body.append("telephone", values.telephone ?? "");
+    body.append("timezone", values.timezone ?? "");
+    body.append("department", values.department ?? "");
+    body.append("team", values.team ?? "");
+    body.append("tickettype", values.type ?? "");
+    body.append("mode", values.mode ?? "");
+    body.append("status", values.status ?? "");
+    body.append("note", values.note ?? "");
 
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
@@ -163,117 +142,14 @@ const New: FC<INew> = () => {
     <PageView title="New Agent" breadcrumbs={<Breadcrumbs />}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div>
-          <Form form={form} layout="vertical" onFinish={onFinish}>
-            {hasFormErrors &&
-              formErrors?.map((e) => (
-                <div key={e} className="py-2">
-                  <Alert message={e} type="error" className="py-2" />
-                </div>
-              ))}
-            <Timeline>
-              <Timeline.Item
-                dot={<CustomerServiceOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">Agent info</div>
-                <Form.Item
-                  name="firstname"
-                  label="First Name"
-                  htmlFor="firstname"
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item name="lastname" label="Last Name" htmlFor="lastname">
-                  <Input />
-                </Form.Item>
-                <Form.Item name="status" label="Status">
-                  <Select>
-                    <Select.Option value="1">Active</Select.Option>
-                    <Select.Option value="2">Inactive</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item
-                dot={<PhoneOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">Agent contact</div>
-                <Form.Item name="email" label="Email" htmlFor="email">
-                  <Input />
-                </Form.Item>
-                <Form.Item name="mobile" label="Mobile" htmlFor="mobile">
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="telephone"
-                  label="Telephone"
-                  htmlFor="telephone"
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item name="timezone" label="Timezone">
-                  <Select>
-                    <Select.Option value="">Not Available</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item
-                dot={<UserSwitchOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">
-                  Agent department, team and service
-                </div>
-                <Form.Item name="department" label="Department">
-                  <Select>
-                    {departmentList?.map((d) => (
-                      <Select.Option key={d.id} value={d.id}>
-                        {d.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item name="team" label="Team">
-                  <Select>
-                    {teamList?.map((d) => (
-                      <Select.Option key={d.id} value={d.id}>
-                        {d.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item name="type" label="Default Ticket Type">
-                  <Select>
-                    {typeList?.map((d) => (
-                      <Select.Option key={d.id} value={d.id}>
-                        {d.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item name="mode" label="Mode">
-                  <Select>
-                    <Select.Option value="1">Agent</Select.Option>
-                    <Select.Option value="2">User</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item
-                dot={<CommentOutlined style={{ fontSize: "16px" }} />}
-              >
-                <div className="font-bold mb-2">
-                  Email signature for agent (optional)
-                </div>
-                <Form.Item name="note" label="Signature" htmlFor="note">
-                  <TextArea rows={4} />
-                </Form.Item>
-              </Timeline.Item>
-              <Timeline.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Timeline.Item>
-            </Timeline>
-          </Form>
+          <AgentForm
+            hasFormErrors={hasFormErrors}
+            formErrors={formErrors}
+            departmentList={departmentList}
+            teamList={teamList}
+            typeList={typeList}
+            onFinish={onFinish}
+          />
         </div>
 
         <div></div>

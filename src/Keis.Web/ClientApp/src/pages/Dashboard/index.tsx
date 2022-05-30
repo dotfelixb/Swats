@@ -117,50 +117,50 @@ const Dashboard: FC<IDashboard> = () => {
         </div>
       </div>
 
-      <div>
-        <div>
-          <h2 className="font-semibold">Recent Tickets</h2>
-        </div>
-        <DataTable showFilter={false} columns={columns}>
-          {ticketList?.map((t) => (
-            <tr className="px-10" key={t.id}>
-              <td className="px-3 py-3">
-                <Link to={`/ticket/${t.id}`}>
-                  <div className="">{t.subject}</div>
-                </Link>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
-                  {t.code}
-                </div>
-              </td>
+          {ticketList.length > 0 && <div>
+              <div>
+                  <h2 className="font-semibold">Recent Tickets</h2>
+              </div>
+              <DataTable showFilter={false} columns={columns}>
+                  {ticketList?.map((t) => (
+                      <tr className="px-10" key={t.id}>
+                          <td className="px-3 py-3">
+                              <Link to={`/ticket/${t.id}`}>
+                                  <div className="">{t.subject}</div>
+                              </Link>
+                              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                                  {t.code}
+                              </div>
+                          </td>
 
-              <td className="px-3 py-3">
-                <div className="">{t.requesterName}</div>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
-                  {t.assignedToName}
-                </div>
-              </td>
+                          <td className="px-3 py-3">
+                              <div className="">{t.requesterName}</div>
+                              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                                  {t.assignedToName}
+                              </div>
+                          </td>
 
-              <td className="px-3 py-3">
-                <div className="">{t.departmentName}</div>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
-                  {t.teamName}
-                </div>
-              </td>
+                          <td className="px-3 py-3">
+                              <div className="">{t.departmentName}</div>
+                              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                                  {t.teamName}
+                              </div>
+                          </td>
 
-              <td className="px-3 py-3">
-                <div className="">{t.createdByName}</div>
-                <div className="text-xs" style={{ color: "#9b9b9b" }}>
-                  {dayjs(t.createdAt).format(dateFormats.longDateFormat)}
-                </div>
-              </td>
+                          <td className="px-3 py-3">
+                              <div className="">{t.createdByName}</div>
+                              <div className="text-xs" style={{ color: "#9b9b9b" }}>
+                                  {dayjs(t.createdAt).format(dateFormats.longDateFormat)}
+                              </div>
+                          </td>
 
-              <td>
-                <span className="text-gray-300"></span>
-              </td>
-            </tr>
-          ))}
-        </DataTable>
-      </div>
+                          <td>
+                              <span className="text-gray-300"></span>
+                          </td>
+                      </tr>
+                  ))}
+              </DataTable>
+          </div>}
     </PageView>
   );
 };

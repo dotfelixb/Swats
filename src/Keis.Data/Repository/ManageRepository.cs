@@ -19,6 +19,8 @@ public interface IManageRepository
     Task<IEnumerable<FetchBusinessHour>> ListBusinessHours(int offset = 0, int limit = 1000,
         bool includeDeleted = false, CancellationToken cancellationToken = default);
 
+    Task<int> UpdateDepartment(Department department, CancellationToken cancellationToken);
+
     #endregion Business Hour
 
     #region Tags
@@ -30,13 +32,15 @@ public interface IManageRepository
     Task<IEnumerable<FetchTag>> ListTags(int offset, int limit, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
 
+    Task<int> UpdateTag(Tag tag, CancellationToken cancellationToken);
+
     #endregion Tags
 
     #region Department
 
     Task<long> GenerateDepartmentCode(CancellationToken cancellationToken);
 
-    Task<int> CreateDepartment(Department department, DbAuditLog auditLog, CancellationToken cancellationToken);
+    Task<int> CreateDepartment(Department department, CancellationToken cancellationToken);
 
     Task<FetchDepartment> GetDepartment(string id, CancellationToken cancellationToken);
 
@@ -54,6 +58,8 @@ public interface IManageRepository
     Task<IEnumerable<FetchTeam>> ListTeams(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
 
+    Task<int> UpdateTeam(Team team, CancellationToken cancellationToken);
+
     #endregion Teams
 
     #region HelpTopic
@@ -69,12 +75,14 @@ public interface IManageRepository
 
     #region Sla
 
-    Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken);
+    Task<int> CreateSla(Sla sla, CancellationToken cancellationToken);
 
     Task<FetchSla> GetSla(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<FetchSla>> ListSla(int offset = 0, int limit = 1000, bool includeDeleted = false,
         CancellationToken cancellationToken = default);
+
+    Task<int> UpdateSla(Sla sla, CancellationToken cancellationToken);
 
     #endregion Sla
 
@@ -108,7 +116,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             var cmd = @"
                 INSERT INTO public.businesshour
 	                (id
-                    , ""name""
+                    , name
                     , description
                     , timezone
                     , status
@@ -140,7 +148,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             var hoursCmd = @"INSERT INTO public.businessopenhour
                     (id
                     , businesshour
-                    , ""name""
+                    , name
                     , enabled
                     , fullday
                     , fromtime
@@ -212,7 +220,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businesshour b
                 WHERE id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchBusinessHour>(query, new { Id = id });
         });
     }
 
@@ -227,7 +235,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM businessopenhour bo
                 WHERE bo.businesshour = @Id";
 
-            return await conn.QueryAsync<OpenHour>(query, new {Id = id});
+            return await conn.QueryAsync<OpenHour>(query, new { Id = id });
         });
     }
 
@@ -249,7 +257,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchBusinessHour>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchBusinessHour>(query, new { offset, limit });
         });
     }
 
@@ -266,7 +274,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             var cmd = @"
                     INSERT INTO public.tags
                         (id
-                        , ""name""
+                        , name
                         , note
                         , color
                         , visibility
@@ -345,7 +353,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM tags t
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTag>(query, new { Id = id });
         });
     }
 
@@ -367,7 +375,58 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTag>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchTag>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> UpdateTag(Tag tag, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                    WITH changed_tag AS (
+                        UPDATE public.tags
+                        SET name = @Name
+                            , note = @Note
+                            , color = @Color
+                            , visibility = @Visibility
+                            , status = @Status
+                            , rowversion = @RowVersion
+                            , updatedby = @UpdatedBy
+                            , updatedat = now()
+                        WHERE id = @Id
+                        RETURNING *
+                    )
+                    INSERT INTO public.tagsauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'tag.update'
+                        , 'updated tag'
+                        , 'tag'
+                        , row_to_json(changed_tag)
+                        , updatedby
+                    FROM changed_tag";
+
+            return conn.ExecuteAsync(cmd, new
+            {
+                tag.Id,
+                tag.Name,
+                tag.Note,
+                tag.Color,
+                tag.Visibility,
+                tag.Status,
+                tag.RowVersion,
+                tag.UpdatedBy
+            });
         });
     }
 
@@ -387,20 +446,22 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    public Task<int> CreateDepartment(Department department, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> CreateDepartment(Department department, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return WithConnection(async conn =>
+        return WithConnection(conn =>
         {
             var cmd = @"
+                WITH inserted_department AS (
                 INSERT INTO public.department
                     (id
                     , code
-                    , ""name""
+                    , name
+                    , manager
                     , businesshour
                     , outgoingemail
-                    , ""type""
+                    , type
                     , response
                     , status
                     , rowversion
@@ -409,6 +470,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 VALUES(@Id
                     , @Code
                     , @Name
+                    , @Manager
                     , @BusinessHour
                     , @OutgoingEmail
                     , @Type
@@ -416,14 +478,32 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     , @Status
                     , @RowVersion
                     , @CreatedBy
-                    , @UpdatedBy);
-                ";
+                    , @UpdatedBy)
+                RETURNING *
+                )
+                INSERT INTO public.departmentauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'department.create'
+                    , 'added department'
+                    , 'department'
+                    , row_to_json(inserted_department)
+                    , createdby
+                FROM inserted_department;";
 
-            var crst = await conn.ExecuteAsync(cmd, new
+            return conn.ExecuteAsync(cmd, new
             {
                 department.Id,
                 department.Code,
                 department.Name,
+                department.Manager,
                 department.BusinessHour,
                 department.OutgoingEmail,
                 department.Type,
@@ -433,38 +513,6 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 department.CreatedBy,
                 department.UpdatedBy
             });
-
-            var logCmd = @"
-                INSERT INTO public.departmentauditlog
-                    (id
-                    , target
-                    , actionname
-                    , description
-                    , objectname
-                    , objectdata
-                    , createdby)
-                VALUES
-                    (@Id
-                    , @Target
-                    , @ActionName
-                    , @Description
-                    , @ObjectName
-                    , @ObjectData::jsonb
-                    , @CreatedBy);
-                ";
-
-            var lrst = await conn.ExecuteAsync(logCmd, new
-            {
-                auditLog.Id,
-                auditLog.Target,
-                auditLog.ActionName,
-                auditLog.Description,
-                auditLog.ObjectName,
-                auditLog.ObjectData,
-                auditLog.CreatedBy
-            });
-
-            return crst + lrst;
         });
     }
 
@@ -478,14 +526,14 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT d.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
-                    , b.""name"" AS businesshourname
+                    , b.name AS businesshourname
                     , CONCAT(g.firstname, ' ', g.lastname) as ManagerName
                 FROM department d
                 LEFT JOIN businesshour b ON b.id = d.businesshour
                 LEFT JOIN agent g on g.id = d.manager
                 WHERE d.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchDepartment>(query, new { Id = id });
         });
     }
 
@@ -501,7 +549,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT d.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = d.updatedby) AS UpdatedByName
-                    , b.""name"" AS businesshourname
+                    , b.name AS businesshourname
                     , CONCAT(g.firstname, ' ', g.lastname) as ManagerName
                 FROM department d
                 LEFT JOIN businesshour b ON b.id = d.businesshour
@@ -511,7 +559,62 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchDepartment>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchDepartment>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> UpdateDepartment(Department department, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                WITH changed_department AS (
+                    UPDATE public.department
+                    SET name = @Name
+                        , Manager = @Manager
+                        , businesshour = @BusinessHour
+                        , outgoingemail = @OutgoingEmail
+                        , type = @Type
+                        , response = @Response
+                        , status = @Status
+                        , rowversion = @RowVersion
+                        , updatedby = @UpdatedBy
+                        , updatedAt = now()
+                    WHERE id = @Id    
+                    RETURNING *
+                )
+                INSERT INTO public.departmentauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'department.update'
+                    , 'updated department'
+                    , 'department'
+                    , row_to_json(changed_department)
+                    , updatedby
+                FROM changed_department";
+
+            return conn.ExecuteAsync(cmd, new
+            {
+                department.Id,
+                department.Name,
+                department.Manager,
+                department.BusinessHour,
+                department.OutgoingEmail,
+                department.Type,
+                department.Response,
+                department.RowVersion,
+                department.Status,
+                department.UpdatedBy
+            });
         });
     }
 
@@ -523,41 +626,31 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return WithConnection(async conn =>
+        return WithConnection(conn =>
         {
             var cmd = @"
-                INSERT INTO public.team
-                    (id
-                    , ""name""
-                    , department
-                    , ""lead""
-                    , status
-                    , rowversion
-                    , createdby
-                    , updatedby)
-                VALUES(@Id
-                    , @Name
-                    , @Department
-                    , @Lead
-                    , @Status
-                    , @RowVersion
-                    , @CreatedBy
-                    , @UpdatedBy);
-                ";
-
-            var crst = await conn.ExecuteAsync(cmd, new
-            {
-                team.Id,
-                team.Name,
-                team.Department,
-                team.Lead,
-                team.Status,
-                team.RowVersion,
-                team.CreatedBy,
-                team.UpdatedBy
-            });
-
-            var logCmd = @"
+                WITH inserted_team AS(
+                    INSERT INTO public.team
+                        (id
+                        , name
+                        , department
+                        , manager
+                        , response
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(@Id
+                        , @Name
+                        , @Department
+                        , @Manager
+                        , @Response
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy)
+                    RETURNING *    
+                )
                 INSERT INTO public.teamauditlog
                     (id
                     , target
@@ -566,28 +659,27 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     , objectname
                     , objectdata
                     , createdby)
-                VALUES
-                    (@Id
-                    , @Target
-                    , @ActionName
-                    , @Description
-                    , @ObjectName
-                    , @ObjectData::jsonb
-                    , @CreatedBy);
-                ";
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'team.create'
+                    , 'added team'
+                    , 'team'
+                    , row_to_json(inserted_team)
+                    , createdby
+                FROM inserted_team;";
 
-            var lrst = await conn.ExecuteAsync(logCmd, new
+            return conn.ExecuteAsync(cmd, new
             {
-                auditLog.Id,
-                auditLog.Target,
-                auditLog.ActionName,
-                auditLog.Description,
-                auditLog.ObjectName,
-                auditLog.ObjectData,
-                auditLog.CreatedBy
+                team.Id,
+                team.Name,
+                team.Department,
+                team.Manager,
+                team.Response,
+                team.Status,
+                team.RowVersion,
+                team.CreatedBy,
+                team.UpdatedBy
             });
-
-            return crst + lrst;
         });
     }
 
@@ -601,14 +693,14 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT t.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
-                    , d.""name"" AS departmentname
-                    , CONCAT(g.firstname, ' ', g.lastname) as LeadName
+                    , d.name AS departmentname
+                    , CONCAT(g.firstname, ' ', g.lastname) as ManagerName
                 FROM team t
                 LEFT JOIN department d ON d.id = t.department
-                LEFT JOIN agent g on g.id = d.manager
+                LEFT JOIN agent g on g.id = t.manager
                 WHERE t.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchTeam>(query, new { Id = id });
         });
     }
 
@@ -624,17 +716,69 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT t.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
-                    , d.""name"" AS departmentname
-                    , CONCAT(g.firstname, ' ', g.lastname) as LeadName
+                    , d.name AS departmentname
+                    , CONCAT(g.firstname, ' ', g.lastname) as ManagerName
                 FROM team t
                 LEFT JOIN department d ON d.id = t.department
-                LEFT JOIN agent g on g.id = d.manager
+                LEFT JOIN agent g on g.id = t.manager
                 WHERE 1=1
                 {_includeDeleted}
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchTeam>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchTeam>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> UpdateTeam(Team team, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                WITH changed_team AS(
+                    UPDATE public.team
+                    SET name = @Name
+                        , department = @Department
+                        , manager = @Manager
+                        , response = @Response
+                        , status = @Status
+                        , rowversion = @RowVersion
+                        , updatedby = @UpdatedBy
+                        , updatedat = now()
+                    WHERE id = @Id
+                    RETURNING *    
+                )
+                INSERT INTO public.teamauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'team.update'
+                    , 'updated team'
+                    , 'team'
+                    , row_to_json(changed_team)
+                    , updatedby
+                FROM changed_team;";
+
+            return conn.ExecuteAsync(cmd, new
+            {
+                team.Id,
+                team.Name,
+                team.Department,
+                team.Manager,
+                team.Response,
+                team.Status,
+                team.RowVersion,
+                team.CreatedBy,
+                team.UpdatedBy
+            });
         });
     }
 
@@ -651,8 +795,8 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             var cmd = @"
                 INSERT INTO public.helptopic
                     (id
-                    , ""name""
-                    , ""type""
+                    , name
+                    , type
                     , department
                     , note
                     , status
@@ -727,12 +871,12 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT h.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.updatedby) AS UpdatedByName
-                    , d.""name"" AS departmentname
+                    , d.name AS departmentname
                 FROM helptopic h
                 LEFT JOIN department d ON d.id = h.department
                 WHERE h.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchHelpTopic>(query, new { Id = id });
         });
     }
 
@@ -748,7 +892,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT h.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = h.updatedby) AS UpdatedByName
-                    , d.""name"" AS departmentname
+                    , d.name AS departmentname
                 FROM helptopic h
                 LEFT JOIN department d ON d.id = h.department
                 WHERE 1=1
@@ -756,7 +900,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchHelpTopic>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchHelpTopic>(query, new { offset, limit });
         });
     }
 
@@ -764,16 +908,17 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     #region Sla
 
-    public Task<int> CreateSla(Sla sla, DbAuditLog auditLog, CancellationToken cancellationToken)
+    public Task<int> CreateSla(Sla sla, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return WithConnection(async conn =>
+        return WithConnection(conn =>
         {
             const string cmd = @"
+                    WITH inserted_sla AS (
                     INSERT INTO public.sla
                         (id
-                        , ""name""
+                        , name
                         , businesshour
                         , responseperiod
                         , responseformat
@@ -803,9 +948,27 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @Status
                         , @RowVersion
                         , @CreatedBy
-                        , @UpdatedBy)";
+                        , @UpdatedBy)
+                    RETURNING *
+                    )
+                    INSERT INTO public.slaauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'sla.create'
+                        , 'added sla'
+                        , 'sla'
+                        , row_to_json(inserted_sla)
+                        , createdby
+                    FROM inserted_sla";
 
-            var ctt = await conn.ExecuteAsync(cmd, new
+            return conn.ExecuteAsync(cmd, new
             {
                 sla.Id,
                 sla.Name,
@@ -824,38 +987,6 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 sla.CreatedBy,
                 sla.UpdatedBy
             });
-
-            const string logCmd = @"
-                INSERT INTO public.slaauditlog
-                    (id
-                    , target
-                    , actionname
-                    , description
-                    , objectname
-                    , objectdata
-                    , createdby)
-                VALUES
-                    (@Id
-                    , @Target
-                    , @ActionName
-                    , @Description
-                    , @ObjectName
-                    , @ObjectData::jsonb
-                    , @CreatedBy);
-                ";
-
-            var cl = await conn.ExecuteAsync(logCmd, new
-            {
-                auditLog.Id,
-                auditLog.Target,
-                auditLog.ActionName,
-                auditLog.Description,
-                auditLog.ObjectName,
-                auditLog.ObjectData,
-                auditLog.CreatedBy
-            });
-
-            return ctt + cl;
         });
     }
 
@@ -871,7 +1002,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT s.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.updatedby) AS UpdatedByName
-                    , b.""name"" AS businesshourname
+                    , b.name AS businesshourname
                 FROM sla s
                 LEFT JOIN businesshour b ON b.id = s.businesshour
                 WHERE 1=1
@@ -879,7 +1010,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchSla>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchSla>(query, new { offset, limit });
         });
     }
 
@@ -893,15 +1024,80 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 SELECT s.*
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.createdby) AS CreatedByName
 	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = s.updatedby) AS UpdatedByName
-                    , b.""name"" AS businesshourname
+                    , b.name AS businesshourname
                 FROM sla s
                 LEFT JOIN businesshour b ON b.id = s.businesshour
                 WHERE s.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchSla>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchSla>(query, new { Id = id });
         });
     }
 
+    public Task<int> UpdateSla(Sla sla, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            const string cmd = @"
+                    WITH updated_sla AS (
+                        UPDATE public.sla
+                        SET name = @Name
+                            , businesshour = @BusinessHour
+                            , responseperiod = @ResponsePeriod
+                            , responseformat = @ResponseFormat
+                            , responsenotify = @ResponseNotify
+                            , responseemail = @ResponseEmail
+                            , resolveperiod = @ResolvePeriod
+                            , resolveformat = @ResolveFormat
+                            , resolvenotify = @ResolveNotify
+                            , resolveemail = @ResolveEmail
+                            , note = @Note
+                            , status = @Status
+                            , rowversion = @RowVersion
+                            , updatedby = @UpdatedBy
+                            , updatedat = now()
+                        WHERE ID = @Id
+                        RETURNING *
+                    )
+                    INSERT INTO public.slaauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'sla.create'
+                        , 'added sla'
+                        , 'sla'
+                        , row_to_json(updated_sla)
+                        , updatedby
+                    FROM updated_sla";
+
+            return conn.ExecuteAsync(cmd, new
+            {
+                sla.Id,
+                sla.Name,
+                sla.BusinessHour,
+                sla.ResponsePeriod,
+                sla.ResponseFormat,
+                sla.ResponseNotify,
+                sla.ResponseEmail,
+                sla.ResolvePeriod,
+                sla.ResolveFormat,
+                sla.ResolveNotify,
+                sla.ResolveEmail,
+                sla.Note,
+                sla.Status,
+                sla.RowVersion,
+                sla.CreatedBy,
+                sla.UpdatedBy
+            });
+        });
+    }
     #endregion Sla
 
     #region Workflow
@@ -915,7 +1111,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
             const string cmd = @"
                     INSERT INTO public.workflow
                         (id
-                        , ""name""
+                        , name
                         , events
                         , note
                         , priority
@@ -933,7 +1129,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                         , @CreatedBy
                         , @UpdatedBy)";
 
-            var eventArray = workflow.Events.Select(s => (int) s).ToArray();
+            var eventArray = workflow.Events.Select(s => (int)s).ToArray();
             var cmdRst = await conn.ExecuteAsync(cmd, new
             {
                 workflow.Id,
@@ -951,10 +1147,10 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     INSERT INTO public.workflowcriteria
                         (id
                         , workflow
-                        , ""name""
+                        , name
                         , criteria
-                        , ""condition""
-                        , ""match"")
+                        , condition
+                        , match)
                     VALUES(@Id
                         , @Workflow
                         , @Name
@@ -968,8 +1164,8 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 s.Id,
                 Workflow = workflow.Id,
                 s.Name,
-                Criteria = (int) s.Criteria,
-                Condition = (int) s.Condition,
+                Criteria = (int)s.Criteria,
+                Condition = (int)s.Condition,
                 s.Match
             }).ToArray();
             var crtRst = await conn.ExecuteAsync(cmdCrt, criteria);
@@ -978,7 +1174,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                     INSERT INTO public.workflowaction
                         (id
                         , workflow
-                        , ""name""
+                        , name
                         , actionfrom
                         , actionto)
                     VALUES(@Id
@@ -993,7 +1189,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 s.Id,
                 Workflow = workflow.Id,
                 s.Name,
-                ActionFrom = (int) s.ActionFrom,
+                ActionFrom = (int)s.ActionFrom,
                 s.ActionTo
             }).ToArray();
             var actRst = await conn.ExecuteAsync(cmdAct, actions);
@@ -1050,7 +1246,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 OFFSET @Offset LIMIT @Limit;
                 ";
 
-            return await conn.QueryAsync<FetchWorkflow>(query, new {offset, limit});
+            return await conn.QueryAsync<FetchWorkflow>(query, new { offset, limit });
         });
     }
 
@@ -1067,7 +1263,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
                 FROM workflow w
                 WHERE w.id = @Id";
 
-            return await conn.QueryFirstOrDefaultAsync<FetchWorkflow>(query, new {Id = id});
+            return await conn.QueryFirstOrDefaultAsync<FetchWorkflow>(query, new { Id = id });
         });
     }
 

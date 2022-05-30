@@ -1,6 +1,7 @@
 using Keis.Infrastructure.Features.Teams.CreateTeam;
 using Keis.Infrastructure.Features.Teams.GetTeam;
 using Keis.Infrastructure.Features.Teams.ListTeams;
+using Keis.Infrastructure.Features.Teams.UpdateTeam;
 using Keis.Model;
 using Keis.Model.Queries;
 using Keis.Web.Extensions;
@@ -69,6 +70,30 @@ public class TeamController : MethodController
         logger.LogInformation(msg);
 
         command.CreatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/team.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
+    [HttpPatch("team.update", Name = nameof(UpdateTeam))]
+    public async Task<IActionResult> UpdateTeam(UpdateTeamCommand command)
+    {
+        const string msg = $"PATCH::{nameof(TeamController)}::{nameof(UpdateTeam)}";
+        logger.LogInformation(msg);
+
+        command.UpdatedBy = Request.HttpContext.UserId();
         var result = await mediatr.Send(command);
 
         if (result.IsFailed)
