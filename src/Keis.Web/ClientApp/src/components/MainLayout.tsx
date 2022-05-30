@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { Avatar, Dropdown, Layout, Menu, MenuProps } from "antd";
+import { Avatar, Button, Dropdown, Layout, Menu, MenuProps } from "antd";
 import {
+  BellOutlined,
   CustomerServiceOutlined,
   DashboardOutlined,
   SettingOutlined,
@@ -50,12 +51,12 @@ const items: MenuProps["items"] = [
 interface IMainLayout {}
 
 const MainLayout: FC<IMainLayout> = ({ children }) => {
-  const { user , signOut} = useAuth();
+  const { user, signOut } = useAuth();
   const [loggedIn, setLoggedIn] = useState<string>();
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoggedIn(user?.fullname?.substring(0, 1) ?? "U");
-  }, [user])
+  }, [user]);
 
   const menu = (
     <Menu
@@ -71,7 +72,9 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
       ]}
     />
   );
-  
+
+  const noti = <Menu items={[]} />;
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Header
@@ -84,18 +87,19 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
       >
         <div className="flex w-full items-center pb-5">
           <div className="flex w-1/2 font-bold ">Keis Desk</div>
-          <div className="flex w-1/2 items-center justify-end">
-            <Dropdown overlay={menu} placement="bottom" arrow>
-              <Avatar
-                style={{
-                  color: "#fff",
-                  backgroundColor: "#6366F1",
-                  cursor: "pointer",
-                }}
-              >
-                {loggedIn}
-              </Avatar>
-            </Dropdown>
+          <div className="flex w-1/2 space-x-2 items-center justify-end">
+              <Button shape="circle" icon={<BellOutlined />} />
+              <Dropdown overlay={menu} placement="bottom" arrow>
+                <Avatar
+                  style={{
+                    color: "#fff",
+                    backgroundColor: "#6366F1",
+                    cursor: "pointer",
+                  }}
+                >
+                  {loggedIn}
+                </Avatar>
+              </Dropdown>
           </div>
         </div>
       </Header>
