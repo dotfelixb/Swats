@@ -46,7 +46,7 @@ export interface IAuthContext {
     password,
     remember,
   }: ILogin) => Promise<ILoginResult | null>;
-  signOut: () => boolean;
+  signOut: () => void;
 }
 
 export interface IAppContext {
