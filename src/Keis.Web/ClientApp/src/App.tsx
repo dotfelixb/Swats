@@ -38,19 +38,15 @@ import {
   ViewType,
   ViewWorkflow,
 } from "./pages";
-import { MainLayout } from "./components";
+import { Loader, MainLayout } from "./components";
 import { AppProvider, AuthProvider, useAuth } from "./context";
-import { LoadingOutlined } from "@ant-design/icons";
 
 const Ready: FC = () => {
   const { browserLoaded } = useAuth();
 
   if (!browserLoaded) {
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center ">
-        <div><LoadingOutlined className="text-4xl font-bold" /></div>
-        <div className="py-2 font-bold">Responding to the World ☏</div>
-      </div>
+      <Loader />
     );
   }
   
