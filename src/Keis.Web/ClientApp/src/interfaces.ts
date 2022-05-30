@@ -38,15 +38,15 @@ export interface ILoginResult {
 }
 
 export interface IAuthContext {
-    isAuthenticated: boolean;
-    browserLoaded: boolean;
-    user: IUser | null;
-    signIn: ({
-                 username,
-                 password,
-                 remember,
-             }: ILogin) => Promise<ILoginResult | null>;
-    signOut: () => boolean;
+  isAuthenticated: boolean;
+  browserLoaded: boolean;
+  user: IUser | null;
+  signIn: ({
+    username,
+    password,
+    remember,
+  }: ILogin) => Promise<ILoginResult | null>;
+  signOut: () => void;
 }
 
 export interface IAppContext {
@@ -126,13 +126,13 @@ export interface IFetchDepartment extends IDataAudit {
 }
 
 export interface IFetchTeam extends IDataAudit {
-    id: string;
-    name: string;
-    department: string;
-    departmentName: string;
-    lead: string;
-    leadName: string;
-    note: string;
+  id: string;
+  name: string;
+  department: string;
+  departmentName: string;
+  manager: string;
+  managerName: string;
+  response: string;
 }
 
 export interface IFetchType extends IDataAudit {
@@ -144,22 +144,22 @@ export interface IFetchType extends IDataAudit {
 }
 
 export interface IFetchAgent extends IDataAudit {
-    id: string;
-    name: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    mobile: string;
-    telephone: string;
-    timezone: string;
-    department: string;
-    departmentName: string;
-    team: string;
-    teamName: string;
-    type: string;
-    typeName: string;
-    mode: string;
-    note: string;
+  id: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobile: string;
+  telephone: string;
+  timezone: string;
+  department: string;
+  departmentName: string;
+  team: string;
+  teamName: string;
+  ticketType: string;
+  ticketTypeName: string;
+  mode: string;
+  note: string;
 }
 
 export interface IFetchSla extends IDataAudit {
@@ -209,13 +209,13 @@ export interface IWorkflowAction {
 }
 
 export interface IFetchWorkflow extends IDataAudit {
-    id: string;
-    name: string;
-    priority: string;
-    note: string;
-    events: IWorkflowEvent[];
-    criteria: IWorkflowCriteria[];
-    actions: IWorkflowAction[];
+  id: string;
+  name: string;
+  priority: string;
+  note: string;
+  events: string[];
+  criteria: IWorkflowCriteria[];
+  actions: IWorkflowAction[];
 }
 
 interface ITicketComment{

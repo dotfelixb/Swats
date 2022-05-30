@@ -15,7 +15,7 @@ public class Agent : DbAudit
     public string Timezone { get; set; }
     public string Department { get; set; }
     public string Team { get; set; }
-    public string Type { get; set; }
+    public string TicketType { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public AgentMode Mode { get; set; }

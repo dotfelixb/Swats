@@ -73,12 +73,12 @@ const ListTeams: FC<IListTeams> = () => {
                             <div className="">{t.name}</div>
                         </Link>
                         <div className="text-xs" style={{color: "#9b9b9b"}}>
-                            {t.note}
+                            {t.response}
                         </div>
                     </td>
 
                     <td className="px-3 py-3">
-                        <div className="">{t.leadName}</div>
+                        <div className="">{t.managerName}</div>
                         <div className="text-xs" style={{color: "#9b9b9b"}}>
                             {t.departmentName}
                         </div>

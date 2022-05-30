@@ -2,6 +2,7 @@
 using Keis.Infrastructure.Features.Agents.CreateAgent;
 using Keis.Infrastructure.Features.Agents.GetAgent;
 using Keis.Infrastructure.Features.Agents.ListAgent;
+using Keis.Infrastructure.Features.Agents.UpdateAgent;
 using Keis.Model;
 using Keis.Model.Commands;
 using Keis.Model.Domain;
@@ -99,6 +100,30 @@ public class AgentController : MethodController
 
         // create agent
         var result = await mediatr.Send(command);
+        if (result.IsFailed)
+            return BadRequest(new ErrorResult
+            {
+                Ok = false,
+                Errors = result.Reasons.Select(s => s.Message)
+            });
+
+        var uri = $"/methods/agent.get?id={result.Value}";
+        return Created(uri, new SingleResult<string>
+        {
+            Ok = true,
+            Data = result.Value
+        });
+    }
+
+    [HttpPatch("agent.update", Name = nameof(UpdateAgent))]
+    public async Task<IActionResult> UpdateAgent(UpdateAgentCommand command)
+    {
+        const string msg = $"PATCH::{nameof(AgentController)}::{nameof(UpdateAgent)}";
+        logger.LogInformation(msg);
+
+        command.UpdatedBy = Request.HttpContext.UserId();
+        var result = await mediatr.Send(command);
+        
         if (result.IsFailed)
             return BadRequest(new ErrorResult
             {

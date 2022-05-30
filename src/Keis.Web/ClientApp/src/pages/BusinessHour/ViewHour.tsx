@@ -1,4 +1,4 @@
-import { Breadcrumb, Checkbox } from "antd";
+import { Breadcrumb, Button, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -13,6 +13,9 @@ const ViewHour: FC<IViewHour> = () => {
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [hour, setHour] = useState<IFetchBusinessHour>();
+  const [showEditForm, setEditForm] = useState(false);
+  const [hasFormErrors, setHasFormErrors] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async () => {
@@ -31,6 +34,14 @@ const ViewHour: FC<IViewHour> = () => {
     }
   }, [user, id, get]);
 
+  const Buttons: FC = () => (
+    <div className="space-x-2">
+      <Button type="primary" onClick={() => setEditForm(true)}>
+        Edit
+      </Button>
+    </div>
+  );
+
   const Breadcrumbs: FC = () => (
     <Breadcrumb separator="/">
       <Breadcrumb.Item>
@@ -47,7 +58,11 @@ const ViewHour: FC<IViewHour> = () => {
   );
 
   return (
-    <PageView title={hour?.name ?? ""} breadcrumbs={<Breadcrumbs />}>
+    <PageView
+      title={hour?.name ?? ""}
+      buttons={<Buttons />}
+      breadcrumbs={<Breadcrumbs />}
+    >
       <div className="w-full flex flex-row ">
         <div style={{ width: "220px" }} className="">
           <div className="pr-2">

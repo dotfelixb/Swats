@@ -38,18 +38,15 @@ import {
   ViewType,
   ViewWorkflow,
 } from "./pages";
-import { MainLayout } from "./components";
+import { Loader, MainLayout } from "./components";
 import { AppProvider, AuthProvider, useAuth } from "./context";
-import { LoadingOutlined } from "@ant-design/icons";
 
 const Ready: FC = () => {
   const { browserLoaded } = useAuth();
 
   if (!browserLoaded) {
     return (
-      <div>
-        <LoadingOutlined />
-      </div>
+      <Loader />
     );
   }
 

@@ -26,7 +26,7 @@ public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Result<
         {
             Target = tag.Id,
             ActionName = "tag.create",
-            Description = "added tag hour",
+            Description = "added tag",
             ObjectName = "tag",
             ObjectData = JsonSerializer.Serialize(tag),
             CreatedBy = request.CreatedBy

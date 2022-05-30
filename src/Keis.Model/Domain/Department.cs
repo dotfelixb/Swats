@@ -17,12 +17,3 @@ public class Department : DbAudit
 
     public string Response { get; set; }
 }
-
-public class Team : DbAudit
-{
-    public string Id { get; set; } = NewId.NextGuid().ToString();
-    public string Name { get; set; }
-    public string Department { get; set; }
-    public string Lead { get; set; }
-    public string Note { get; set; }
-}

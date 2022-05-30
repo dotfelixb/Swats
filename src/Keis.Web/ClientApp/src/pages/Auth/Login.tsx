@@ -59,9 +59,11 @@ const Login: FC<ILogin> = () => {
       </Header>
       <Content className="bg-white">
         <div className="relative w-full h-full flex-auto px-3 md:px-16 lg:px-36 py-8">
-          <PageView title="Login">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <div>
+          <PageView title="">
+            <div className="flex w-full items-center pb-5">
+              <div className="flex w-1/2"></div>
+              <div style={{ width: "640px" }}>
+                <div className="font-bold text-2xl pb-5">Login</div>
                 {loginFailed &&
                   loginErrors?.map((e) => (
                     <Alert key={e} message={e} type="error" className="py-2" />
@@ -83,7 +85,7 @@ const Login: FC<ILogin> = () => {
                   </Form.Item>
                 </Form>
               </div>
-              <div></div>
+              <div className="flex w-1/2"></div>
             </div>
           </PageView>
         </div>

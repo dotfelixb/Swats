@@ -9,6 +9,7 @@
 -- sequences
 CREATE SEQUENCE TicketCode INCREMENT 1 START 1;
 CREATE SEQUENCE DepartmentCode INCREMENT 1 START 1;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE authuser
 (
@@ -247,9 +248,10 @@ CREATE TABLE team
     id         BPCHAR(36) PRIMARY KEY,
     name       VARCHAR(50),
     department BPCHAR(36),
-    lead       BPCHAR(36),
+    manager       BPCHAR(36),
     status     INT,
     rowversion BPCHAR(36) NOT NULL,
+    response      VARCHAR,
     deleted    BOOLEAN     DEFAULT (FALSE),
     createdby  BPCHAR(36),
     createdat  TIMESTAMPTZ DEFAULT (now()),
