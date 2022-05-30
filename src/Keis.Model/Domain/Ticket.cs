@@ -20,13 +20,12 @@ public class Ticket : DbAudit
     public string TicketType { get; set; }
     public string Department { get; set; }
     public string Team { get; set; }
-    public string Sla { get; set; }
     public string HelpTopic { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TicketPriority Priority { get; set; }
 
-    public DateTimeOffset? DueAt { get; set; }
+    public DateTimeOffset DueAt { get; set; }
 }
 
 public class TicketType : DbAudit

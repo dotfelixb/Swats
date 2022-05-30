@@ -1,0 +1,103 @@
+﻿@model IEnumerable<FetchBusinessHour>
+@{
+
+}
+
+<div id="main-swap">
+    <section>
+        @await Component.InvokeAsync("Breadcrumbs", new
+        {
+            crumbs = new[]
+            {
+                new SelectListItem {Text = "Home", Value = "/"},
+                new SelectListItem {Text = "Admin", Value = "/admin"}
+            },
+            currentPage = "Business Hour"
+        })
+    </section>
+    <section class="flex w-full font-bold text-2xl pb-5">
+        <div class="flex w-1/2">Business Hours</div>
+        <div class="flex w-1/2 justify-end">
+            <div class="">
+                <button class="btn-primary" hx-get="/admin/businesshour/create" hx-trigger="click" hx-target="#main-swap"
+                        hx-swap="outerHTML" hx-push-url="true">
+                    New Hour
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class=" bg-white drop-shadow-lg rounded">
+        @* filter fields *@
+        <div class="grid grid-cols-5 gap-4 px-5 py-5">
+            <div>
+                <div class="w-full">
+                    <input class="form-input-search" placeholder="Name"/>
+                </div>
+            </div>
+            <div>
+                <div class="w-full">
+                    <input class="form-input-search" placeholder="Name"/>
+                </div>
+            </div>
+        </div>
+
+        @* filtered fields display *@
+        <div class="w-full px-5 pb-3">
+            <span class="text-xs rounded bg-indigo-500 text-white px-2 py-1">Filter</span>
+            <span class="text-xs rounded bg-indigo-500 text-white px-2 py-1">Name</span>
+        </div>
+
+        <div class="w-full border-t-2 border-gray-50">
+            <table class="w-full table-auto">
+                <thead>
+                <tr class="text-left px-3 bg-indigo-50">
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Name</p>
+                        <p style="color: #6b6b6b;">Description</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Status</p>
+                        <p style="color: #6b6b6b;">Timezone</p>
+                    </th>
+                    <th class="px-3 py-3 font-semibold text-xs">
+                        <p>Created By</p>
+                        <p style="color: #6b6b6b;">Created At</p>
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="px-10 cursor-pointer"
+                        hx-get="/admin/businesshour/edit/@item.Id"
+                        hx-trigger="click"
+                        hx-target="#main-swap"
+                        hx-swap="outerHTML"
+                        hx-push-url="true">
+                        <td class="px-3 py-1">
+                            <p class="text-xs">@item.Name </p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.Description</p>
+                        </td>
+
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.Status</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.Timezone</p>
+                        </td>
+                        <td class="px-3 py-3">
+                            <p class="text-xs">@item.CreatedByName</p>
+                            <p class="text-xs" style="color: #9b9b9b;">@item.CreatedAt.ToString("MMM dd, yyyy")</p>
+                        </td>
+                        <td>
+                            <span class="text-gray-300">
+                                <ion-icon name="chatbubbles"></ion-icon>
+                            </span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ namespace Keis.Model.Domain;
 public class HelpTopic : DbAudit
 {
     public string Id { get; set; } = NewId.NextGuid().ToString();
-    public string Name { get; set; }
+    public string Topic { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public DefaultType Type { get; set; }

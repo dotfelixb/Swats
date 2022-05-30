@@ -74,7 +74,7 @@ const ListTopics: FC<IListTopics> = () => {
           <tr className="px-10" key={t.id}>
             <td className="px-3 py-3">
               <Link to={`/admin/helptopic/${t.id}`}>
-                <div className="">{t.name}</div>
+                <div className="">{t.topic}</div>
               </Link>
               <div className="text-xs" style={{ color: "#9b9b9b" }}>
                 {t.note}

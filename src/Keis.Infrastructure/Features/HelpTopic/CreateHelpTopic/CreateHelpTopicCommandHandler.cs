@@ -33,8 +33,6 @@ public class CreateHelpTopicCommandHandler : IRequestHandler<CreateHelpTopicComm
         };
 
         var rst = await _manageRepository.CreateHelpTopic(helpTopic, auditLog, cancellationToken);
-        return rst > 0 
-            ? Result.Ok(helpTopic.Id) 
-            : Result.Fail<string>("Not able to create now!");
+        return rst > 0 ? Result.Ok(helpTopic.Id) : Result.Fail<string>("Not able to create now!");
     }
 }

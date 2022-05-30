@@ -318,7 +318,7 @@ CREATE TABLE agentauditlog
 CREATE TABLE helptopic
 (
     id                 BPCHAR(36) PRIMARY KEY,
-    name               VARCHAR(50),
+    topic              VARCHAR(50),
     type               INT,
     department         BPCHAR(36),
     defeaultdepartment BPCHAR(36),
@@ -347,44 +347,6 @@ CREATE TABLE helptopicauditlog
     FOREIGN KEY (target) REFERENCES helptopic (id) ON DELETE CASCADE
 );
 
-CREATE TABLE sla
-(
-    id BPCHAR(36) PRIMARY KEY
-    , name VARCHAR(50) NOT NULL
-    , businesshour BPCHAR(36)
-    , responseperiod INT
-    , responseformat INT
-    , responseNotify BOOLEAN
-    , responseemail BOOLEAN
-    , resolveperiod INT  
-    , resolveformat INT
-    , resolvenotify BOOLEAN
-    , resolveemail BOOLEAN
-    , note  TEXT
-    , status INT
-	, rowversion BPCHAR(36) NOT NULL
-	, deleted BOOLEAN DEFAULT(FALSE)
-  	, createdby BPCHAR(36)
-	, createdat TIMESTAMPTZ DEFAULT(now())
-	, updatedby BPCHAR(36)
-	, updatedat TIMESTAMPTZ DEFAULT(now())
-	, FOREIGN KEY (businesshour) REFERENCES businesshour (id) ON DELETE CASCADE
-);
-
-
-CREATE TABLE slaauditlog
-(
-    id BPCHAR(36) PRIMARY KEY
-	, target BPCHAR(36)
-	, actionname VARCHAR(50) NOT NULL
-	, description VARCHAR(150) NOT NULL
-	, objectname VARCHAR(50) NOT NULL
-	, objectdata VARCHAR NOT NULL
-    , createdby BPCHAR(36)
-	, createdat TIMESTAMPTZ DEFAULT(now())
-	, FOREIGN KEY (target) REFERENCES sla(id) ON DELETE CASCADE
-);
-
 
 CREATE TABLE ticket
 (
@@ -398,7 +360,6 @@ CREATE TABLE ticket
     tickettype    BPCHAR(36),
     department    BPCHAR(36),
     team          BPCHAR(36),
-    sla           BPCHAR(36),
     helptopic     BPCHAR(36),
     priority      INT,
     status        INT,
@@ -412,7 +373,6 @@ CREATE TABLE ticket
     FOREIGN KEY (tickettype) REFERENCES tickettype (id) ON DELETE CASCADE,
     FOREIGN KEY (department) REFERENCES department (id) ON DELETE CASCADE,
     FOREIGN KEY (team) REFERENCES team (id) ON DELETE CASCADE,
-    FOREIGN KEY (sla) REFERENCES sla (id) ON DELETE CASCADE,
     FOREIGN KEY (helptopic) REFERENCES helptopic (id) ON DELETE CASCADE
 );
 
@@ -481,6 +441,44 @@ CREATE TABLE ticketcomment
 	FOREIGN KEY (ticket) REFERENCES ticket(id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE sla
+(
+    id BPCHAR(36) PRIMARY KEY
+    , name VARCHAR(50) NOT NULL
+    , businesshour BPCHAR(36)
+    , responseperiod INT
+    , responseformat INT
+    , responseNotify BOOLEAN
+    , responseemail BOOLEAN
+    , resolveperiod INT  
+    , resolveformat INT
+    , resolvenotify BOOLEAN
+    , resolveemail BOOLEAN
+    , note  TEXT
+    , status INT
+	, rowversion BPCHAR(36) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+  	, createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(36)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (businesshour) REFERENCES businesshour (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE slaauditlog
+(
+    id BPCHAR(36) PRIMARY KEY
+	, target BPCHAR(36)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+    , createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES sla(id) ON DELETE CASCADE
+);
 
 CREATE TABLE workflow
 (

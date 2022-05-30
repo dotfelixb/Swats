@@ -49,7 +49,7 @@ const Ready: FC = () => {
       <Loader />
     );
   }
-  
+
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
