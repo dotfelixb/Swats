@@ -52,10 +52,10 @@ const NewType: FC<INewType> = () => {
 
     if (f.status === 201 && result.ok) {
       navigate(`/admin/tickettype/${result.data}`, { replace: true });
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
     }
-
-    setHasFormErrors(true);
-    setFormErrors(result?.errors);
   };
 
   const Breadcrumbs: FC = () => (

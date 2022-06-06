@@ -1,4 +1,4 @@
-import { Breadcrumb, Form } from "antd";
+import { Breadcrumb } from "antd";
 import { FC, useCallback, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
@@ -19,7 +19,6 @@ interface IFormData {
 const NewTeam: FC<INewTeam> = () => {
   const { user } = useAuth();
   const { get } = useApp();
-  const [form] = Form.useForm();
   const navigate = useNavigate();
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
   const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
