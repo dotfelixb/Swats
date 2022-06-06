@@ -39,17 +39,17 @@ public class AuthController : MethodController
     [HttpPost("auth.login", Name = nameof(Login))]
     public async Task<IActionResult> Login(LoginCommand command)
     {
-        var msg = $"{Request.Method}::{nameof(AuthController)}::{nameof(Login)}";
+        const string msg = $"POST::{nameof(AuthController)}::{nameof(Login)}";
         logger.LogInformation(msg);
 
         var user = await userManager.FindByNameAsync(command.UserName);
         if (user is null)
-            return NotFound(new ErrorResult {Ok = false, Errors = new[] {$"User '{command.UserName}' not found"}});
+            return NotFound(new ErrorResult { Ok = false, Errors = new[] { $"User '{command.UserName}' not found" } });
 
         var hasValidPassword = await userManager.CheckPasswordAsync(user, command.Password);
         if (!hasValidPassword)
             return BadRequest(new ErrorResult
-                {Ok = false, Errors = new[] {$"Login failed for user '{command.UserName}'"}});
+            { Ok = false, Errors = new[] { $"Login failed for user '{command.UserName}'" } });
 
         var claims = new List<Claim>
         {
@@ -75,6 +75,27 @@ public class AuthController : MethodController
             Token = tokenHandler.WriteToken(token),
             Fullname = user.NormalizedUserName,
             Email = user.NormalizedEmail
+        });
+    }
+
+    [AllowAnonymous]
+    [HttpPost("auth.forget", Name = nameof(Forget))]
+    public async Task<IActionResult> Forget(LoginCommand command)
+    {
+        const string msg = $"POST::{nameof(AuthController)}::{nameof(Login)}";
+        logger.LogInformation(msg);
+
+        var user = await userManager.FindByNameAsync(command.UserName);
+        if (user is null)
+            return NotFound(new ErrorResult { Ok = false, Errors = new[] { $"User '{command.UserName}' not found" } });
+
+        // send email to address of username if found
+        // TODO
+
+        return Ok(new SingleResult<string>
+        {
+            Ok = true,
+            Data = $"User recover email send to user at {user.Email}"
         });
     }
 }
