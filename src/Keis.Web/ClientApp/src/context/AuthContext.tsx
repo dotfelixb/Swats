@@ -63,7 +63,7 @@ export const AuthProvider: FC<IViewProps> = ({ children }) => {
   };
 
   const signOut = () => {
-    localStorage.clear();
+    return false;
   };
 
   return (

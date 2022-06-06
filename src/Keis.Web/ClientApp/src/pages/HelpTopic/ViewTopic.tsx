@@ -53,7 +53,7 @@ const ViewTopic: FC<IViewTopic> = () => {
       <Breadcrumb.Item>
         <Link to="/admin/helptopic">Help Topics</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>{topic?.topic ?? ""}</Breadcrumb.Item>
+      <Breadcrumb.Item>{topic?.name ?? ""}</Breadcrumb.Item>
     </Breadcrumb>
   );
 

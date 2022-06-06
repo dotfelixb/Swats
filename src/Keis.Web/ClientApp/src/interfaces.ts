@@ -46,7 +46,7 @@ export interface IAuthContext {
     password,
     remember,
   }: ILogin) => Promise<ILoginResult | null>;
-  signOut: () => void;
+  signOut: () => boolean;
 }
 
 export interface IAppContext {
@@ -107,7 +107,7 @@ export interface IFetchTag extends IDataAudit {
 
 export interface IFetchTopic extends IDataAudit {
   id: string;
-  topic: string;
+  name: string;
   department: string;
   departmentName: string;
   type: string;
@@ -233,12 +233,23 @@ export interface IFetchTicket extends IDataAudit {
   id: string;
   subject: string;
   code: string;
+  requester: string;
   requesterName: string;
+  assignedTo: string;
   assignedToName: string;
+  department: string;
   departmentName: string;
+  team: string;
   teamName: string;
+  sla: string;
+  slaName: string;
+  ticketType: string;
+  ticketTypeName: string;
+  helpTopic: string;
+  helpTopicName: string;
   source: string;
   priority: string;
+  dueAt: string;
   ticketComments: ITicketComment[];
 }
 
