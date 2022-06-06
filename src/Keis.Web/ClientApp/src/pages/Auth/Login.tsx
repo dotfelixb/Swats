@@ -1,4 +1,5 @@
-import { Alert, Button, Checkbox, Form, Input, Layout } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { Alert, Button, Checkbox, Form, Input, Layout, Modal, Timeline } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
@@ -23,10 +24,13 @@ const Login: FC<ILogin> = () => {
   const [loginErrors, setLoginErrors] = useState<string[]>();
   const navigate = useNavigate();
   const [returnUrl, setReturnUrl] = useState("/");
+  const [showForget, setShowForget] = useState(false);
   const { state } = useLocation();
   const _state: any = state;
 
   useEffect(() => {
+    document.title = "Login";
+
     if (_state && _state.from && _state.from.pathname) {
       setReturnUrl(_state.from.pathname);
     }
@@ -46,6 +50,8 @@ const Login: FC<ILogin> = () => {
       setLoginErrors(result?.errors);
     }
   };
+
+  const onRecover = () => {}
 
   return (
     <Layout className="h-screen">
@@ -70,13 +76,17 @@ const Login: FC<ILogin> = () => {
                   ))}
                 <Form form={form} onFinish={onFinish} layout="vertical">
                   <Form.Item name="username" label="Username or Email">
-                    <Input placeholder="" />
+                    <Input />
                   </Form.Item>
                   <Form.Item name="password" label="Password">
-                    <Input.Password placeholder="" />
+                    <Input.Password />
                   </Form.Item>
                   <Form.Item name="remember" valuePropName="checked">
                     <Checkbox>Remember me</Checkbox>
+                    <span className="pl-2">|</span>
+                    <Button type="link" onClick={() => setShowForget(true)}>
+                      <span className="text-xs">Forget Password?</span>
+                    </Button>
                   </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
@@ -89,6 +99,32 @@ const Login: FC<ILogin> = () => {
             </div>
           </PageView>
         </div>
+        <Modal
+          visible={showForget}
+          title="Get back into your account"
+          onCancel={() => setShowForget(false)}
+          destroyOnClose={true}
+          footer={null}
+        >
+          <Form layout="vertical" onFinish={onRecover}>
+        <Timeline>
+          <Timeline.Item dot={<UserOutlined style={{ fontSize: "16px" }} />}>
+            <div className="font-bold mb-2">Who are you?</div>
+            <div className="pb-3">To recover your account, begin by entering your email or username</div>
+            <Form.Item name="username" label="Username or Email">
+             <Input />
+            </Form.Item>
+          </Timeline.Item>
+          <Timeline.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Recover
+              </Button>
+            </Form.Item>
+          </Timeline.Item>
+        </Timeline>
+      </Form>
+        </Modal>
       </Content>
     </Layout>
   );
