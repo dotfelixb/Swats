@@ -14,8 +14,6 @@ const ViewType: FC<IViewType> = () => {
   const { id } = useParams();
   const [type, setType] = useState<IFetchType>();
   const [showEditForm, setEditForm] = useState(false);
-  const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async () => {

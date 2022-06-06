@@ -14,8 +14,6 @@ const ViewTopic: FC<IViewTopic> = () => {
   const { id } = useParams();
   const [topic, setTopic] = useState<IFetchTopic>();
   const [showEditForm, setEditForm] = useState(false);
-  const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async () => {
