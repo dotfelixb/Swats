@@ -260,3 +260,23 @@ export interface IDashboardCount {
   openTickets: number;
   openTicketsDue: number;
 }
+
+export interface IFetchEmail extends IDataAudit {
+  id:string;
+  address:string;
+  name:string;
+  username:string;
+  password:string;
+
+  inHost:string;
+  inPort:string;
+  inProtocol:string;
+  inSecurity:string;
+
+  outHost:string;
+  outPort:string;
+  outProtocol:string;
+  outSecurity:string;
+
+  note:string;
+}

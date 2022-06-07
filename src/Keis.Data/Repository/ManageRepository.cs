@@ -96,6 +96,19 @@ public interface IManageRepository
     Task<FetchWorkflow> GetWorkflow(string id, CancellationToken cancellationToken);
 
     #endregion
+
+    #region Email Settings
+
+    Task<int> CreateEmail(Email email, CancellationToken cancellationToken);
+
+    Task<FetchEmail> GetEmail(string id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchEmail>> ListEmails(int offset, int limit, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
+
+    Task<int> UpdateEmail(Email email, CancellationToken cancellationToken);
+
+    #endregion
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -1268,4 +1281,165 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
     }
 
     #endregion
+
+    #region Tag
+
+    public Task<int> CreateEmail(Email email, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                WITH inserted_email AS (
+                INSERT INTO public.emailsettings
+                    (id
+                    , name
+                    , address
+                    , username
+                    , password
+                    , inhost
+                    , inprotocol
+                    , inport
+                    , insecurity
+                    , outhost
+                    , outprotocol
+                    , outport
+                    , outsecurity
+                    , note
+                    , status
+                    , rowversion
+                    , createdby
+                    , updatedby)
+                VALUES(@Id
+                    , @Name
+                    , @Address
+                    , @Username
+                    , @Password
+                    , @InHost
+                    , @InProtocol
+                    , @InPort
+                    , @InSecurity
+                    , @OutHost
+                    , @OutProtocol
+                    , @OutPort
+                    , @OutSecurity
+                    , @Note
+                    , @Status
+                    , @RowVersion
+                    , @CreatedBy
+                    , @UpdatedBy)
+                RETURNING *
+                )
+                INSERT INTO public.emailsettingsauditlog
+                    (id
+                    , target
+                    , actionname
+                    , description
+                    , objectname
+                    , objectdata
+                    , createdby)
+                SELECT uuid_generate_v1()
+                    , id
+                    , 'emailsettings.create'
+                    , 'added email settings'
+                    , 'emailsettings'
+                    , row_to_json(inserted_email)
+                    , createdby
+                FROM inserted_email";
+
+            return conn.ExecuteAsync(cmd, email);
+        });
+    }
+
+    public Task<FetchEmail> GetEmail(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT e.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = e.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = e.updatedby) AS UpdatedByName
+                FROM emailsettings e
+                WHERE e.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchEmail>(query, new { Id = id });
+        });
+    }
+
+    public Task<IEnumerable<FetchEmail>> ListEmails(int offset, int limit, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND e.deleted = FALSE ";
+            var query = $@"
+                SELECT e.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = e.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = e.updatedby) AS UpdatedByName
+                FROM emailsettings e
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchEmail>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> UpdateEmail(Email email, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                    WITH changed_email AS (
+                        UPDATE public.emailsettings
+                        SET name = @Name
+                            , address = @Address
+                            , username = @Username
+                            , password = @Password
+                            , inhost = @InHost
+                            , inprotocol = @InProtocol
+                            , inport = @InPort
+                            , insecurity = @InSecurity
+                            , outhost = @OutHost
+                            , outprotocol = @OutProtocol
+                            , outport = @OutPort
+                            , outsecurity = @OutSecurity
+                            , note = @Note
+                            , status = @Status
+                            , rowversion = @RowVersion
+                            , updatedby = @UpdatedBy
+                            , updatedat = now()
+                        WHERE id = @Id
+                        RETURNING *
+                    )
+                    INSERT INTO public.emailsettingsauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'emailsettings.update'
+                        , 'updated email settings'
+                        , 'emailsettings'
+                        , row_to_json(changed_email)
+                        , updatedby
+                    FROM changed_email";
+
+            return conn.ExecuteAsync(cmd, email);
+        });
+    }
+
+    #endregion Tag
 }

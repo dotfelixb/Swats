@@ -75,6 +75,16 @@ const context = [
   "/methods/workflow.event",
   "/methods/workflow.criteria",
   "/methods/workflow.action",
+
+  "/methods/email.list",
+  "/methods/email.get",
+  "/methods/email.create",
+  "/methods/email.update",
+
+  "/methods/template.list",
+  "/methods/template.get",
+  "/methods/template.create",
+  "/methods/template.update",
 ];
 
 module.exports = function (app) {

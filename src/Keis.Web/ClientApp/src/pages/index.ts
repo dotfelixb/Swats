@@ -16,3 +16,7 @@ export { ListTags, NewTag, ViewTag } from "./Tag";
 
 export { ListSla, NewSla, ViewSla } from "./Sla";
 export { ListWorkflow, NewWorkflow, ViewWorkflow } from "./Workflow";
+
+export { ListEmail, NewEmail, ViewEmail } from "./Email";
+export { ListTemplate, NewTemplate, ViewTemplate } from "./Template";
+

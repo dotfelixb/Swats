@@ -2,6 +2,6 @@
 
 namespace Keis.Model.Queries;
 
-public class FetchTag : Tag
+public class FetchEmail : Email
 {
 }

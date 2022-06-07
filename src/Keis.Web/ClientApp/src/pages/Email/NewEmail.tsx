@@ -1,45 +1,61 @@
 import { Breadcrumb } from "antd";
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
 import { useAuth } from "../../context";
 import { ISingleResult } from "../../interfaces";
-import TagForm from "./TagForm";
+import EmailForm from "./EmailForm";
 
 interface IFormData {
+  address: string;
   name: string;
-  color: string;
+  username: string;
+  password: string;
+  
+  inhost: string;
+  inprotocol: string;
+  inport: string;
+  insecurity:string;
+
+  outhost: string;
+  outprotocol: string;
+  outport: string;
+  outsecurity:string;
+
   status: string;
-  visibility: string;
   note: string;
 }
 
-interface INewTag {}
+interface INewEmail {}
 
-const NewTag: FC<INewTag> = () => {
+const NewEmail: FC<INewEmail> = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
-  const onFinish = async ({
-    name,
-    color,
-    status,
-    visibility,
-    note,
-  }: IFormData) => {
+  const onFinish = async (values: IFormData) => {
     const body = new FormData();
-    body.append("name", name ?? "");
-    body.append("color", color ?? "");
-    body.append("status", status ?? "");
-    body.append("visibility", visibility ?? "");
-    body.append("note", note ?? "");
+    body.append("address", values.address ?? "");
+    body.append("name", values.name ?? "");
+    body.append("username", values.username ?? "");
+    body.append("password", values.password ?? "");
+    body.append("inhost", values.inhost ?? "");
+    body.append("inprotocol", values.inprotocol ?? "");
+    body.append("inport", values.inport ?? "");
+    body.append("insecurity", values.insecurity ?? "");
+    body.append("outhost", values.outhost ?? "");
+    body.append("outprotocol", values.outprotocol ?? "");
+    body.append("outport", values.outport ?? "");
+    body.append("outsecurity", values.outsecurity ?? "");
+    body.append("status", values.status ?? "");
+    body.append("note", values.note ?? "");
+
 
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/tag.create", {
+    const f = await fetch("methods/email.create", {
       method: "POST",
       body,
       headers,
@@ -48,7 +64,7 @@ const NewTag: FC<INewTag> = () => {
     const result: ISingleResult<string> = await f.json();
 
     if (f.status === 201 && result.ok) {
-      navigate(`/admin/tag/${result.data}`, { replace: true });
+      navigate(`/admin/email/${result.data}`, { replace: true });
     } else {
       setHasFormErrors(true);
       setFormErrors(result?.errors);
@@ -64,17 +80,17 @@ const NewTag: FC<INewTag> = () => {
         <Link to="/admin">Admin</Link>
       </Breadcrumb.Item>
       <Breadcrumb.Item>
-        <Link to="/admin/tag">Tags</Link>
+        <Link to="/admin/tag">Email Settings</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>New Tag</Breadcrumb.Item>
+      <Breadcrumb.Item>New Email Settings</Breadcrumb.Item>
     </Breadcrumb>
   );
 
   return (
-    <PageView title="New Tag" breadcrumbs={<Breadcrumbs />}>
+    <PageView title="New Email" breadcrumbs={<Breadcrumbs />}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div>
-          <TagForm
+          <EmailForm
             hasFormErrors={hasFormErrors}
             formErrors={formErrors}
             onFinish={onFinish}
@@ -89,4 +105,4 @@ const NewTag: FC<INewTag> = () => {
   );
 };
 
-export default NewTag;
+export default NewEmail;

@@ -5,11 +5,11 @@ using MediatR;
 
 namespace Keis.Infrastructure.Features.Tags.ListTag;
 
-public class ListTagCommandHandler : IRequestHandler<ListTagsCommand, Result<IEnumerable<FetchTag>>>
+public class ListTagsCommandHandler : IRequestHandler<ListTagsCommand, Result<IEnumerable<FetchTag>>>
 {
     private readonly IManageRepository _manageRepository;
 
-    public ListTagCommandHandler(IManageRepository manageRepository)
+    public ListTagsCommandHandler(IManageRepository manageRepository)
     {
         _manageRepository = manageRepository;
     }

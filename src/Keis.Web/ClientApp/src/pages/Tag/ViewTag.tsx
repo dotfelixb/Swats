@@ -78,7 +78,7 @@ const ViewTag: FC<IViewTag> = () => {
     if (user != null && user.token && id) {
       loadTag();
     }
-  }, [user, id, get, loadTag]);
+  }, [user, id, loadTag]);
 
   const Buttons: FC = () => (
     <div className="space-x-2">

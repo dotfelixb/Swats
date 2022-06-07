@@ -79,7 +79,7 @@ tbody tr:nth-of-type(2n) td {
 
 .form-label {
   text-transform: uppercase;
-  @apply block text-gray-600 text-xs py-1;
+  @apply block text-gray-600 font-semibold text-xs py-1;
 }
 
 .datatable tr th div:last-child {

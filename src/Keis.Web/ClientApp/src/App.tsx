@@ -6,6 +6,7 @@ import {
   Dashboard,
   ListAgents,
   ListDepartments,
+  ListEmail,
   ListHours,
   ListSla,
   ListTags,
@@ -17,6 +18,7 @@ import {
   Login,
   NewAgent,
   NewDepartment,
+  NewEmail,
   NewHour,
   NewSla,
   NewTag,
@@ -29,6 +31,7 @@ import {
   Settings,
   ViewAgent,
   ViewDepartment,
+  ViewEmail,
   ViewHour,
   ViewSla,
   ViewTag,
@@ -108,6 +111,11 @@ const Ready: FC = () => {
             <Route index element={<ListWorkflow />} />
             <Route path="new" element={<NewWorkflow />} />
             <Route path=":id" element={<ViewWorkflow />} />
+          </Route>
+          <Route path="email">
+            <Route index element={<ListEmail />} />
+            <Route path="new" element={<NewEmail />} />
+            <Route path=":id" element={<ViewEmail />} />
           </Route>
         </Route>
       </Route>

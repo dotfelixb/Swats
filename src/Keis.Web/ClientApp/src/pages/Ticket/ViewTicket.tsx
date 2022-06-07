@@ -238,7 +238,26 @@ const ViewTicket: FC<IViewTicket> = () => {
     setChangePriorityModal(true);
   };
 
-  const onSubmitChangeStatus = async () => {
+  const onPatch = useCallback(
+    async (
+      body: FormData,
+      uri: string,
+      onSuccess: (id: string, name: string) => void,
+      onHideModal: (value: boolean) => void
+    ) => {
+      const f: Response = await patch(uri, body);
+      const result: ISingleResult<{ name: string; id: string }> =
+        await f.json();
+
+      if (f.status === 200 && result.ok) {
+        onSuccess(result.data?.id ?? result.data, result.data?.name ?? "");
+        onHideModal(false);
+      }
+    },
+    [patch]
+  );
+
+  const onSubmitChangeStatus = useCallback(async () => {
     const body = new FormData();
     body.append("status", newStatus ?? "");
     body.append("id", ticket?.id ?? "");
@@ -252,9 +271,9 @@ const ViewTicket: FC<IViewTicket> = () => {
     };
 
     onPatch(body, "methods/ticket.status", onSuccess, setChangeStatusModal);
-  };
+  }, [onPatch, ticket, newStatus]);
 
-  const onSubmitChangePriority = async () => {
+  const onSubmitChangePriority = useCallback(async () => {
     const body = new FormData();
     body.append("priority", newPriority ?? "");
     body.append("id", ticket?.id ?? "");
@@ -268,123 +287,126 @@ const ViewTicket: FC<IViewTicket> = () => {
     };
 
     onPatch(body, "methods/ticket.priority", onSuccess, setChangePriorityModal);
-  };
+  }, [onPatch, ticket, newPriority]);
 
-  const onSubmitAssignedTo = async (values: any) => {
-    const body = new FormData();
-    body.append("assignedto", values.assignedto ?? "");
-    body.append("id", ticket?.id ?? "");
+  const onSubmitAssignedTo = useCallback(
+    async (values: any) => {
+      const body = new FormData();
+      body.append("assignedto", values.assignedto ?? "");
+      body.append("id", ticket?.id ?? "");
 
-    const onSuccess = (id: string, name: string) => {
-      if (ticket !== undefined) {
-        setTicket({
-          ...ticket,
-          assignedTo: id,
-          assignedToName: name,
-        });
-      }
+      const onSuccess = (id: string, name: string) => {
+        if (ticket !== undefined) {
+          setTicket({
+            ...ticket,
+            assignedTo: id,
+            assignedToName: name,
+          });
+        }
 
-      message.success(`Ticket successfully assigned to ${name}`);
-    };
+        message.success(`Ticket successfully assigned to ${name}`);
+      };
 
-    onPatch(body, "methods/ticket.assign", onSuccess, setAssignedToModal);
-  };
+      onPatch(body, "methods/ticket.assign", onSuccess, setAssignedToModal);
+    },
+    [ticket, onPatch]
+  );
 
-  const onSubmitChangeDepartment = async (values: any) => {
-    const body = new FormData();
-    body.append("department", values.department ?? "");
-    body.append("id", ticket?.id ?? "");
+  const onSubmitChangeDepartment = useCallback(
+    async (values: any) => {
+      const body = new FormData();
+      body.append("department", values.department ?? "");
+      body.append("id", ticket?.id ?? "");
 
-    const onSuccess = (id: string, name: string) => {
-      if (ticket !== undefined) {
-        setTicket({ ...ticket, department: id, departmentName: name });
-      }
+      const onSuccess = (id: string, name: string) => {
+        if (ticket !== undefined) {
+          setTicket({ ...ticket, department: id, departmentName: name });
+        }
 
-      message.success(`Ticket department successfully changed to ${name}`);
-    };
+        message.success(`Ticket department successfully changed to ${name}`);
+      };
 
-    onPatch(body, "methods/ticket.department", onSuccess, setDepartmentModal);
-  };
+      onPatch(body, "methods/ticket.department", onSuccess, setDepartmentModal);
+    },
+    [onPatch, ticket]
+  );
 
-  const onSubmitChangeTeam = async (values: any) => {
-    const body = new FormData();
-    body.append("team", values.team ?? "");
-    body.append("id", ticket?.id ?? "");
+  const onSubmitChangeTeam = useCallback(
+    async (values: any) => {
+      const body = new FormData();
+      body.append("team", values.team ?? "");
+      body.append("id", ticket?.id ?? "");
 
-    const onSuccess = (id: string, name: string) => {
-      if (ticket !== undefined) {
-        setTicket({ ...ticket, team: id, teamName: name });
-      }
+      const onSuccess = (id: string, name: string) => {
+        if (ticket !== undefined) {
+          setTicket({ ...ticket, team: id, teamName: name });
+        }
 
-      message.success(`Ticket team successfully changed to ${name}`);
-    };
+        message.success(`Ticket team successfully changed to ${name}`);
+      };
 
-    onPatch(body, "methods/ticket.team", onSuccess, setTeamModal);
-  };
+      onPatch(body, "methods/ticket.team", onSuccess, setTeamModal);
+    },
+    [onPatch, ticket]
+  );
 
-  const onSubmitChangeDueDate = async (values: any) => {
-    const body = new FormData();
-    body.append("dueAt", dayjs(values.dueAt ?? "").format() ?? "");
-    body.append("id", ticket?.id ?? "");
+  const onSubmitChangeDueDate = useCallback(
+    async (values: any) => {
+      const body = new FormData();
+      body.append("dueAt", dayjs(values.dueAt ?? "").format() ?? "");
+      body.append("id", ticket?.id ?? "");
 
-    const onSuccess = (id: string, name: string) => {
-      if (ticket !== undefined) {
-        setTicket({ ...ticket, dueAt: id });
-      }
+      const onSuccess = (id: string, name: string) => {
+        if (ticket !== undefined) {
+          setTicket({ ...ticket, dueAt: id });
+        }
 
-      const due = dayjs(values.dueAt).format(dateFormats.shortDateFormat);
-      message.success(`Ticket Due Date successfully changed to ${due}`);
-    };
+        const due = dayjs(values.dueAt).format(dateFormats.shortDateFormat);
+        message.success(`Ticket Due Date successfully changed to ${due}`);
+      };
 
-    onPatch(body, "methods/ticket.duedate", onSuccess, setDueModal);
-  };
+      onPatch(body, "methods/ticket.duedate", onSuccess, setDueModal);
+    },
+    [dateFormats.shortDateFormat, onPatch, ticket]
+  );
 
-  const onSubmitChangeTicketType = async (values: any) => {
-    const body = new FormData();
-    body.append("ticketType", values.ticketType ?? "");
-    body.append("id", ticket?.id ?? "");
+  const onSubmitChangeTicketType = useCallback(
+    async (values: any) => {
+      const body = new FormData();
+      body.append("ticketType", values.ticketType ?? "");
+      body.append("id", ticket?.id ?? "");
 
-    const onSuccess = (id: string, name: string) => {
-      if (ticket !== undefined) {
-        setTicket({ ...ticket, ticketType: id, ticketTypeName: name });
-      }
+      const onSuccess = (id: string, name: string) => {
+        if (ticket !== undefined) {
+          setTicket({ ...ticket, ticketType: id, ticketTypeName: name });
+        }
 
-      message.success(`Ticket Type successfully changed to ${name}`);
-    };
+        message.success(`Ticket Type successfully changed to ${name}`);
+      };
 
-    onPatch(body, "methods/ticket.tickettype", onSuccess, setTicketTypeModal);
-  };
+      onPatch(body, "methods/ticket.tickettype", onSuccess, setTicketTypeModal);
+    },
+    [onPatch, ticket]
+  );
 
-  const onSubmitChangeHelpTopic = async (values: any) => {
-    const body = new FormData();
-    body.append("helpTopic", values.helpTopic ?? "");
-    body.append("id", ticket?.id ?? "");
+  const onSubmitChangeHelpTopic = useCallback(
+    async (values: any) => {
+      const body = new FormData();
+      body.append("helpTopic", values.helpTopic ?? "");
+      body.append("id", ticket?.id ?? "");
 
-    const onSuccess = (id: string, name: string) => {
-      if (ticket !== undefined) {
-        setTicket({ ...ticket, helpTopic: id, helpTopicName: name });
-      }
+      const onSuccess = (id: string, name: string) => {
+        if (ticket !== undefined) {
+          setTicket({ ...ticket, helpTopic: id, helpTopicName: name });
+        }
 
-      message.success(`Ticket Help Topic successfully changed to ${name}`);
-    };
+        message.success(`Ticket Help Topic successfully changed to ${name}`);
+      };
 
-    onPatch(body, "methods/ticket.helptopic", onSuccess, setHelpTopicModal);
-  };
-
-  const onPatch = async (
-    body: FormData,
-    uri: string,
-    onSuccess: (id: string, name: string) => void,
-    onHideModal: (value: boolean) => void
-  ) => {
-    const f: Response = await patch(uri, body);
-    const result: ISingleResult<{ name: string; id: string }> = await f.json();
-
-    if (f.status === 200 && result.ok) {
-      onSuccess(result.data?.id ?? result.data, result.data?.name ?? "");
-      onHideModal(false);
-    }
-  };
+      onPatch(body, "methods/ticket.helptopic", onSuccess, setHelpTopicModal);
+    },
+    [onPatch, ticket]
+  );
 
   const onHandleMoreAction: MenuProps["onClick"] = (e) => {
     switch (parseInt(e.key)) {
@@ -413,7 +435,7 @@ const ViewTicket: FC<IViewTicket> = () => {
     }
   };
 
-  const onHandleComment = async () => {
+  const onHandleComment = useCallback(async () => {
     const body = new FormData();
     body.append("ticketId", ticket?.id ?? "");
     body.append("body", note ?? "");
@@ -436,7 +458,7 @@ const ViewTicket: FC<IViewTicket> = () => {
       // call load ticket
       await load();
     }
-  };
+  }, [user, ticket, load, note]);
 
   const changeStatusMenu = (
     <Menu onClick={onHandleStatusChange} items={statusItems} />
@@ -650,15 +672,16 @@ const ViewTicket: FC<IViewTicket> = () => {
                 >
                   <div className="font-bold mb-2">Add your comment</div>
 
-                  <ReactQuill
-                    theme="snow"
-                    value={note}
-                    onChange={setNote}
-                    formats={editorFormats}
-                    modules={editorModels}
-                    style={{ height: "140px" }}
-                  />
-                  <div className="mb-9"></div>
+                  <div style={{height: "200px"}}>
+                    <ReactQuill
+                      theme="snow"
+                      value={note}
+                      onChange={setNote}
+                      formats={editorFormats}
+                      modules={editorModels} 
+                      style={{ height: "65%" }}
+                    />
+                  </div>
                 </Timeline.Item>
                 <Timeline.Item>
                   <div className="flex flex-row space-x-3">

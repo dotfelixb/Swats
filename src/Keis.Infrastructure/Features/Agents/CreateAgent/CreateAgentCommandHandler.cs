@@ -4,6 +4,7 @@ using FluentResults;
 using Keis.Data.Repository;
 using Keis.Model.Domain;
 using MediatR;
+using Quartz;
 
 namespace Keis.Infrastructure.Features.Agents.CreateAgent;
 
@@ -23,6 +24,8 @@ public class CreateAgentCommandHandler : IRequestHandler<CreateAgentCommand, Res
         var agent = _mapper.Map<CreateAgentCommand, Agent>(request);
 
         var rst = await _agentRepository.CreateAgent(agent, cancellationToken);
-        return rst > 0 ? Result.Ok(agent.Id) : Result.Fail<string>("Not able to create now!");
+        return rst > 0 
+            ? Result.Ok(agent.Id) 
+            : Result.Fail<string>("Not able to create now!");
     }
 }

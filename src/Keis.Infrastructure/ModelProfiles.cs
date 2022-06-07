@@ -4,6 +4,8 @@ using Keis.Infrastructure.Features.Agents.UpdateAgent;
 using Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
 using Keis.Infrastructure.Features.Department.CreateDepartment;
 using Keis.Infrastructure.Features.Department.UpdateDepartment;
+using Keis.Infrastructure.Features.Emails.CreateEmail;
+using Keis.Infrastructure.Features.Emails.UpdateEmail;
 using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
 using Keis.Infrastructure.Features.Sla.CreateSla;
 using Keis.Infrastructure.Features.Sla.UpdateSla;
@@ -57,11 +59,15 @@ public class ModelProfiles : Profile
         CreateMap<CreateWorkflowCommand, Workflow>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
+        CreateMap<CreateEmailCommand, Email>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+
         CreateMap<UpdateTagCommand, Tag>();
         CreateMap<UpdateAgentCommand, Agent>();
         CreateMap<UpdateDepartmentCommand, Department>();
         CreateMap<UpdateTeamCommand, Team>();
         CreateMap<UpdateSlaCommand, Sla>();
+        CreateMap<UpdateEmailCommand, Email>();
 
 
         CreateMap<LoginLogCommand, LoginAudit>();

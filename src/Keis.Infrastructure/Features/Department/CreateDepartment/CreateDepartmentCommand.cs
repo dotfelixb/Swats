@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using Keis.Model.Domain;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Keis.Infrastructure.Features.Department.CreateDepartment;
 
