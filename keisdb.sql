@@ -569,11 +569,41 @@ CREATE TABLE emailsettingsauditlog
 	, FOREIGN KEY (target) REFERENCES emailsettings(id) ON DELETE CASCADE
 );
 
+CREATE TABLE template
+(
+    id BPCHAR(36) PRIMARY KEY
+    , name    VARCHAR(50) NOT NULL
+    , mergetags VARCHAR[]
+    , subject  VARCHAR(50) NOT NULL
+    , body 		TEXT NOT NULL 
+    , status INT
+	, rowversion BPCHAR(36) NOT NULL
+	, deleted BOOLEAN DEFAULT(FALSE)
+    , createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, updatedby BPCHAR(36)
+	, updatedat TIMESTAMPTZ DEFAULT(now())
+);
+
+
+CREATE TABLE templateauditlog
+(
+    id BPCHAR(36) PRIMARY KEY
+	, target BPCHAR(36)
+	, actionname VARCHAR(50) NOT NULL
+	, description VARCHAR(150) NOT NULL
+	, objectname VARCHAR(50) NOT NULL
+	, objectdata VARCHAR NOT NULL
+  	, createdby BPCHAR(36)
+	, createdat TIMESTAMPTZ DEFAULT(now())
+	, FOREIGN KEY (target) REFERENCES template(id) ON DELETE CASCADE
+);
+
 
 --CREATE TABLE table
 --(
---    id BPCHAR(36) PRIMARY KEY
---    , status INT
+--  id BPCHAR(36) PRIMARY KEY
+--  , status INT
 --	, rowversion BPCHAR(36) NOT NULL
 --	, deleted BOOLEAN DEFAULT(FALSE)
 --  , createdby BPCHAR(36)

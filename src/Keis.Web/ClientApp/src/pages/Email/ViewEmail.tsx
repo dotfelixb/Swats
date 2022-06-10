@@ -31,7 +31,7 @@ interface IFormData {
 
 const ViewEmail: FC<IViewEmail> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, patch, dateFormats } = useApp();
   const { id } = useParams();
   const [email, setEmail] = useState<IFetchEmail>();
   const [showEditForm, setEditForm] = useState(false);
@@ -79,11 +79,7 @@ const ViewEmail: FC<IViewEmail> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/email.update", {
-      method: "PATCH",
-      body,
-      headers,
-    });
+    const f = await patch("methods/email.update",  body );
 
     const result: ISingleResult<string> = await f.json();
 

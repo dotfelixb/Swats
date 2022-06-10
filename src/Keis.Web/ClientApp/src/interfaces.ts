@@ -280,3 +280,11 @@ export interface IFetchEmail extends IDataAudit {
 
   note:string;
 }
+
+export interface IFetchTemplate extends IDataAudit {
+  id:string;
+  name:string;
+  subject:string;
+  body:string;
+  mergeTags:string[];
+}

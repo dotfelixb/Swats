@@ -101,7 +101,7 @@ const priorityItems = [
 
 const ViewTicket: FC<IViewTicket> = () => {
   const { user } = useAuth();
-  const { get, patch, dateFormats, editorFormats, editorModels } = useApp();
+  const { get, post, patch, dateFormats, editorFormats, editorModels } = useApp();
   const { id } = useParams();
   const [note, setNote] = useState("");
   const [showComment, setShowComment] = useState(false);
@@ -443,11 +443,7 @@ const ViewTicket: FC<IViewTicket> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/ticket.postcomment", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/ticket.postcomment",  body );
 
     const result: ISingleResult<string> = await f.json();
 

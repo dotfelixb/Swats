@@ -1,10 +1,11 @@
 import {
-  ClockCircleOutlined,
   CommentOutlined,
   FormOutlined,
+  LeftSquareOutlined,
+  RightSquareOutlined,
 } from "@ant-design/icons";
 import { Alert, Button, Form, Input, Select, Timeline } from "antd";
-import React, { FC } from "react";
+import { FC } from "react";
 import { IFetchEmail } from "../../interfaces";
 
 const { TextArea } = Input;
@@ -49,7 +50,7 @@ const EmailForm: FC<IEmailForm> = ({
           </Form.Item>
         </div>
       </Timeline.Item>
-      <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}>
+      <Timeline.Item dot={<LeftSquareOutlined style={{ fontSize: "16px" }} />}>
         <div className="font-bold mb-2">Incoming mail server settings</div>
         <Form.Item name="inhost" label="Host Name" initialValue={email?.inHost}>
           <Input />
@@ -75,7 +76,7 @@ const EmailForm: FC<IEmailForm> = ({
           </Form.Item>
         </div>
       </Timeline.Item>
-      <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}>
+      <Timeline.Item dot={<RightSquareOutlined style={{ fontSize: "16px" }} />}>
         <div className="font-bold mb-2">Outgoing mail server settings</div>
         <Form.Item name="outhost" label="Host Name" initialValue={email?.outHost}>
           <Input />

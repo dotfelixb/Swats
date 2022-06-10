@@ -83,6 +83,7 @@ const context = [
 
   "/methods/template.list",
   "/methods/template.get",
+  "/methods/template.mergetags",
   "/methods/template.create",
   "/methods/template.update",
 ];

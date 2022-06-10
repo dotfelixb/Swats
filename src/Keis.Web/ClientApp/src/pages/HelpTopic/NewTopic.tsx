@@ -26,7 +26,7 @@ interface IFormData {
 
 const NewTopic: FC<INewTopic> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get, post } = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
@@ -72,11 +72,7 @@ const NewTopic: FC<INewTopic> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/helptopic.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/helptopic.create",  body );
 
     const result: ISingleResult<string> = await f.json();
 

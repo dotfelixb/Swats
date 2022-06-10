@@ -32,7 +32,7 @@ interface IFormData {
 
 const NewSla: FC<INewSla> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get, post } = useApp();
   const navigate = useNavigate();
   const [hourList, setHourList] = useState<IFetchBusinessHour[]>([]);
   const [hasFormErrors, setHasFormErrors] = useState(false);
@@ -76,11 +76,7 @@ const NewSla: FC<INewSla> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/sla.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/sla.create",   body );
 
     const result: ISingleResult<string> = await f.json();
 

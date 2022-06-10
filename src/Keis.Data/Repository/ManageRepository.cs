@@ -109,6 +109,20 @@ public interface IManageRepository
     Task<int> UpdateEmail(Email email, CancellationToken cancellationToken);
 
     #endregion
+
+
+    #region Template
+
+    Task<int> CreateTemplate(Template template, CancellationToken cancellationToken);
+
+    Task<FetchTemplate> GetTemplate(string id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<FetchTemplate>> ListTemplates(int offset = 0, int limit = 1000, bool includeDeleted = false,
+        CancellationToken cancellationToken = default);
+
+    Task<int> UpdateTemplate(Template template, CancellationToken cancellationToken);
+
+    #endregion Template
 }
 
 public class ManageRepository : BasePostgresRepository, IManageRepository
@@ -1282,7 +1296,7 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
 
     #endregion
 
-    #region Tag
+    #region Email
 
     public Task<int> CreateEmail(Email email, CancellationToken cancellationToken)
     {
@@ -1292,44 +1306,44 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         {
             var cmd = @"
                 WITH inserted_email AS (
-                INSERT INTO public.emailsettings
-                    (id
-                    , name
-                    , address
-                    , username
-                    , password
-                    , inhost
-                    , inprotocol
-                    , inport
-                    , insecurity
-                    , outhost
-                    , outprotocol
-                    , outport
-                    , outsecurity
-                    , note
-                    , status
-                    , rowversion
-                    , createdby
-                    , updatedby)
-                VALUES(@Id
-                    , @Name
-                    , @Address
-                    , @Username
-                    , @Password
-                    , @InHost
-                    , @InProtocol
-                    , @InPort
-                    , @InSecurity
-                    , @OutHost
-                    , @OutProtocol
-                    , @OutPort
-                    , @OutSecurity
-                    , @Note
-                    , @Status
-                    , @RowVersion
-                    , @CreatedBy
-                    , @UpdatedBy)
-                RETURNING *
+                    INSERT INTO public.emailsettings
+                        (id
+                        , name
+                        , address
+                        , username
+                        , password
+                        , inhost
+                        , inprotocol
+                        , inport
+                        , insecurity
+                        , outhost
+                        , outprotocol
+                        , outport
+                        , outsecurity
+                        , note
+                        , status
+                        , rowversion
+                        , createdby
+                        , updatedby)
+                    VALUES(@Id
+                        , @Name
+                        , @Address
+                        , @Username
+                        , @Password
+                        , @InHost
+                        , @InProtocol
+                        , @InPort
+                        , @InSecurity
+                        , @OutHost
+                        , @OutProtocol
+                        , @OutPort
+                        , @OutSecurity
+                        , @Note
+                        , @Status
+                        , @RowVersion
+                        , @CreatedBy
+                        , @UpdatedBy)
+                    RETURNING *
                 )
                 INSERT INTO public.emailsettingsauditlog
                     (id
@@ -1441,5 +1455,140 @@ public class ManageRepository : BasePostgresRepository, IManageRepository
         });
     }
 
-    #endregion Tag
+    #endregion Email
+
+    #region Template
+
+    public Task<int> CreateTemplate(Template template, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                    WITH inserted_template AS(
+                        INSERT INTO public.template
+                            (id
+                            , name
+                            , mergetags
+                            , subject
+                            , body
+                            , status
+                            , rowversion
+                            , createdby
+                            , updatedby)
+                        VALUES(@Id
+                            , @Name
+                            , @Mergetags
+                            , @Subject
+                            , @Body
+                            , @Status
+                            , @RowVersion
+                            , @CreatedBy
+                            , @UpdatedBy)
+                        RETURNING *
+                    )
+                    INSERT INTO public.templateauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'template.create'
+                        , 'created template'
+                        , 'template'
+                        , row_to_json(inserted_template)
+                        , updatedby
+                    FROM inserted_template
+                    ";
+
+            return conn.ExecuteAsync(cmd, template);
+        });
+    }
+
+    public Task<FetchTemplate> GetTemplate(string id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var query = @"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM template t
+                WHERE t.id = @Id";
+
+            return await conn.QueryFirstOrDefaultAsync<FetchTemplate>(query, new { Id = id });
+        });
+    }
+
+    public Task<IEnumerable<FetchTemplate>> ListTemplates(int offset, int limit, bool includeDeleted = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(async conn =>
+        {
+            var _includeDeleted = includeDeleted ? " " : " AND t.deleted = FALSE ";
+            var query = $@"
+                SELECT t.*
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.createdby) AS CreatedByName
+	                , (SELECT a.normalizedusername FROM authuser a WHERE a.id = t.updatedby) AS UpdatedByName
+                FROM template t
+                WHERE 1=1
+                {_includeDeleted}
+                OFFSET @Offset LIMIT @Limit;
+                ";
+
+            return await conn.QueryAsync<FetchTemplate>(query, new { offset, limit });
+        });
+    }
+
+    public Task<int> UpdateTemplate(Template template, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return WithConnection(conn =>
+        {
+            var cmd = @"
+                    WITH updated_tempalte AS (
+                        UPDATE public.template
+                        SET name = @Name
+                            , mergetags = @Mergetags
+                            , subject =  @Subject
+                            , body = @Body
+                            , status = @Status
+                            , rowversion = @RowVersion
+                            , updatedby = @UpdatedBy
+                            , updatedat = now()
+                        WHERE id = @Id
+                        RETURNING *
+                    )
+                    INSERT INTO public.templateauditlog
+                        (id
+                        , target
+                        , actionname
+                        , description
+                        , objectname
+                        , objectdata
+                        , createdby)
+                    SELECT uuid_generate_v1()
+                        , id
+                        , 'tempalte.update'
+                        , 'updated template'
+                        , 'template'
+                        , row_to_json(updated_tempalte)
+                        , updatedby
+                    FROM updated_tempalte";
+
+            return conn.ExecuteAsync(cmd, template);
+        });
+    }
+
+    #endregion Template
 }

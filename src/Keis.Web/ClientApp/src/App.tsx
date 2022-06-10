@@ -11,6 +11,7 @@ import {
   ListSla,
   ListTags,
   ListTeams,
+  ListTemplate,
   ListTickets,
   ListTopics,
   ListTypes,
@@ -23,6 +24,7 @@ import {
   NewSla,
   NewTag,
   NewTeam,
+  NewTemplate,
   NewTicket,
   NewTopic,
   NewType,
@@ -36,6 +38,7 @@ import {
   ViewSla,
   ViewTag,
   ViewTeam,
+  ViewTemplate,
   ViewTicket,
   ViewTopic,
   ViewType,
@@ -116,6 +119,11 @@ const Ready: FC = () => {
             <Route index element={<ListEmail />} />
             <Route path="new" element={<NewEmail />} />
             <Route path=":id" element={<ViewEmail />} />
+          </Route>
+          <Route path="template">
+            <Route index element={<ListTemplate />} />
+            <Route path="new" element={<NewTemplate />} />
+            <Route path=":id" element={<ViewTemplate />} />
           </Route>
         </Route>
       </Route>

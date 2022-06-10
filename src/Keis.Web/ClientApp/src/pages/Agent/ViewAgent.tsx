@@ -33,7 +33,7 @@ interface IViewAgent {}
 
 const ViewAgent: FC<IViewAgent> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, patch, dateFormats } = useApp();
   const { id } = useParams();
   const [agent, setAgent] = useState<IFetchAgent>();
   const [showEditForm, setEditForm] = useState(false);
@@ -126,11 +126,7 @@ const ViewAgent: FC<IViewAgent> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/agent.update", {
-      method: "PATCH",
-      body,
-      headers,
-    });
+    const f = await patch("methods/agent.update",  body );
 
     const result: ISingleResult<string> = await f.json();
 

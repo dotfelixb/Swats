@@ -31,7 +31,7 @@ interface INewWorkflow {}
 
 const NewWorkflow: FC<INewWorkflow> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get, post } = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [criteriaList, setCriteriaList] = useState<IWorkflowCriteria[]>([]);
@@ -144,11 +144,7 @@ const NewWorkflow: FC<INewWorkflow> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/workflow.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/workflow.create",   body );
 
     const result: ISingleResult<string> = await f.json();
 

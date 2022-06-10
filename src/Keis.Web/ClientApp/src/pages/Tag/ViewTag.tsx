@@ -19,7 +19,7 @@ interface IFormData {
 
 const ViewTag: FC<IViewTag> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, patch, dateFormats } = useApp();
   const { id } = useParams();
   const [tag, setTag] = useState<IFetchTag>();
   const [showEditForm, setEditForm] = useState(false);
@@ -57,11 +57,7 @@ const ViewTag: FC<IViewTag> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/tag.update", {
-      method: "PATCH",
-      body,
-      headers,
-    });
+    const f = await patch("methods/tag.update",   body );
 
     const result: ISingleResult<string> = await f.json();
 
