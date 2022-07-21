@@ -12,6 +12,7 @@ internal class ListTemplateTagsCommandHandler : IRequestHandler<ListTemplateTags
             "{email}",
             "{first_name}",
             "{last_name}",
+            "{date}",
         };
 
         return Task.FromResult(Result.Ok(tags));

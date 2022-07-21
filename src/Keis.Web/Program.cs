@@ -73,7 +73,7 @@ builder.Services.AddSingleton<IAgentRepository, AgentReposiory>();
 // Quartz configuration
 builder.Services.AddQuartz(q =>
 {
-    q.SchedulerId = "__quartz__id__";
+    q.SchedulerId = "__quartz__keis__id__";
     q.UseMicrosoftDependencyInjectionJobFactory();
 
     q.UseSimpleTypeLoader();
