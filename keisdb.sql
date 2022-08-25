@@ -318,7 +318,7 @@ CREATE TABLE agentauditlog
 CREATE TABLE helptopic
 (
     id                 BPCHAR(36) PRIMARY KEY,
-    topic              VARCHAR(50),
+    name               VARCHAR(50),
     type               INT,
     department         BPCHAR(36),
     defeaultdepartment BPCHAR(36),
