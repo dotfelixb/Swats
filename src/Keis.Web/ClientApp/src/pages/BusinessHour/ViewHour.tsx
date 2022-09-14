@@ -14,8 +14,6 @@ const ViewHour: FC<IViewHour> = () => {
   const { id } = useParams();
   const [hour, setHour] = useState<IFetchBusinessHour>();
   const [showEditForm, setEditForm] = useState(false);
-  const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async () => {

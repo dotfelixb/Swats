@@ -45,7 +45,7 @@ public class TagController : MethodController
     [HttpGet("tag.get", Name = nameof(GetTag))]
     public async Task<IActionResult> GetTag([FromQuery] GetTagCommand command)
     {
-        const string msg = $"GET::{nameof(BusinessHourController)}::{nameof(GetTag)}";
+        const string msg = $"GET::{nameof(TagController)}::{nameof(GetTag)}";
         logger.LogInformation(msg);
 
         var result = await mediatr.Send(command);

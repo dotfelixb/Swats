@@ -14,8 +14,6 @@ const ViewTopic: FC<IViewTopic> = () => {
   const { id } = useParams();
   const [topic, setTopic] = useState<IFetchTopic>();
   const [showEditForm, setEditForm] = useState(false);
-  const [hasFormErrors, setHasFormErrors] = useState(false);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async () => {
@@ -53,7 +51,7 @@ const ViewTopic: FC<IViewTopic> = () => {
       <Breadcrumb.Item>
         <Link to="/admin/helptopic">Help Topics</Link>
       </Breadcrumb.Item>
-      <Breadcrumb.Item>{topic?.topic ?? ""}</Breadcrumb.Item>
+      <Breadcrumb.Item>{topic?.name ?? ""}</Breadcrumb.Item>
     </Breadcrumb>
   );
 

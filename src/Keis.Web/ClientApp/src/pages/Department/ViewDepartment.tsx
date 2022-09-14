@@ -27,7 +27,7 @@ interface IFormData {
 
 const ViewDepartment: FC<IViewDepartment> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, patch, dateFormats } = useApp();
   const { id } = useParams();
   const [department, setDepartment] = useState<IFetchDepartment>();
   const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
@@ -47,7 +47,7 @@ const ViewDepartment: FC<IViewDepartment> = () => {
         // TODO: display error to user
       }
     }
-  }, [get]);
+  }, [get, id]);
 
   const loadAgent = useCallback(async () => {
     const g: Response = await get(`methods/agent.list`);
@@ -83,7 +83,7 @@ const ViewDepartment: FC<IViewDepartment> = () => {
       loadAgent();
       loadHour();
     }
-  }, [user, id, get]);
+  }, [user, id, get, load, loadAgent, loadHour]);
 
   const onFinish = async ({
     name,
@@ -107,11 +107,7 @@ const ViewDepartment: FC<IViewDepartment> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/department.update", {
-      method: "PATCH",
-      body,
-      headers,
-    });
+    const f = await patch("methods/department.update", body);
 
     const result: ISingleResult<string> = await f.json();
 

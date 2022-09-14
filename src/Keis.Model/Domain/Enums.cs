@@ -124,3 +124,18 @@ public enum ActionType
     ApplySla,
     ChangeStatus
 }
+
+public enum EmailProtocol
+{
+    IMAP = 1,
+    POP,
+    SMTP,
+    Exchange
+}
+
+public enum Encryption
+{
+    None = 1,
+    SSL,
+    TLS
+}

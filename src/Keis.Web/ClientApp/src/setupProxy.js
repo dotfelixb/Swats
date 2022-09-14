@@ -15,7 +15,18 @@ const context = [
   "/methods/ticket.get",
   "/methods/ticket.create",
   "/methods/ticket.update",
+
   "/methods/ticket.postcomment",
+  
+  "/methods/ticket.status",
+  "/methods/ticket.assign",
+  "/methods/ticket.department",
+  "/methods/ticket.team",
+  "/methods/ticket.sla",
+  "/methods/ticket.duedate",
+  "/methods/ticket.tickettype",
+  "/methods/ticket.helptopic",
+  "/methods/ticket.priority",
 
   "/methods/agent.list",
   "/methods/agent.get",
@@ -64,6 +75,17 @@ const context = [
   "/methods/workflow.event",
   "/methods/workflow.criteria",
   "/methods/workflow.action",
+
+  "/methods/email.list",
+  "/methods/email.get",
+  "/methods/email.create",
+  "/methods/email.update",
+
+  "/methods/template.list",
+  "/methods/template.get",
+  "/methods/template.mergetags",
+  "/methods/template.create",
+  "/methods/template.update",
 ];
 
 module.exports = function (app) {

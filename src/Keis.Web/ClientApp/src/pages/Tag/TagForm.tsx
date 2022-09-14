@@ -12,11 +12,16 @@ const { TextArea } = Input;
 interface ITagForm {
   hasFormErrors: boolean;
   formErrors: string[];
-  tag?: IFetchTag
+  tag?: IFetchTag;
   onFinish: (values: any) => void;
 }
 
-const TagForm: FC<ITagForm> = ({ hasFormErrors, formErrors, tag, onFinish }) => (
+const TagForm: FC<ITagForm> = ({
+  hasFormErrors,
+  formErrors,
+  tag,
+  onFinish,
+}) => (
   <Form layout="vertical" onFinish={onFinish}>
     {hasFormErrors &&
       formErrors?.map((e) => (
@@ -33,7 +38,11 @@ const TagForm: FC<ITagForm> = ({ hasFormErrors, formErrors, tag, onFinish }) => 
       </Timeline.Item>
       <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}>
         <div className="font-bold mb-2">Visibility and status</div>
-        <Form.Item name="visibility" label="Visibility" initialValue={tag?.visibility}>
+        <Form.Item
+          name="visibility"
+          label="Visibility"
+          initialValue={tag?.visibility}
+        >
           <Select>
             <Select.Option value="1">Public</Select.Option>
             <Select.Option value="2">Private</Select.Option>
@@ -50,7 +59,7 @@ const TagForm: FC<ITagForm> = ({ hasFormErrors, formErrors, tag, onFinish }) => 
         <div className="font-bold mb-2">
           Addition note for this tag (optional)
         </div>
-        <Form.Item name="note" label="Note" initialValue={tag?.note} >
+        <Form.Item name="note" label="Note" initialValue={tag?.note}>
           <TextArea rows={4} />
         </Form.Item>
       </Timeline.Item>

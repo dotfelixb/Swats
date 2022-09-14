@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from "react";
+import { createContext, FC, useCallback, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IAppContext, IViewProps } from "../interfaces";
 import { useAuth } from "./AuthContext";
@@ -71,37 +71,45 @@ export const AppProvider: FC<IViewProps> = ({ children }) => {
     [user, location, navigate]
   );
 
-  const post = async (endPoint: string, body: FormData): Promise<any> => {
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+  const get = useCallback(
+    async (endPoint: string): Promise<any> => {
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch(endPoint, {
-      method: "POST",
-      headers,
-      body,
-    });
+      const f = await fetch(endPoint, {
+        method: "GET",
+        headers,
+      });
 
-    return f.status === 401
-      ? navigate("/login", { replace: true, state: { from: location } })
-      : f;
-  };
+      return f.status === 401
+        ? navigate("/login", { replace: true, state: { from: location } })
+        : f;
+    },
+    [user, location, navigate]
+  );
 
-  const get = async (endPoint: string): Promise<any> => {
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
+  const patch = useCallback(
+    async (endPoint: string, body: FormData): Promise<any> => {
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch(endPoint, {
-      method: "GET",
-      headers,
-    });
+      const f = await fetch(endPoint, {
+        method: "PATCH",
+        headers,
+        body,
+      });
 
-    return f.status === 401
-      ? navigate("/login", { replace: true, state: { from: location } })
-      : f;
-  };
+      return f.status === 401
+        ? navigate("/login", { replace: true, state: { from: location } })
+        : f;
+    },
+    [user, location, navigate]
+  );
 
   return (
-    <AppContext.Provider value={{ post, get, dateFormats }}>
+    <AppContext.Provider
+      value={{ post, get, patch, dateFormats, editorFormats, editorModels }}
+    >
       {children}
     </AppContext.Provider>
   );

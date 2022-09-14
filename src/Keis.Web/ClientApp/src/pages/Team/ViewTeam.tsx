@@ -25,7 +25,7 @@ interface IFormData {
 
 const ViewTeam: FC<IViewTeam> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, patch, dateFormats } = useApp();
   const { id } = useParams();
   const [team, setTeam] = useState<IFetchTeam>();
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
@@ -95,11 +95,7 @@ const ViewTeam: FC<IViewTeam> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/team.update", {
-      method: "PATCH",
-      body,
-      headers,
-    });
+    const f = await patch("methods/team.update",   body );
 
     const result: ISingleResult<string> = await f.json();
 

@@ -34,7 +34,7 @@ interface IFormData {
 
 const ViewSla: FC<IViewSla> = () => {
   const { user } = useAuth();
-  const { get, dateFormats } = useApp();
+  const { get, patch, dateFormats } = useApp();
   const { id } = useParams();
   const [sla, setSla] = useState<IFetchSla>();
   const [hourList, setHourList] = useState<IFetchBusinessHour[]>([]);
@@ -93,11 +93,7 @@ const ViewSla: FC<IViewSla> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/sla.update", {
-      method: "PATCH",
-      body,
-      headers,
-    });
+    const f = await patch("methods/sla.update",  body );
 
     const result: ISingleResult<string> = await f.json();
 

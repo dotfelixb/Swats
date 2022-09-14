@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { FC, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { OpenHourItem, PageView } from "../../components";
-import { useAuth } from "../../context";
+import { useApp, useAuth } from "../../context";
 import { IOpenHour, ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
@@ -83,6 +83,7 @@ const initialOpenHours: IOpenHour[] = [
 
 const NewHour: FC<INewHour> = () => {
   const { user } = useAuth();
+  const {post} = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [hoursList, setHoursList] = useState<IOpenHour[]>(initialOpenHours);
@@ -120,11 +121,7 @@ const NewHour: FC<INewHour> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/businesshour.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/businesshour.create",  body );
 
     const result: ISingleResult<string> = await f.json();
 

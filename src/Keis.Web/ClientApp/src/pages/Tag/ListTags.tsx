@@ -1,6 +1,6 @@
 import {Breadcrumb, Button} from "antd";
 import dayjs from "dayjs";
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useCallback, useEffect, useState} from "react";
 import {Link, Outlet} from "react-router-dom";
 import {DataTable, PageView} from "../../components";
 import {useApp, useAuth} from "../../context";
@@ -24,25 +24,25 @@ const ListTags: FC<IListTags> = () => {
     const {get, dateFormats} = useApp();
     const [tagList, setTagList] = useState<IFetchTag[]>();
 
-    useEffect(() => {
-        const load = async () => {
-            const g: Response = await get("methods/tag.list");
+    const load = useCallback(async () => {
+        const g: Response = await get("methods/tag.list");
 
-            if (g != null) {
-                const d: IListResult<IFetchTag[]> = await g.json();
+        if (g != null) {
+            const d: IListResult<IFetchTag[]> = await g.json();
 
-                if (g.status === 200 && d.ok) {
-                    setTagList(d.data);
-                } else {
-                    // TODO: display error to user
-                }
+            if (g.status === 200 && d.ok) {
+                setTagList(d.data);
+            } else {
+                // TODO: display error to user
             }
-        };
+        }
+    }, [get]);
 
+    useEffect(() => {
         if (user != null && user.token) {
             load();
         }
-    }, [user, get]);
+    }, [user, load]);
 
     const Buttons: FC = () => (
         <div className="space-x-2">

@@ -1,40 +1,40 @@
 /// interface use by keis.web
 interface IResult {
-    ok: boolean;
-    type: string;
-    ts: number;
-    errors: string[];
+  ok: boolean;
+  type: string;
+  ts: number;
+  errors: string[];
 }
 
 export interface ISingleResult<T> extends IResult {
-    data: T;
+  data: T;
 }
 
 export interface IListResult<T> extends IResult {
-    data: T;
+  data: T;
 }
 
 export interface IUser {
-    token: string;
-    fullname: string;
-    email: string;
-    permissions: string[];
+  token: string;
+  fullname: string;
+  email: string;
+  permissions: string[];
 }
 
 export interface ILogin {
-    username: string;
-    password: string;
-    remember: boolean;
+  username: string;
+  password: string;
+  remember: boolean;
 }
 
 export interface ILoginResult {
-    fullname: string;
-    email: string;
-    token: string;
-    permissions: string[];
-    errors: string[];
-    ok: boolean;
-    ts: Number;
+  fullname: string;
+  email: string;
+  token: string;
+  permissions: string[];
+  errors: string[];
+  ok: boolean;
+  ts: Number;
 }
 
 export interface IAuthContext {
@@ -50,79 +50,81 @@ export interface IAuthContext {
 }
 
 export interface IAppContext {
-    post: (endPoint: string, body: FormData) => Promise<any>;
-    get: (endPoint: string) => Promise<any>;
-    dateFormats: { longDateFormat: string; shortDateFormat: string };
+  post: (endPoint: string, body: FormData) => Promise<any>;
+  get: (endPoint: string) => Promise<any>;
+  patch: (endPoint: string, body: FormData) => Promise<any>;
+  dateFormats: { longDateFormat: string; shortDateFormat: string };
+  editorFormats: string[];
+  editorModels: any;
 }
 
 export interface IViewProps {
-    children?: JSX.Element;
+  children?: JSX.Element;
 }
 
 export interface IOpenHour {
-    id: number;
-    name: string;
-    enabled: boolean;
-    fullDay: boolean;
-    fromTime: string | undefined;
-    toTime: string | undefined;
+  id: number;
+  name: string;
+  enabled: boolean;
+  fullDay: boolean;
+  fromTime: string | undefined;
+  toTime: string | undefined;
 }
 
 export enum ControlType {
-    Input = 1,
-    Select,
-    Multiselect,
+  Input = 1,
+  Select,
+  Multiselect,
 }
 
-
 interface IDataAudit {
-    status: string;
+  status: string;
 
-    createdBy: string;
-    createdByName: string;
-    createdAt: Date;
+  createdBy: string;
+  createdByName: string;
+  createdAt: Date;
 
-    updatedBy: string;
-    updatedByName: string;
-    updatedAt: Date;
+  updatedBy: string;
+  updatedByName: string;
+  updatedAt: Date;
 }
 
 export interface IFetchBusinessHour extends IDataAudit {
-    id: string;
-    name: string;
-    description: string;
-    timezone: string;
-    openHours: IOpenHour[];
+  id: string;
+  name: string;
+  description: string;
+  timezone: string;
+  openHours: IOpenHour[];
 }
 
 export interface IFetchTag extends IDataAudit {
-    id: string;
-    name: string;
-    note: string;
-    visibility: string;
-    color: string;
+  id: string;
+  name: string;
+  note: string;
+  visibility: string;
+  color: string;
 }
 
 export interface IFetchTopic extends IDataAudit {
-    id: string;
-    topic: string;
-    department: string;
-    departmentName: string;
-    type: string;
-    note: string;
+  id: string;
+  name: string;
+  department: string;
+  departmentName: string;
+  type: string;
+  note: string;
 }
 
 export interface IFetchDepartment extends IDataAudit {
-    id: string;
-    code: string;
-    name: string;
-    manager: string;
-    managerName: string;
-    businessHour: string;
-    businessHourName: string;
-    outgoingEmail: string;
-    type: string;
-    response: string;
+  id: string;
+  code: string;
+  name: string;
+  manager: string;
+  managerName: string;
+  businessHour: string;
+  businessHourName: string;
+  outgoingEmail: string;
+  type: string;
+  response: string;
 }
 
 export interface IFetchTeam extends IDataAudit {
@@ -136,11 +138,11 @@ export interface IFetchTeam extends IDataAudit {
 }
 
 export interface IFetchType extends IDataAudit {
-    id: string;
-    name: string;
-    description: string;
-    visibility: string;
-    color: string;
+  id: string;
+  name: string;
+  description: string;
+  visibility: string;
+  color: string;
 }
 
 export interface IFetchAgent extends IDataAudit {
@@ -163,49 +165,49 @@ export interface IFetchAgent extends IDataAudit {
 }
 
 export interface IFetchSla extends IDataAudit {
-    id: string;
-    name: string;
-    note: string;
-    businessHour: string;
-    businessHourName: string;
-    responsePeriod: number;
-    responseFormat: string;
-    responseNotify: boolean;
-    responseEmail: boolean;
-    resolvePeriod: number;
-    resolveFormat: string;
-    resolveNotify: boolean;
-    resolveEmail: boolean;
+  id: string;
+  name: string;
+  note: string;
+  businessHour: string;
+  businessHourName: string;
+  responsePeriod: number;
+  responseFormat: string;
+  responseNotify: boolean;
+  responseEmail: boolean;
+  resolvePeriod: number;
+  resolveFormat: string;
+  resolveNotify: boolean;
+  resolveEmail: boolean;
 }
 
 export interface IList {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 }
 
 export interface IWorkflowEvent {
-    name: string;
-    type: string;
+  name: string;
+  type: string;
 }
 
 export interface IWorkflowCriteria {
-    key: number;
-    name?: string;
-    criteria?: number;
-    condition?: number;
-    match?: string;
-    control?: ControlType;
-    type?: string;
-    link?: string;
+  key: number;
+  name?: string;
+  criteria?: number;
+  condition?: number;
+  match?: string;
+  control?: ControlType;
+  type?: string;
+  link?: string;
 }
 
 export interface IWorkflowAction {
-    key: number;
-    name?: string;
-    actionFrom?: number;
-    actionTo?: string;
-    control?: ControlType;
-    link?: string;
+  key: number;
+  name?: string;
+  actionFrom?: number;
+  actionTo?: string;
+  control?: ControlType;
+  link?: string;
 }
 
 export interface IFetchWorkflow extends IDataAudit {
@@ -218,32 +220,71 @@ export interface IFetchWorkflow extends IDataAudit {
   actions: IWorkflowAction[];
 }
 
-interface ITicketComment{
-    id: string;
-    ticket:string;
-    body:string;
-    fromEmail:string;
-    fromName:string;
-    createdAt:string;
+interface ITicketComment {
+  id: string;
+  ticket: string;
+  body: string;
+  fromEmail: string;
+  fromName: string;
+  createdAt: string;
 }
 
 export interface IFetchTicket extends IDataAudit {
-    id: string;
-    subject: string;
-    code:string;
-    requesterName:string;
-    assignedToName:string;
-    departmentName:string;
-    teamName:string;
-    source:string;
-    priority:string;
-    ticketComments: ITicketComment[]
+  id: string;
+  subject: string;
+  code: string;
+  requester: string;
+  requesterName: string;
+  assignedTo: string;
+  assignedToName: string;
+  department: string;
+  departmentName: string;
+  team: string;
+  teamName: string;
+  sla: string;
+  slaName: string;
+  ticketType: string;
+  ticketTypeName: string;
+  helpTopic: string;
+  helpTopicName: string;
+  source: string;
+  priority: string;
+  dueAt: string;
+  ticketComments: ITicketComment[];
 }
 
 export interface IDashboardCount {
-    myTicket :number;
-    myOverDue :number;
-    myDueToday :number;
-    openTickets :number;
-    openTicketsDue :number;
+  myTicket: number;
+  myOverDue: number;
+  myDueToday: number;
+  openTickets: number;
+  openTicketsDue: number;
+}
+
+export interface IFetchEmail extends IDataAudit {
+  id:string;
+  address:string;
+  name:string;
+  username:string;
+  password:string;
+
+  inHost:string;
+  inPort:string;
+  inProtocol:string;
+  inSecurity:string;
+
+  outHost:string;
+  outPort:string;
+  outProtocol:string;
+  outSecurity:string;
+
+  note:string;
+}
+
+export interface IFetchTemplate extends IDataAudit {
+  id:string;
+  name:string;
+  subject:string;
+  body:string;
+  mergeTags:string[];
 }

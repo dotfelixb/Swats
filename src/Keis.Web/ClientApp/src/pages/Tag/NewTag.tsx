@@ -2,7 +2,7 @@ import { Breadcrumb } from "antd";
 import { FC, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
-import { useAuth } from "../../context";
+import { useApp, useAuth } from "../../context";
 import { ISingleResult } from "../../interfaces";
 import TagForm from "./TagForm";
 
@@ -18,6 +18,7 @@ interface INewTag {}
 
 const NewTag: FC<INewTag> = () => {
   const { user } = useAuth();
+  const {post} = useApp();
   const navigate = useNavigate();
   const [hasFormErrors, setHasFormErrors] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
@@ -39,20 +40,16 @@ const NewTag: FC<INewTag> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/tag.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/tag.create",  body );
 
     const result: ISingleResult<string> = await f.json();
 
     if (f.status === 201 && result.ok) {
       navigate(`/admin/tag/${result.data}`, { replace: true });
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
     }
-
-    setHasFormErrors(true);
-    setFormErrors(result?.errors);
   };
 
   const Breadcrumbs: FC = () => (
@@ -71,7 +68,7 @@ const NewTag: FC<INewTag> = () => {
   );
 
   return (
-    <PageView title="New Tag" breadcrumbs={<Breadcrumbs />} >
+    <PageView title="New Tag" breadcrumbs={<Breadcrumbs />}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div>
           <TagForm

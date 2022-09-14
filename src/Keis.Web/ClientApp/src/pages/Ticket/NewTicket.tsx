@@ -29,7 +29,7 @@ interface IFormData {
 
 const NewTicket: FC<INewTicket> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get,post } = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [note, setNote] = useState("");
@@ -103,11 +103,7 @@ const NewTicket: FC<INewTicket> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/ticket.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/ticket.create",   body );
 
     const result: ISingleResult<string> = await f.json();
 

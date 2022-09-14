@@ -3,7 +3,7 @@ import { Alert, Breadcrumb, Button, Form, Input, Select, Timeline } from "antd";
 import { FC, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { PageView } from "../../components";
-import { useAuth } from "../../context";
+import { useApp, useAuth } from "../../context";
 import { ISingleResult } from "../../interfaces";
 
 const { TextArea } = Input;
@@ -20,6 +20,7 @@ interface IFormData {
 
 const NewType: FC<INewType> = () => {
   const { user } = useAuth();
+  const {post} = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [hasFormErrors, setHasFormErrors] = useState(false);
@@ -42,20 +43,16 @@ const NewType: FC<INewType> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/tickettype.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/tickettype.create",  body );
 
     const result: ISingleResult<string> = await f.json();
 
     if (f.status === 201 && result.ok) {
       navigate(`/admin/tickettype/${result.data}`, { replace: true });
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
     }
-
-    setHasFormErrors(true);
-    setFormErrors(result?.errors);
   };
 
   const Breadcrumbs: FC = () => (

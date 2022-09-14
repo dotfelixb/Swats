@@ -16,7 +16,7 @@ const { TextArea } = Input;
 interface INewTopic {}
 
 interface IFormData {
-  topic: string;
+  name: string;
   department: string;
   type: string;
   status: string;
@@ -26,7 +26,7 @@ interface IFormData {
 
 const NewTopic: FC<INewTopic> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get, post } = useApp();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>();
@@ -54,7 +54,7 @@ const NewTopic: FC<INewTopic> = () => {
   }, [user, get]);
 
   const onFinish = async ({
-    topic,
+    name,
     department,
     type,
     status,
@@ -62,7 +62,7 @@ const NewTopic: FC<INewTopic> = () => {
     note,
   }: IFormData) => {
     const body = new FormData();
-    body.append("topic", topic ?? "");
+    body.append("name", name ?? "");
     body.append("department", department ?? "");
     body.append("type", type ?? 1);
     body.append("status", status ?? 1);
@@ -72,20 +72,16 @@ const NewTopic: FC<INewTopic> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/helptopic.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/helptopic.create",  body );
 
     const result: ISingleResult<string> = await f.json();
 
     if (f.status === 201 && result.ok) {
       navigate(`/admin/helptopic/${result.data}`, { replace: true });
+    } else {
+      setHasFormErrors(true);
+      setFormErrors(result?.errors);
     }
-
-    setHasFormErrors(true);
-    setFormErrors(result?.errors);
   };
 
   const Breadcrumbs: FC = () => (
@@ -119,7 +115,7 @@ const NewTopic: FC<INewTopic> = () => {
                 dot={<FormOutlined style={{ fontSize: "16px" }} />}
               >
                 <div className="font-bold mb-2">Help topic name</div>
-                <Form.Item name="topic" label="Topic" htmlFor="topic">
+                <Form.Item name="name" label="Name">
                   <Input />
                 </Form.Item>
               </Timeline.Item>

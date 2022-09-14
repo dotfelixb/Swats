@@ -31,7 +31,7 @@ interface IFormData {
 
 const New: FC<INew> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get , post} = useApp();
   const navigate = useNavigate();
   const [departmentList, setDepartmentList] = useState<IFetchDepartment[]>([]);
   const [teamList, setTeamList] = useState<IFetchTeam[]>([]);
@@ -107,11 +107,7 @@ const New: FC<INew> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/agent.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/agent.create", body );
 
     const result: ISingleResult<string> = await f.json();
 

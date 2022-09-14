@@ -26,7 +26,7 @@ interface IFormData {
 
 const NewDepartment: FC<INewDepartment> = () => {
   const { user } = useAuth();
-  const { get } = useApp();
+  const { get, post } = useApp();
   const navigate = useNavigate();
   const [agentList, setAgentList] = useState<IFetchAgent[]>([]);
   const [hourList, setHourList] = useState<IFetchBusinessHour[]>([]);
@@ -89,11 +89,7 @@ const NewDepartment: FC<INewDepartment> = () => {
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await fetch("methods/department.create", {
-      method: "POST",
-      body,
-      headers,
-    });
+    const f = await post("methods/department.create",  body );
 
     const result: ISingleResult<string> = await f.json();
 

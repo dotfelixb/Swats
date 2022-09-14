@@ -32,7 +32,7 @@ interface ILinkCard {
 
 const LinkCard: FC<ILinkCard> = ({ title, location, icon }) => {
   return (
-    <div className="w-full flex flex-col justify-center items-center min-w-fit bg-white border border-gray-200 rounded px-3 py-10">
+    <div className="w-full flex flex-col justify-center items-center min-w-fit bg-white border border-gray-200 rounded px-1 py-7">
       <Link to={location} className="cursor-pointer">
         <div className="relative flex justify-center border-solid border-4 border-indigo-200 rounded-full w-16 h-16">
           <span className=" text-lg font-bold text-center text-indigo-500 mt-2">

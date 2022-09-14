@@ -4,6 +4,8 @@ using Keis.Infrastructure.Features.Agents.UpdateAgent;
 using Keis.Infrastructure.Features.BusinessHour.CreateBusinessHour;
 using Keis.Infrastructure.Features.Department.CreateDepartment;
 using Keis.Infrastructure.Features.Department.UpdateDepartment;
+using Keis.Infrastructure.Features.Emails.CreateEmail;
+using Keis.Infrastructure.Features.Emails.UpdateEmail;
 using Keis.Infrastructure.Features.HelpTopic.CreateHelpTopic;
 using Keis.Infrastructure.Features.Sla.CreateSla;
 using Keis.Infrastructure.Features.Sla.UpdateSla;
@@ -11,6 +13,8 @@ using Keis.Infrastructure.Features.Tags.CreateTag;
 using Keis.Infrastructure.Features.Tags.UpdateTag;
 using Keis.Infrastructure.Features.Teams.CreateTeam;
 using Keis.Infrastructure.Features.Teams.UpdateTeam;
+using Keis.Infrastructure.Features.Template.CreateTemplate;
+using Keis.Infrastructure.Features.Template.UpdateTemplate;
 using Keis.Infrastructure.Features.Tickets.CreateTicket;
 using Keis.Infrastructure.Features.TicketTypes.CreateTicketType;
 using Keis.Infrastructure.Features.Workflow.CreateWorkflow;
@@ -57,11 +61,19 @@ public class ModelProfiles : Profile
         CreateMap<CreateWorkflowCommand, Workflow>()
             .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
 
+        CreateMap<CreateEmailCommand, Email>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+
+        CreateMap<CreateTemplateCommand, Template>()
+            .ForMember(d => d.UpdatedBy, opt => opt.MapFrom(s => s.CreatedBy));
+
         CreateMap<UpdateTagCommand, Tag>();
         CreateMap<UpdateAgentCommand, Agent>();
         CreateMap<UpdateDepartmentCommand, Department>();
         CreateMap<UpdateTeamCommand, Team>();
         CreateMap<UpdateSlaCommand, Sla>();
+        CreateMap<UpdateEmailCommand, Email>();
+        CreateMap<UpdateTemplateCommand, Template>();
 
 
         CreateMap<LoginLogCommand, LoginAudit>();

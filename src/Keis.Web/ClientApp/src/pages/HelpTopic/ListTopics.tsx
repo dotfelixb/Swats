@@ -1,6 +1,6 @@
 import { Breadcrumb, Button } from "antd";
 import dayjs from "dayjs";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { DataTable, PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
@@ -23,25 +23,26 @@ const ListTopics: FC<IListTopics> = () => {
   const { get, dateFormats } = useApp();
   const [topicList, setTopicList] = useState<IFetchTopic[]>();
 
-  useEffect(() => {
-    const load = async () => {
-      const g: Response = await get("methods/helptopic.list");
+  const load = useCallback(async () => {
+    const g: Response = await get("methods/helptopic.list");
 
-      if (g != null) {
-        const d: IListResult<IFetchTopic[]> = await g.json();
+    if (g != null) {
+      const d: IListResult<IFetchTopic[]> = await g.json();
 
-        if (g.status === 200 && d.ok) {
-          setTopicList(d.data);
-        } else {
-          // TODO: display error to user
-        }
+      if (g.status === 200 && d.ok) {
+        setTopicList(d.data);
+      } else {
+        // TODO: display error to user
       }
-    };
+    }
+  }, [get]);
+
+  useEffect(() => {
 
     if (user != null && user.token) {
       load();
     }
-  }, [user, get]);
+  }, [user, get, load]);
 
   const Buttons: FC = () => (
     <div className="space-x-2">
@@ -74,7 +75,7 @@ const ListTopics: FC<IListTopics> = () => {
           <tr className="px-10" key={t.id}>
             <td className="px-3 py-3">
               <Link to={`/admin/helptopic/${t.id}`}>
-                <div className="">{t.topic}</div>
+                <div className="">{t.name}</div>
               </Link>
               <div className="text-xs" style={{ color: "#9b9b9b" }}>
                 {t.note}
