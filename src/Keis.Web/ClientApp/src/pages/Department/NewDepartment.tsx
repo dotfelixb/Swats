@@ -5,8 +5,7 @@ import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import {
   IFetchAgent,
-  IFetchBusinessHour,
-  IFetchDepartment,
+  IFetchBusinessHour, 
   IListResult,
   ISingleResult,
 } from "../../interfaces";

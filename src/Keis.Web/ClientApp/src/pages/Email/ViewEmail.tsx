@@ -2,7 +2,7 @@ import { Breadcrumb, Button, Drawer } from "antd";
 import dayjs from "dayjs";
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader, PageView } from "../../components";
+import { PageView } from "../../components";
 import { useApp, useAuth } from "../../context";
 import { IFetchEmail, ISingleResult } from "../../interfaces";
 import EmailForm from "./EmailForm";
@@ -14,16 +14,16 @@ interface IFormData {
   name: string;
   username: string;
   password: string;
-  
+
   inhost: string;
   inprotocol: string;
   inport: string;
-  insecurity:string;
+  insecurity: string;
 
   outhost: string;
   outprotocol: string;
   outport: string;
-  outsecurity:string;
+  outsecurity: string;
 
   status: string;
   note: string;
@@ -75,11 +75,10 @@ const ViewEmail: FC<IViewEmail> = () => {
     body.append("status", values.status ?? "");
     body.append("note", values.note ?? "");
 
-
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${user?.token ?? ""}`);
 
-    const f = await patch("methods/email.update",  body );
+    const f = await patch("methods/email.update", body);
 
     const result: ISingleResult<string> = await f.json();
 

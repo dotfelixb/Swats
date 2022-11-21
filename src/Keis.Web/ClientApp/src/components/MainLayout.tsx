@@ -73,8 +73,6 @@ const MainLayout: FC<IMainLayout> = ({ children }) => {
     />
   );
 
-  const noti = <Menu items={[]} />;
-
   return (
     <Layout style={{ height: "100vh" }}>
       <Header

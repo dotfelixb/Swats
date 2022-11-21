@@ -13,7 +13,7 @@ const ViewTopic: FC<IViewTopic> = () => {
   const { get, dateFormats } = useApp();
   const { id } = useParams();
   const [topic, setTopic] = useState<IFetchTopic>();
-  const [showEditForm, setEditForm] = useState(false);
+  // const [showEditForm, setEditForm] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -34,7 +34,7 @@ const ViewTopic: FC<IViewTopic> = () => {
 
   const Buttons: FC = () => (
     <div className="space-x-2">
-      <Button type="primary" onClick={() => setEditForm(true)}>
+      <Button type="primary" >
         Edit
       </Button>
     </div>

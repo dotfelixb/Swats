@@ -54,7 +54,7 @@ const ViewAgent: FC<IViewAgent> = () => {
         // TODO: display error to user
       }
     }
-  }, [get]);
+  }, [get, id]);
 
   const loadDepartment = useCallback(async () => {
     const g: Response = await get(`methods/department.list`);
@@ -105,7 +105,7 @@ const ViewAgent: FC<IViewAgent> = () => {
       loadTeam();
       loadType();
     }
-  }, [user, id, get]);
+  }, [user, id, get, loadAgent, loadDepartment, loadTeam, loadType]);
 
   const onFinish = async (values: IFormData) => {
     const body = new FormData();

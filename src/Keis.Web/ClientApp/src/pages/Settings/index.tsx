@@ -68,7 +68,7 @@ const Settings: FC<ISettings> = () => {
           <div>
             <LinkCard
               title="Agents"
-              location="/admin/agent"
+              location="/agent"
               icon={<PhoneOutlined />}
             />
           </div>

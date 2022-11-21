@@ -5,7 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@craco/craco": "^6.4.3",
-    "antd": "^4.19.4",
+    "antd": "^4.23.6",
     "autoprefixer": "^10.4.4",
     "craco-less": "^2.0.0",
     "dayjs": "^1.11.0",
@@ -53,7 +53,7 @@
   "scripts": {
     "css": "postcss src/app.css -o src/site.css",
     "prestart": "node aspnetcore-https && node aspnetcore-react && npm run css",
-    "start": "rimraf ./build && craco start",
+    "start": "rimraf ./build && craco --openssl-legacy-provider start ",
     "build": "craco build",
     "watch:mac": "watch 'npm run css' ./src",
     "watch:win": "watch \"npm run css\" .\\src",

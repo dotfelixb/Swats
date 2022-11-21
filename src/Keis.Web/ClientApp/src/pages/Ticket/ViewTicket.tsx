@@ -454,7 +454,7 @@ const ViewTicket: FC<IViewTicket> = () => {
       // call load ticket
       await load();
     }
-  }, [user, ticket, load, note]);
+  }, [user, ticket, load, note, post]);
 
   const changeStatusMenu = (
     <Menu onClick={onHandleStatusChange} items={statusItems} />
